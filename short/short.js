@@ -66,7 +66,7 @@ function mascot(t, pose, t0) {
   const px = (x, y, w, h, c) => { ctx.fillStyle = c; ctx.fillRect(x * U, y * U, w * U, h * U); };
   const limb = (x1, y1, x2, y2) => { const n = Math.max(Math.abs(x2 - x1), Math.abs(y2 - y1)), pts = [];
     for (let i = 0; i <= n; i++) pts.push([Math.round(x1 + (x2 - x1) * i / n), Math.round(y1 + (y2 - y1) * i / n)]);
-    pts.forEach(([x, y]) => px(x - 1, y - 1, 4, 4, OUT)); pts.forEach(([x, y]) => px(x, y, 2, 2, OR)); };
+    pts.forEach(([x, y]) => px(x - 1, y - 1, 3, 3, OUT)); pts.forEach(([x, y]) => px(x, y, 1, 1, OR)); };
   ctx.save(); ctx.translate(W / 2, 1800 + bob); ctx.scale(k, k);
   ctx.globalAlpha *= .2; px(-10, 0, 20, 1, '#000'); ctx.globalAlpha /= .2; // ombre
   [-7, -3, 2, 6].forEach(x => { px(x - 1, -4, 4, 4, OUT); px(x, -4, 2, 3, OR); }); // 4 petites pattes
