@@ -1,199 +1,176 @@
-// Short YouTube 9:16 — "Claude Code remplace les IA à 200€/mois". Tout est fonction du temps t (s).
+// Short YouTube 9:16 — style "cahier + personnage qui réagit + gros sous-titres".
+// Tout est fonction du temps t (s). Les repères de temps collent aux sons de music.js.
 const W = 1080, H = 1920, DURATION = 28;
 const CHANNEL = '@FuraxDev';
 const cv = document.getElementById('c'), ctx = cv.getContext('2d');
-const C = { bg: '#fff7ee', ink: '#17141f', red: '#e11d48', orange: '#d97757', cream: '#fff7ee', green: '#16a34a', dim: '#6b6578' };
-const F = { anton: 'Anton', bangers: 'Bangers', bebas: '"Bebas Neue"', marker: '"Permanent Marker"', grotesk: '"Space Grotesk"', code: '"Fira Code"' };
+const C = { ink: '#1a1a1a', orange: '#d97757', darkOr: '#7a3b22', red: '#e11d48', yellow: '#facc15', green: '#4ec97a' };
+const F = { kalam: 'Kalam', mont: 'Montserrat', code: '"Fira Code"', marker: '"Permanent Marker"' };
 
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const seg = (t, a, b) => clamp((t - a) / (b - a));
 const easeOut = x => 1 - Math.pow(1 - x, 3);
-const easeInOut = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
 const back = x => { const c = 1.70158; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
-const life = (t, a, b, f = .3) => Math.min(seg(t, a, a + f), 1 - seg(t, b - f, b));
-const lerp = (a, b, k) => a + (b - a) * k;
-
+const life = (t, a, b, f = .25) => Math.min(seg(t, a, a + f), 1 - seg(t, b - f, b));
+const typed = (s, t, a, cps) => s.slice(0, Math.floor(clamp((t - a) * cps, 0, s.length)));
 function rrect(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); }
-function text(s, x, y, size, color, font = F.anton, align = 'center', weight = 400) {
-  ctx.font = `${weight} ${size}px ${font}`; ctx.fillStyle = color; ctx.textAlign = align; ctx.textBaseline = 'middle';
-  ctx.fillText(s, x, y);
-}
-function glow(s, x, y, size, color, shadowC, font = F.anton) {
-  ctx.save(); ctx.shadowColor = 'rgba(23,20,31,.22)'; ctx.shadowOffsetY = 8; ctx.shadowBlur = 14; text(s, x, y, size, color, font); ctx.restore();
-}
-function typed(s, t, a, cps) { return s.slice(0, Math.floor(clamp((t - a) * cps, 0, s.length))); }
-
-// Secousses d'écran déclenchées sur les impacts
-const SLAMS = [.2, .9, 1.6, 4.2, 4.9, 5.6, 8.0, 9.0, 11.3, 12.0, 12.7, 21.8];
-function shake(t) {
-  let a = 0; for (const s of SLAMS) if (t >= s) a += 7 * Math.exp(-(t - s) * 9) * (t - s < .6 ? 1 : 0);
-  return [Math.sin(t * 90) * a, Math.cos(t * 77) * a];
+function text(s, x, y, size, color, font, align = 'center', weight = 400) {
+  ctx.font = `${weight} ${size}px ${font}`; ctx.fillStyle = color; ctx.textAlign = align; ctx.textBaseline = 'middle'; ctx.fillText(s, x, y);
 }
 
-// ---------- Fond : grille (rouge = danger → orange Claude) ----------
-function background(t) {
-  const k = easeOut(seg(t, 8, 9));
-  ctx.fillStyle = `rgb(${lerp(255, 255, k) | 0},${lerp(236, 247, k) | 0},${lerp(232, 238, k) | 0})`; ctx.fillRect(0, 0, W, H);
-  const step = 90, off = (t * 45) % step;
-  ctx.lineWidth = 1.8; ctx.strokeStyle = `rgba(${lerp(225, 217, k) | 0},${lerp(29, 119, k) | 0},${lerp(72, 87, k) | 0},.2)`;
-  ctx.beginPath();
-  for (let x = -step + off; x < W + step; x += step) { ctx.moveTo(x, 0); ctx.lineTo(x, H); }
-  for (let y = -step + off; y < H + step; y += step) { ctx.moveTo(0, y); ctx.lineTo(W, y); }
-  ctx.stroke();
-}
+// ---------- Papier cahier (généré une seule fois) ----------
+const paper = document.createElement('canvas'); paper.width = W; paper.height = H;
+(function () {
+  const p = paper.getContext('2d'); let s = 11; const r = () => ((s = (s * 16807) % 2147483647) / 2147483647);
+  const g = p.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#efe7d4'); g.addColorStop(1, '#e2d8c0'); p.fillStyle = g; p.fillRect(0, 0, W, H);
+  for (let i = 0; i < 9000; i++) { p.fillStyle = r() > .5 ? 'rgba(255,255,255,.07)' : 'rgba(90,70,40,.05)'; p.fillRect(r() * W, r() * H, 2 + r() * 3, 2 + r() * 3); }
+  for (let i = 0; i < 60; i++) { p.strokeStyle = r() > .5 ? 'rgba(255,255,255,.14)' : 'rgba(90,70,40,.08)'; p.lineWidth = 1 + r() * 2;
+    p.beginPath(); const x = r() * W, y = r() * H; p.moveTo(x, y); p.lineTo(x + (r() - .5) * 500, y + (r() - .5) * 500); p.stroke(); }
+  p.strokeStyle = 'rgba(86,120,190,.5)'; p.lineWidth = 3;
+  for (let y = 200; y < H; y += 66) { p.beginPath(); p.moveTo(0, y); p.lineTo(W, y); p.stroke(); }
+  p.strokeStyle = 'rgba(224,90,90,.7)'; p.lineWidth = 4; p.beginPath(); p.moveTo(110, 0); p.lineTo(110, H); p.stroke();
+})();
 
-// ---------- 1. Accroche ----------
-function scene1(t) {
-  const a = life(t, 0, 3.9, .01) * (1 - seg(t, 3.5, 3.9));
-  if (a <= 0) return;
-  ctx.save(); ctx.globalAlpha = a;
-  const lines = [['TU PAIES', 150, C.ink, F.bebas, 560, .2], ['200$/MOIS', 190, C.red, F.anton, 800, .9], ['POUR UNE IA ?', 150, C.ink, F.bebas, 1080, 1.6]];
-  for (const [s, size, col, font, y, t0] of lines) {
-    const k = back(seg(t, t0, t0 + .25)); if (k <= 0) continue;
-    ctx.save(); ctx.translate(W / 2, y); ctx.scale(k, k);
-    glow(s, 0, 0, size, col, '', font); ctx.restore();
-  }
-  if (t > 2.3) { const k = back(seg(t, 2.3, 2.7)); ctx.save(); ctx.translate(W / 2, 1380); ctx.rotate(Math.sin(t * 8) * .08); ctx.scale(k, k);
-    text('🤨', 0, 0, 260, '#fff'); ctx.restore(); }
+// ---------- Gribouillis au stylo ----------
+function doodles(t) {
+  ctx.save(); ctx.strokeStyle = C.ink; ctx.fillStyle = C.ink; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.save(); ctx.translate(70, 120); ctx.rotate(Math.sin(t * 1.5) * .06); ctx.beginPath(); // étoile
+  for (let i = 0; i < 10; i++) { const a = i * Math.PI / 5 - Math.PI / 2, r = i % 2 ? 36 : 82; ctx[i ? 'lineTo' : 'moveTo'](Math.cos(a) * r, Math.sin(a) * r); }
+  ctx.closePath(); ctx.fill(); ctx.restore();
+  ctx.save(); ctx.translate(930 + Math.sin(t * 2) * 8, 130); ctx.rotate(-.2); ctx.beginPath(); // avion en papier
+  ctx.moveTo(-70, 10); ctx.lineTo(80, -50); ctx.lineTo(20, 60); ctx.lineTo(0, 15); ctx.closePath(); ctx.moveTo(-70, 10); ctx.lineTo(0, 15); ctx.lineTo(80, -50); ctx.stroke(); ctx.restore();
+  ctx.setLineDash([10, 14]); ctx.beginPath(); ctx.moveTo(760, 250); ctx.bezierCurveTo(840, 150, 700, 120, 790, 60); ctx.stroke(); ctx.setLineDash([]);
+  ctx.beginPath(); for (let i = 0; i < 90; i++) { const a = i * .22, r = 4 + i * .5; ctx[i ? 'lineTo' : 'moveTo'](70 + Math.cos(a) * r, 1790 + Math.sin(a) * r); } ctx.stroke(); // spirale
+  ctx.beginPath(); ctx.moveTo(960, 1840); ctx.lineTo(1030, 1840); ctx.lineTo(995, 1780); ctx.closePath(); ctx.stroke(); // triangle
   ctx.restore();
 }
 
-// ---------- 2. Cartes de prix qui tombent ----------
-const CARDS = [['CHATGPT PRO', 200, 4.2, -3], ['MIDJOURNEY', 60, 4.9, 2.5], ['SORA', 20, 5.6, -2]];
-const TOTAL = CARDS.reduce((a, c) => a + c[1], 0);
-function scene2(t) {
-  const a = life(t, 3.8, 8, .25); if (a <= 0) return;
-  ctx.save(); ctx.globalAlpha = a;
-  CARDS.forEach(([name, price, t0, rot], i) => {
-    const k = seg(t, t0 - .35, t0), y = lerp(-300, 470 + i * 270, k * k * (3 - 2 * k) * 0 + (k < 1 ? k * k : 1));
-    const bounce = t > t0 ? Math.exp(-(t - t0) * 7) * Math.sin((t - t0) * 30) * 14 : 0;
-    ctx.save(); ctx.translate(W / 2, y + bounce); ctx.rotate(rot * Math.PI / 180);
-    ctx.shadowColor = 'rgba(23,20,31,.25)'; ctx.shadowBlur = 30; ctx.shadowOffsetY = 12; rrect(-440, -105, 880, 210, 36); ctx.fillStyle = '#fff'; ctx.fill(); ctx.shadowColor = 'transparent';
-    ctx.strokeStyle = C.red; ctx.lineWidth = 4; ctx.stroke();
-    text(name, -400, 0, 84, C.ink, F.bebas, 'left');
-    text(price + '$', 400, -8, 130, C.red, F.anton, 'right');
-    text('/mois', 400, 62, 36, C.dim, F.grotesk, 'right', 700);
-    ctx.restore();
-  });
-  if (t > 6) {
-    const n = Math.round(TOTAL * easeOut(seg(t, 6, 7.2))), s = 1 + Math.sin(t * 25) * .015;
-    ctx.save(); ctx.translate(W / 2, 1450); ctx.scale(s, s);
-    text('TOTAL', 0, -200, 70, C.dim, F.bebas);
-    glow(n + '$', 0, 0, 280, C.red, '', F.anton);
-    text('PAR MOIS 💸', 0, 170, 90, C.ink, F.bebas); ctx.restore();
-  }
-  for (let i = 0; i < 7 && t > 6; i++) { // billets qui s'envolent
-    const p = ((t - 6) * .5 + i / 7) % 1; text('💸', 120 + i * 140 + Math.sin(i * 3 + t * 2) * 40, 1790 - p * 300, 90, '#fff');
-  }
-  ctx.restore();
-}
-
-// ---------- 3. STOP ----------
-function scene3(t) {
-  const a = life(t, 8, 9.25, .08) * (1 - seg(t, 9.0, 9.25)); if (a <= 0) return;
-  ctx.save(); ctx.globalAlpha = a; const k = back(seg(t, 8, 8.25));
-  ctx.translate(W / 2, H / 2); ctx.scale(k, k); ctx.rotate(-.06);
-  ctx.lineJoin = 'round'; ctx.font = `400 440px ${F.bangers}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.lineWidth = 34; ctx.strokeStyle = C.ink; ctx.strokeText('STOP.', 0, 0);
-  ctx.fillStyle = C.red; ctx.fillText('STOP.', 0, 0); ctx.restore();
+// ---------- Autocollants colorés ----------
+function sticker(s, cx, cy, w, h, color, rot, t, t0, size = 58, img = null) {
+  const k = back(seg(t, t0, t0 + .25)); if (k <= 0) return;
+  ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot * Math.PI / 180); ctx.scale(k, k);
+  ctx.fillStyle = 'rgba(26,26,26,.9)'; rrect(-w / 2 + 9, -h / 2 + 11, w, h, 24); ctx.fill();
+  rrect(-w / 2, -h / 2, w, h, 24); ctx.fillStyle = color; ctx.fill(); ctx.lineWidth = 5; ctx.strokeStyle = C.ink; ctx.stroke();
+  const pad = img ? 130 : 50; ctx.font = `700 ${size}px ${F.kalam}`;
+  const fit = Math.min(1, (w - pad - 40) / ctx.measureText(s).width);
+  if (img && logoImg.complete) ctx.drawImage(logoImg, -w / 2 + 25, -h / 2 + (h - 100) / 2, 100, 100);
+  text(s, img ? 50 : 0, 4, size * fit, C.ink, F.kalam, 'center', 700); ctx.restore();
 }
 
 // ---------- Logo Claude ----------
 const logoImg = new Image(); logoImg.src = window.CLAUDE_LOGO;
-function logo(cx, cy, size, rot = 0, alpha = 1) {
-  if (!logoImg.complete) return;
-  ctx.save(); ctx.globalAlpha *= alpha; ctx.translate(cx, cy); ctx.rotate(rot);
-  ctx.shadowColor = 'rgba(217,119,87,.45)'; ctx.shadowBlur = 40; ctx.drawImage(logoImg, -size / 2, -size / 2, size, size); ctx.restore();
-}
 
-// ---------- 4. Claude Code ----------
-function scene4(t) {
-  const a = life(t, 9, 14.6, .3); if (a <= 0) return;
-  ctx.save(); ctx.globalAlpha = a;
-  for (let i = 0; i < 3; i++) { const k = seg(t, 9 + i * .15, 10.4 + i * .15);
-    if (k > 0 && k < 1) { ctx.strokeStyle = `rgba(217,119,87,${1 - k})`; ctx.lineWidth = 8 * (1 - k); ctx.beginPath(); ctx.arc(W / 2, 520, easeOut(k) * 900, 0, 7); ctx.stroke(); } }
-  const s = back(seg(t, 9, 9.7)); logo(W / 2, 520, 380 * s, t * .8, s > 0 ? 1 : 0);
-  const name = 'CLAUDE CODE'; ctx.font = `700 124px ${F.grotesk}`; const full = ctx.measureText(name).width; let cx = W / 2 - full / 2;
-  [...name].forEach((ch, i) => { const k = easeOut(seg(t, 9.6 + i * .04, 9.9 + i * .04)), w = ctx.measureText(ch).width;
-    ctx.save(); ctx.globalAlpha *= k; glow(ch, cx + w / 2, 890 - (1 - k) * 80, 124, C.ink, '', F.grotesk); ctx.restore(); cx += w; });
-  [['IL CODE.', 1150, 11.3], ['IL DÉBUG.', 1320, 12.0], ['IL DÉPLOIE.', 1490, 12.7]].forEach(([s, y, t0], i) => {
-    const k = back(seg(t, t0, t0 + .22)); if (k <= 0) return;
-    ctx.save(); ctx.translate(W / 2, y); ctx.scale(k, k); glow(s, 0, 0, 140, i === 2 ? C.orange : C.ink, '', F.bebas); ctx.restore();
-  });
+// ---------- Personnage : mascotte Claude en cartoon ----------
+function mascot(t, pose, t0) {
+  const k = back(seg(t, t0, t0 + .3)), bob = Math.sin(t * 6) * 5, D = C.darkOr, O = C.orange;
+  ctx.save(); ctx.translate(W / 2, 1800 + bob); ctx.scale(k, k);
+  const limb = (x1, y1, x2, y2) => { ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+    ctx.strokeStyle = D; ctx.lineWidth = 56; ctx.stroke(); ctx.strokeStyle = O; ctx.lineWidth = 44; ctx.stroke(); };
+  const hand = (x, y) => { ctx.beginPath(); ctx.arc(x, y, 34, 0, 7); ctx.fillStyle = O; ctx.fill(); ctx.lineWidth = 8; ctx.strokeStyle = D; ctx.stroke(); };
+  ctx.lineWidth = 8; ctx.strokeStyle = D; ctx.fillStyle = O;
+  [-110, 40].forEach(x => { rrect(x, -80, 70, 80, 16); ctx.fill(); ctx.stroke(); }); // jambes
+  ctx.fillStyle = '#222'; [-135, 25].forEach(x => { rrect(x, -26, 120, 40, 20); ctx.fill(); });
+  ctx.fillStyle = O; rrect(-200, -380, 400, 310, 50); ctx.fill(); ctx.stroke(); // corps
+  const shock = pose === 'head', blink = (t % 3.3) < .12;
+  [-78, 78].forEach(x => { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(x, -285, 42, blink ? 4 : shock ? 58 : 50, 0, 0, 7); ctx.fill(); ctx.lineWidth = 5; ctx.stroke();
+    if (!blink) { ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(x + Math.sin(t * 2) * 8, -285, shock ? 8 : 14, 0, 7); ctx.fill(); } });
+  ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.strokeStyle = '#111'; ctx.beginPath();
+  if (pose === 'cross') { ctx.moveTo(-120, -350); ctx.lineTo(-45, -332); ctx.moveTo(120, -350); ctx.lineTo(45, -332); ctx.moveTo(-45, -205); ctx.lineTo(45, -205); }
+  else if (shock) { ctx.moveTo(-120, -362); ctx.quadraticCurveTo(-78, -392, -36, -362); ctx.moveTo(120, -362); ctx.quadraticCurveTo(78, -392, 36, -362); }
+  else { ctx.moveTo(-60, -215); ctx.quadraticCurveTo(0, -165, 60, -215); }
+  ctx.stroke();
+  if (shock) { ctx.fillStyle = '#111'; ctx.beginPath(); ctx.ellipse(0, -200, 30, 40 + Math.sin(t * 20) * 3, 0, 0, 7); ctx.fill(); }
+  if (pose === 'cross') { limb(200, -230, -70, -160); limb(-200, -230, 70, -190); hand(-70, -160); hand(70, -190); }
+  else if (shock) { limb(-200, -230, -150, -430); limb(200, -230, 150, -430); hand(-150, -430); hand(150, -430); }
+  else if (pose === 'point') { limb(200, -230, 400, -350); limb(-200, -230, -250, -110); hand(400, -350); hand(-250, -110); }
+  else { const wv = Math.sin(t * 12) * 30; limb(200, -230, 300 + wv, -420); limb(-200, -230, -250, -110); hand(300 + wv, -420); hand(-250, -110); }
   ctx.restore();
 }
 
-// ---------- 5. Terminal ----------
-function scene5(t) {
-  const a = life(t, 14.4, 20, .3); if (a <= 0) return;
-  ctx.save(); ctx.globalAlpha = a; ctx.translate(0, (1 - easeOut(seg(t, 14.4, 15))) * 300);
-  const x = 60, y = 500, w = 960, h = 900, fs = 28, K = { bg: '#1f1d1b', txt: '#e8e3dc', gray: '#8a847b', or: '#d77757', grn: '#4ec97a' };
-  ctx.save(); ctx.shadowColor = 'rgba(23,20,31,.35)'; ctx.shadowBlur = 50; ctx.shadowOffsetY = 20; rrect(x, y, w, h, 30); ctx.fillStyle = K.bg; ctx.fill(); ctx.restore();
-  [C.red, '#f59e0b', C.green].forEach((c, i) => { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x + 46 + i * 38, y + 42, 11, 0, 7); ctx.fill(); });
-  text('claude — ~/saas', x + w / 2, y + 42, 24, K.gray, F.code, 'center');
-  const T = (s, px, py, col = K.txt, wt = 400) => text(s, px, py, fs, col, F.code, 'left', wt);
-  // Bandeau d'accueil avec la mascotte
-  ctx.strokeStyle = K.or; ctx.lineWidth = 2.5; rrect(x + 40, y + 90, w - 80, 190, 14); ctx.stroke();
-  ['  ▐▛███▜▌', ' ▝▜█████▛▘', '   ▘▘ ▝▝'].forEach((l, i) => T(l, x + 70, y + 140 + i * 30, K.or));
-  T('Claude Code', x + 330, y + 140, K.txt, 700); T('Opus 5.5', x + 330, y + 176, K.gray); T('~/saas', x + 330, y + 212, K.gray);
-  // Ce que l'utilisateur a envoyé
-  const sent = t >= 16.7, cur = Math.floor(t * 3) % 2 ? ' ' : '█';
-  const msg = 'Crée-moi un SaaS complet avec auth + paiement';
-  if (sent) { ctx.fillStyle = '#2d2a27'; rrect(x + 40, y + 310, w - 80, 56, 8); ctx.fill(); T('> ' + msg, x + 58, y + 338, K.txt); }
-  const sp = '✻✽✶✳'[Math.floor(t * 8) % 4];
-  if (t >= 17 && t < 17.4) T(sp + ' Pondering… (esc to interrupt)', x + 40, y + 420, K.or);
-  const tools = [[17.4, 'Write(app/api/checkout/route.ts)', 'Wrote 48 lines'], [18.1, 'Bash(npm test)', '58 tests passed ✓'], [18.8, 'Bash(vercel --prod)', 'Deployed to production 🚀']];
-  tools.forEach(([t0, name, res], i) => { const k = seg(t, t0, t0 + .15); if (k <= 0) return; const py = y + 420 + i * 110;
-    ctx.save(); ctx.globalAlpha *= k; T('●', x + 40, py, K.grn); T(name, x + 80, py, K.txt, 700);
-    if (t > t0 + .3) { T('⎿', x + 60, py + 44, K.gray); T(res, x + 110, py + 44, K.gray); } ctx.restore(); });
-  // Zone de saisie
-  const iy = y + h - 150; ctx.strokeStyle = '#4a4540'; ctx.lineWidth = 2; rrect(x + 40, iy, w - 80, 70, 12); ctx.stroke();
-  const typedMsg = t < 16.7 ? typed(msg, t, 15.1, 30) : '';
-  T('> ' + typedMsg + (t < 16.7 ? cur : ''), x + 62, iy + 36, K.txt);
-  T('? for shortcuts', x + 50, iy + 105, K.gray);
-  ctx.restore();
+// ---------- Gros sous-titres mot par mot (*mot = en jaune) ----------
+const SUBS = [
+  [.2, 3.4, 'TU PAIES *200$ PAR MOIS POUR UNE IA ?'],
+  [3.8, 7.8, 'CHATGPT, MIDJOURNEY, SORA... *280$ PAR MOIS !'],
+  [8.2, 13.3, 'SAUF QUE *CLAUDE *CODE FAIT TOUT : IL CODE, IL DÉBUG, IL DÉPLOIE'],
+  [13.6, 19.5, 'LA PREUVE ? CETTE VIDÉO EST CODÉE PAR *CLAUDE *CODE'],
+  [19.8, 24.3, 'LES IA À 200$ PAR MOIS ? *INUTILES.'],
+  [24.6, 27.8, 'ABONNE-TOI POUR LA *SUITE !'],
+];
+function subtitles(t) {
+  const sub = SUBS.find(([a, b]) => t >= a && t < b); if (!sub) return;
+  const [a, b, str] = sub, words = str.split(' '), n = words.length, wd = (b - a - .3) / n;
+  const i = Math.min(n - 1, Math.floor((t - a) / wd)), g = Math.floor(i / 3), grp = words.slice(g * 3, g * 3 + 3);
+  const size = 92; ctx.font = `800 ${size}px ${F.mont}`;
+  const ws = grp.map(w => ctx.measureText(w.replace('*', '')).width), gap = 26, total = ws.reduce((x, y) => x + y, 0) + gap * (grp.length - 1);
+  let x = W / 2 - total / 2;
+  grp.forEach((w, j) => { const idx = g * 3 + j, k = idx <= i ? back(seg(t, a + idx * wd, a + idx * wd + .15)) : 0, hl = w.startsWith('*'), s = w.replace('*', '');
+    if (k > 0) { ctx.save(); ctx.translate(x + ws[j] / 2, 1245); ctx.scale(k, k); ctx.font = `800 ${size}px ${F.mont}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.lineJoin = 'round'; ctx.lineWidth = 20; ctx.strokeStyle = C.ink; ctx.strokeText(s, 0, 0); ctx.fillStyle = hl ? C.yellow : '#fff'; ctx.fillText(s, 0, 0); ctx.restore(); }
+    x += ws[j] + gap; });
 }
 
-// ---------- 6. Les IA chères = inutiles ----------
-function scene6(t) {
-  const a = life(t, 19.8, 24, .3); if (a <= 0) return;
-  ctx.save(); ctx.globalAlpha = a;
-  const k1 = easeOut(seg(t, 19.9, 20.3)); ctx.save(); ctx.globalAlpha *= k1;
-  text('LES IA À 200$/MOIS', W / 2, 560 - (1 - k1) * 40, 130, C.ink, F.bebas);
-  text('(ET PLUS)', W / 2, 700, 90, C.dim, F.bebas); ctx.restore();
-  const s = seg(t, 20.8, 21.5); // trait de feutre
-  if (s > 0) { ctx.strokeStyle = C.red; ctx.lineWidth = 26; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(110, 600); ctx.lineTo(110 + 860 * easeOut(s), 520 + 80 * easeOut(s)); ctx.stroke(); ctx.shadowBlur = 0; }
-  const k = back(seg(t, 21.8, 22.1)); if (k > 0) { ctx.save(); ctx.translate(W / 2, 1020); ctx.rotate(-.1); ctx.scale(k, k);
-    glow('INUTILES.', 0, 0, 170, C.red, '', F.marker); ctx.restore(); }
-  const k3 = easeOut(seg(t, 22.5, 23)); ctx.save(); ctx.globalAlpha *= k3;
-  text('Claude Code suffit.', W / 2, 1350 + (1 - k3) * 30, 90, C.ink, F.grotesk, 'center', 700);
-  logo(W / 2, 1560, 200 * back(seg(t, 22.5, 23)), t); ctx.restore();
-  ctx.restore();
+// ---------- Texte manuscrit en haut ----------
+function heading(s, t, a, b) {
+  const k = easeOut(seg(t, a, a + .3)) * (1 - seg(t, b - .2, b)); if (k <= 0) return;
+  ctx.save(); ctx.globalAlpha = k; text(s, W / 2, 310 + (1 - k) * 20, 76, C.ink, F.kalam, 'center', 700); ctx.restore();
 }
 
-// ---------- 7. CTA ----------
-function scene7(t) {
-  const a = seg(t, 23.8, 24.2) * (1 - seg(t, 27.5, 28)); if (a <= 0) return;
-  ctx.save(); ctx.globalAlpha = a;
-  logo(W / 2, 460, 260 * back(seg(t, 23.8, 24.4)), Math.sin(t * 2) * .15);
-  const k = back(seg(t, 24.2, 24.6)), g = ctx.createLinearGradient(100, 0, 980, 0); g.addColorStop(0, '#f59e0b'); g.addColorStop(1, C.red);
-  ctx.save(); ctx.translate(W / 2, 820); ctx.scale(k, k); glow('ABONNE-TOI', 0, 0, 230, g, '', F.anton); ctx.restore();
-  text('pour la suite', W / 2, 1000, 80, C.ink, F.marker);
-  const b = back(seg(t, 25, 25.4)), pulse = 1 + Math.sin(t * 7) * .035;
-  if (b > 0) { ctx.save(); ctx.translate(W / 2, 1230); ctx.scale(b * pulse, b * pulse);
-    ctx.shadowColor = 'rgba(225,29,72,.4)'; ctx.shadowBlur = 30; ctx.shadowOffsetY = 10; rrect(-340, -85, 680, 170, 85); ctx.fillStyle = '#ff0033'; ctx.fill(); ctx.shadowColor = 'transparent';
-    text('S\'ABONNER', 40, 4, 100, '#fff', F.bebas); text('🔔', -220, 0, 90, '#fff'); ctx.restore(); }
-  text(CHANNEL, W / 2, 1450, 90, C.ink, F.grotesk, 'center', 700);
+// ---------- Mini terminal Claude Code ----------
+function terminal(t) {
+  const k = back(seg(t, 13.6, 14.1)); if (k <= 0) return;
+  const x = 70, y = 440, w = 940, h = 640, K = { txt: '#e8e3dc', gray: '#8a847b', or: C.orange, grn: C.green };
+  ctx.save(); ctx.translate(W / 2, y + h / 2); ctx.scale(k, k); ctx.translate(-W / 2, -(y + h / 2)); ctx.rotate(0);
+  ctx.fillStyle = 'rgba(26,26,26,.9)'; rrect(x + 9, y + 11, w, h, 26); ctx.fill();
+  rrect(x, y, w, h, 26); ctx.fillStyle = '#1f1d1b'; ctx.fill(); ctx.lineWidth = 5; ctx.strokeStyle = C.ink; ctx.stroke();
+  [C.red, '#f59e0b', C.green].forEach((c, i) => { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x + 44 + i * 36, y + 40, 11, 0, 7); ctx.fill(); });
+  const T = (s, px, py, col = K.txt, wt = 400) => text(s, px, py, 30, col, F.code, 'left', wt), cur = Math.floor(t * 3) % 2 ? ' ' : '█';
+  T('✻ Claude Code', x + 40, y + 110, K.or, 700);
+  const msg = 'Fais-moi une pub vidéo', sent = t >= 16.7;
+  ctx.fillStyle = '#2d2a27'; rrect(x + 30, y + 160, w - 60, 62, 10); ctx.fill();
+  T('> ' + (sent ? msg : typed(msg, t, 15.1, 14) + cur), x + 50, y + 192);
+  [[17.4, 'Write(video.js)', 'Wrote 312 lines'], [18.1, 'Bash(node render.js)', 'video.mp4 ✓'], [18.8, 'Done', 'Ta pub est prête 🎬']].forEach(([t0, n, r], i) => {
+    const q = seg(t, t0, t0 + .15); if (q <= 0) return; const py = y + 300 + i * 105; ctx.save(); ctx.globalAlpha *= q;
+    T('●', x + 40, py, K.grn); T(n, x + 80, py, K.txt, 700); if (t > t0 + .3) { T('⎿', x + 60, py + 44, K.gray); T(r, x + 110, py + 44, K.gray); } ctx.restore(); });
   ctx.restore();
 }
 
 function renderFrame(t) {
-  background(t);
-  const [sx, sy] = shake(t); ctx.save(); ctx.translate(sx, sy);
-  scene1(t); scene2(t); scene3(t); scene4(t); scene5(t); scene6(t); scene7(t);
-  ctx.restore();
-  ctx.fillStyle = C.orange; ctx.fillRect(0, 0, W * t / DURATION, 8); // barre de progression
+  ctx.drawImage(paper, 0, 0); doodles(t);
+  const scene = t < 3.6 ? 0 : t < 8 ? 1 : t < 13.4 ? 2 : t < 19.6 ? 3 : t < 24.4 ? 4 : 5;
+  const A = [[0, 3.6], [3.6, 8], [8, 13.4], [13.4, 19.6], [19.6, 24.4], [24.4, 28]];
+  const TOPS = ["attends, t'as vu ça ?", "et c'est pas fini…", 'sauf que… 👀', 'la preuve ?', 'donc franchement…', 'la suite arrive 👇'];
+  heading(TOPS[scene], t, A[scene][0] + .05, A[scene][1]);
+  const grp = (a, b, fn) => { if (t < a || t >= b) return; ctx.save(); ctx.globalAlpha = a === 0 ? 1 - seg(t, b - .2, b) : life(t, a, b, .2); fn(); ctx.restore(); };
+  grp(0, 3.6, () => {
+    sticker('💸 200$/mois pour UNE IA', W / 2, 640, 880, 170, '#fca5a5', -3, t, .4, 56);
+    if (t > 2) { const k = back(seg(t, 2, 2.4)); ctx.save(); ctx.translate(W / 2, 900); ctx.rotate(Math.sin(t * 8) * .08); ctx.scale(k, k); text('🤨', 0, 0, 230, '#000', F.kalam); ctx.restore(); }
+  });
+  grp(3.6, 8, () => {
+    [['ChatGPT Pro · 200$/mois', 4.2, -3, 520], ['Midjourney · 60$/mois', 4.9, 2, 690], ['Sora · 20$/mois', 5.6, -2, 860]].forEach(([s, t0, r, y]) => sticker(s, W / 2, y, 860, 140, '#fca5a5', r, t, t0, 54));
+    sticker('= 280$ par mois 💸', W / 2, 1040, 760, 150, '#fde68a', 2, t, 6.8, 62);
+  });
+  grp(8, 13.4, () => {
+    sticker('Claude Code', W / 2, 520, 860, 170, '#86efac', -2, t, 9.0, 70, true);
+    sticker('⌨️ Il code', W / 2, 720, 600, 120, '#93c5fd', 2, t, 11.3, 56); sticker('🐞 Il débug', W / 2, 870, 600, 120, '#fde68a', -2, t, 12.0, 56); sticker('🚀 Il déploie', W / 2, 1020, 600, 120, '#fca5a5', 2, t, 12.7, 56);
+  });
+  terminal4(t);
+  // 5
+  if (t >= 19.6 && t < 24.4) { ctx.save(); ctx.globalAlpha = life(t, 19.6, 24.4, .25);
+    sticker('280$ / mois 💸', W / 2, 600, 780, 160, '#fca5a5', -2, t, 20.0, 66);
+    const s = easeOut(seg(t, 20.8, 21.5)); if (s > 0) { ctx.save(); ctx.translate(W / 2, 600); ctx.rotate(-2 * Math.PI / 180); ctx.strokeStyle = C.red; ctx.lineWidth = 22; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(-420, 20); ctx.lineTo(-420 + 840 * s, -20); ctx.stroke(); ctx.restore(); }
+    const k = back(seg(t, 21.8, 22.1)); if (k > 0) { ctx.save(); ctx.translate(W / 2, 880); ctx.rotate(-.08); ctx.scale(k, k); ctx.font = `400 190px ${F.marker}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.lineJoin = 'round'; ctx.lineWidth = 22; ctx.strokeStyle = C.ink; ctx.strokeText('INUTILES.', 0, 0); ctx.fillStyle = C.red; ctx.fillText('INUTILES.', 0, 0); ctx.restore(); }
+    ctx.restore(); }
+  // 6
+  if (t >= 24.4) { ctx.save(); ctx.globalAlpha = 1 - seg(t, 27.6, 28);
+    sticker('🔔 Abonne-toi', W / 2, 560, 800, 170, '#fde68a', -2, t, 24.7, 74);
+    sticker(CHANNEL, W / 2, 780, 640, 140, '#fca5a5', 2, t, 25.0, 72); ctx.restore(); }
+  const pose = ['cross', 'head', 'point', 'head', 'cross', 'wave'][scene];
+  ctx.save(); ctx.globalAlpha = 1 - seg(t, 27.6, 28); mascot(t, pose, A[scene][0]); ctx.restore();
+  subtitles(t);
+  ctx.fillStyle = C.orange; ctx.fillRect(0, 0, W * t / DURATION, 8);
 }
+function terminal4(t) { if (t >= 13.6 && t < 19.6) { ctx.save(); ctx.globalAlpha = life(t, 13.6, 19.6, .25); terminal(t); ctx.restore(); } }
 window.renderFrame = renderFrame; window.DURATION = DURATION;
 window.ready = Promise.all(Object.values(F).map(f => document.fonts.load(`40px ${f}`))).then(() => logoImg.decode());
 
