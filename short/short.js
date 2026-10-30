@@ -59,28 +59,30 @@ function sticker(s, cx, cy, w, h, color, rot, t, t0, size = 58, img = null) {
 // ---------- Logo Claude ----------
 const logoImg = new Image(); logoImg.src = window.CLAUDE_LOGO;
 
-// ---------- Personnage : mascotte Claude en pixel art (grille de 16 px) ----------
+// ---------- Personnage : mascotte Claude en pixel art (grille de 20 px, version mignonne) ----------
 function mascot(t, pose, t0) {
-  const U = 16, k = Math.round(back(seg(t, t0, t0 + .3)) * 8) / 8, bob = Math.round(Math.sin(t * 6) * .6) * U / 2;
-  const OUT = '#5a2a18', OR = '#d97757', LT = '#ec9a7c', DK = '#b95f3f', WH = '#ffffff', BK = '#14110f';
+  const U = 20, k = Math.round(back(seg(t, t0, t0 + .3)) * 8) / 8, bob = Math.round(Math.sin(t * 6) * .6) * U / 2;
+  const OUT = '#6b3220', OR = '#d97757', LT = '#ea9a7c', DK = '#bd6342', BK = '#1b1411', WH = '#ffffff', PK = '#f2a58b';
   const px = (x, y, w, h, c) => { ctx.fillStyle = c; ctx.fillRect(x * U, y * U, w * U, h * U); };
   const limb = (x1, y1, x2, y2) => { const n = Math.max(Math.abs(x2 - x1), Math.abs(y2 - y1)), pts = [];
     for (let i = 0; i <= n; i++) pts.push([Math.round(x1 + (x2 - x1) * i / n), Math.round(y1 + (y2 - y1) * i / n)]);
-    pts.forEach(([x, y]) => px(x - 2, y - 2, 5, 5, OUT)); pts.forEach(([x, y]) => px(x - 1, y - 1, 3, 3, OR)); };
-  const hand = (x, y) => { px(x - 2, y - 2, 5, 5, OUT); px(x - 1, y - 1, 3, 3, LT); };
+    pts.forEach(([x, y]) => px(x - 1, y - 1, 4, 4, OUT)); pts.forEach(([x, y]) => px(x, y, 2, 2, OR)); };
   ctx.save(); ctx.translate(W / 2, 1800 + bob); ctx.scale(k, k);
-  ctx.globalAlpha *= .22; px(-13, 0, 26, 2, '#000'); ctx.globalAlpha /= .22; // ombre au sol
-  [-10, -6, 4, 8].forEach(x => { px(x - 1, -5, 4, 5, OUT); px(x, -5, 2, 4, OR); }); // 4 pattes
-  px(-13, -23, 26, 19, OUT); px(-12, -22, 24, 17, OR); px(-12, -22, 24, 2, LT); px(-12, -7, 24, 2, DK); // corps + ombrage
-  const shock = pose === 'head', blink = (t % 3.3) < .12, ey = shock ? 8 : 7, lx = Math.round(Math.sin(t * 2));
-  [-8, 3].forEach(x => { if (blink) px(x, -15, 5, 1, BK); else { px(x - 1, -19, 7, ey + 2, OUT); px(x, -18, 5, ey, WH); px(x + 1 + lx, shock ? -15 : -16, 2, 2, BK); } });
-  if (pose === 'cross') { px(-9, -21, 4, 1, BK); px(-6, -20, 2, 1, BK); px(5, -21, 4, 1, BK); px(4, -20, 2, 1, BK); }
-  else if (shock) { px(-8, -22, 5, 1, BK); px(3, -22, 5, 1, BK); px(-2, -11, 4, 4, BK); }
-  else { px(-4, -10, 1, 1, BK); px(-3, -9, 6, 1, BK); px(3, -10, 1, 1, BK); }
-  if (pose === 'cross') { limb(13, -9, -4, -6); limb(-13, -9, 4, -7); hand(-4, -6); hand(4, -7); }
-  else if (shock) { limb(-13, -15, -11, -27); limb(13, -15, 11, -27); hand(-11, -27); hand(11, -27); }
-  else if (pose === 'point') { limb(13, -15, 25, -23); limb(-13, -15, -16, -6); hand(25, -23); hand(-16, -6); }
-  else { const wv = Math.round(Math.sin(t * 12) * 2); limb(13, -15, 19 + wv, -29); limb(-13, -15, -16, -6); hand(19 + wv, -29); hand(-16, -6); }
+  ctx.globalAlpha *= .2; px(-10, 0, 20, 1, '#000'); ctx.globalAlpha /= .2; // ombre
+  [-7, -3, 2, 6].forEach(x => { px(x - 1, -4, 4, 4, OUT); px(x, -4, 2, 3, OR); }); // 4 petites pattes
+  px(-10, -16, 20, 13, OUT); px(-9, -15, 18, 11, OR); px(-9, -15, 18, 1, LT); px(-9, -5, 18, 1, DK); // corps
+  const blink = (t % 3.3) < .12, lx = Math.round(Math.sin(t * 2) * .5), shock = pose === 'head', happy = pose === 'point' || pose === 'wave';
+  [-5, 3].forEach(x => { if (blink || happy) { // yeux fermés ou contents : petite arche
+      if (blink) px(x, -11, 2, 1, BK); else { px(x, -11, 1, 1, BK); px(x + 1, -12, 1, 1, BK); px(x + 2, -11, 1, 1, BK); }
+    } else { const h = shock ? 4 : 3; px(x + lx, -13, 2, h, BK); px(x + lx, -13, 1, 1, WH); } });
+  px(-8, -8, 2, 1, PK); px(6, -8, 2, 1, PK); // joues
+  if (pose === 'head') px(-1, -8, 2, 2, BK);
+  else if (happy) { px(-2, -8, 1, 1, BK); px(-1, -7, 2, 1, BK); px(1, -8, 1, 1, BK); }
+  else if (pose !== 'cross') px(-1, -7, 2, 1, BK);
+  if (pose === 'cross') { limb(10, -8, -3, -6); limb(-10, -8, 3, -7); }
+  else if (shock) { limb(-10, -9, -9, -19); limb(10, -9, 9, -19); }
+  else if (pose === 'point') { limb(10, -9, 19, -15); limb(-10, -9, -12, -4); }
+  else { const wv = Math.round(Math.sin(t * 12) * 2); limb(10, -9, 14 + wv, -20); limb(-10, -9, -12, -4); }
   ctx.restore();
 }
 
