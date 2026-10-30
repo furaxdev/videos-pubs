@@ -1,7 +1,8 @@
-// Rend le short image par image (1080x1920) puis assemble avec ffmpeg (vidéo muette).
+// Rend le short image par image (1080x1920) puis assemble avec ffmpeg (avec voix off si voice.wav existe).
 const { chromium } = require('playwright');
 const { spawn } = require('child_process');
 const path = require('path');
+const fs = require('fs');
 const FPS = 30;
 
 (async () => {
@@ -11,8 +12,10 @@ const FPS = 30;
   await page.evaluate(() => window.ready);
   const total = await page.evaluate(() => window.DURATION) * FPS;
   const out = path.join(__dirname, 'short-claude-code.mp4');
+  const voice = path.join(__dirname, 'voice.wav'), hasVoice = fs.existsSync(voice); // voix off facultative (voiceover.py)
   const ff = spawn('ffmpeg', ['-y', '-f', 'image2pipe', '-framerate', String(FPS), '-c:v', 'mjpeg', '-i', '-',
-    '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '18', '-preset', 'medium', '-an', '-movflags', '+faststart', out], { stdio: ['pipe', 'ignore', 'inherit'] });
+    ...(hasVoice ? ['-i', voice, '-c:a', 'aac', '-b:a', '192k'] : ['-an']),
+    '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '18', '-preset', 'medium', '-movflags', '+faststart', out], { stdio: ['pipe', 'ignore', 'inherit'] });
   for (let f = 0; f < total; f++) {
     const data = await page.evaluate(t => { renderFrame(t); return document.getElementById('c').toDataURL('image/jpeg', .95); }, f / FPS);
     if (!ff.stdin.write(Buffer.from(data.split(',')[1], 'base64'))) await new Promise(r => ff.stdin.once('drain', r));
