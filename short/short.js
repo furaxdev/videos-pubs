@@ -59,30 +59,28 @@ function sticker(s, cx, cy, w, h, color, rot, t, t0, size = 58, img = null) {
 // ---------- Logo Claude ----------
 const logoImg = new Image(); logoImg.src = window.CLAUDE_LOGO;
 
-// ---------- Personnage : mascotte Claude en cartoon ----------
+// ---------- Personnage : mascotte Claude en pixel art (grille de 16 px) ----------
 function mascot(t, pose, t0) {
-  const k = back(seg(t, t0, t0 + .3)), bob = Math.sin(t * 6) * 5, D = C.darkOr, O = C.orange;
+  const U = 16, k = Math.round(back(seg(t, t0, t0 + .3)) * 8) / 8, bob = Math.round(Math.sin(t * 6) * .6) * U / 2;
+  const OUT = '#5a2a18', OR = '#d97757', LT = '#ec9a7c', DK = '#b95f3f', WH = '#ffffff', BK = '#14110f';
+  const px = (x, y, w, h, c) => { ctx.fillStyle = c; ctx.fillRect(x * U, y * U, w * U, h * U); };
+  const limb = (x1, y1, x2, y2) => { const n = Math.max(Math.abs(x2 - x1), Math.abs(y2 - y1)), pts = [];
+    for (let i = 0; i <= n; i++) pts.push([Math.round(x1 + (x2 - x1) * i / n), Math.round(y1 + (y2 - y1) * i / n)]);
+    pts.forEach(([x, y]) => px(x - 2, y - 2, 5, 5, OUT)); pts.forEach(([x, y]) => px(x - 1, y - 1, 3, 3, OR)); };
+  const hand = (x, y) => { px(x - 2, y - 2, 5, 5, OUT); px(x - 1, y - 1, 3, 3, LT); };
   ctx.save(); ctx.translate(W / 2, 1800 + bob); ctx.scale(k, k);
-  const limb = (x1, y1, x2, y2) => { ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
-    ctx.strokeStyle = D; ctx.lineWidth = 56; ctx.stroke(); ctx.strokeStyle = O; ctx.lineWidth = 44; ctx.stroke(); };
-  const hand = (x, y) => { ctx.beginPath(); ctx.arc(x, y, 34, 0, 7); ctx.fillStyle = O; ctx.fill(); ctx.lineWidth = 8; ctx.strokeStyle = D; ctx.stroke(); };
-  ctx.lineWidth = 8; ctx.strokeStyle = D; ctx.fillStyle = O;
-  [-110, 40].forEach(x => { rrect(x, -80, 70, 80, 16); ctx.fill(); ctx.stroke(); }); // jambes
-  ctx.fillStyle = '#222'; [-135, 25].forEach(x => { rrect(x, -26, 120, 40, 20); ctx.fill(); });
-  ctx.fillStyle = O; rrect(-200, -380, 400, 310, 50); ctx.fill(); ctx.stroke(); // corps
-  const shock = pose === 'head', blink = (t % 3.3) < .12;
-  [-78, 78].forEach(x => { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(x, -285, 42, blink ? 4 : shock ? 58 : 50, 0, 0, 7); ctx.fill(); ctx.lineWidth = 5; ctx.stroke();
-    if (!blink) { ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(x + Math.sin(t * 2) * 8, -285, shock ? 8 : 14, 0, 7); ctx.fill(); } });
-  ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.strokeStyle = '#111'; ctx.beginPath();
-  if (pose === 'cross') { ctx.moveTo(-120, -350); ctx.lineTo(-45, -332); ctx.moveTo(120, -350); ctx.lineTo(45, -332); ctx.moveTo(-45, -205); ctx.lineTo(45, -205); }
-  else if (shock) { ctx.moveTo(-120, -362); ctx.quadraticCurveTo(-78, -392, -36, -362); ctx.moveTo(120, -362); ctx.quadraticCurveTo(78, -392, 36, -362); }
-  else { ctx.moveTo(-60, -215); ctx.quadraticCurveTo(0, -165, 60, -215); }
-  ctx.stroke();
-  if (shock) { ctx.fillStyle = '#111'; ctx.beginPath(); ctx.ellipse(0, -200, 30, 40 + Math.sin(t * 20) * 3, 0, 0, 7); ctx.fill(); }
-  if (pose === 'cross') { limb(200, -230, -70, -160); limb(-200, -230, 70, -190); hand(-70, -160); hand(70, -190); }
-  else if (shock) { limb(-200, -230, -150, -430); limb(200, -230, 150, -430); hand(-150, -430); hand(150, -430); }
-  else if (pose === 'point') { limb(200, -230, 400, -350); limb(-200, -230, -250, -110); hand(400, -350); hand(-250, -110); }
-  else { const wv = Math.sin(t * 12) * 30; limb(200, -230, 300 + wv, -420); limb(-200, -230, -250, -110); hand(300 + wv, -420); hand(-250, -110); }
+  ctx.globalAlpha *= .22; px(-13, 0, 26, 2, '#000'); ctx.globalAlpha /= .22; // ombre au sol
+  [-10, -6, 4, 8].forEach(x => { px(x - 1, -5, 4, 5, OUT); px(x, -5, 2, 4, OR); }); // 4 pattes
+  px(-13, -23, 26, 19, OUT); px(-12, -22, 24, 17, OR); px(-12, -22, 24, 2, LT); px(-12, -7, 24, 2, DK); // corps + ombrage
+  const shock = pose === 'head', blink = (t % 3.3) < .12, ey = shock ? 8 : 7, lx = Math.round(Math.sin(t * 2));
+  [-8, 3].forEach(x => { if (blink) px(x, -15, 5, 1, BK); else { px(x - 1, -19, 7, ey + 2, OUT); px(x, -18, 5, ey, WH); px(x + 1 + lx, shock ? -15 : -16, 2, 2, BK); } });
+  if (pose === 'cross') { px(-9, -21, 4, 1, BK); px(-6, -20, 2, 1, BK); px(5, -21, 4, 1, BK); px(4, -20, 2, 1, BK); }
+  else if (shock) { px(-8, -22, 5, 1, BK); px(3, -22, 5, 1, BK); px(-2, -11, 4, 4, BK); }
+  else { px(-4, -10, 1, 1, BK); px(-3, -9, 6, 1, BK); px(3, -10, 1, 1, BK); }
+  if (pose === 'cross') { limb(13, -9, -4, -6); limb(-13, -9, 4, -7); hand(-4, -6); hand(4, -7); }
+  else if (shock) { limb(-13, -15, -11, -27); limb(13, -15, 11, -27); hand(-11, -27); hand(11, -27); }
+  else if (pose === 'point') { limb(13, -15, 25, -23); limb(-13, -15, -16, -6); hand(25, -23); hand(-16, -6); }
+  else { const wv = Math.round(Math.sin(t * 12) * 2); limb(13, -15, 19 + wv, -29); limb(-13, -15, -16, -6); hand(19 + wv, -29); hand(-16, -6); }
   ctx.restore();
 }
 
