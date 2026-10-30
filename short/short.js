@@ -114,22 +114,43 @@ function heading(s, t, a, b) {
   ctx.save(); ctx.globalAlpha = k; text(s, W / 2, 310 + (1 - k) * 20, 76, C.ink, F.kalam, 'center', 700); ctx.restore();
 }
 
-// ---------- Mini terminal Claude Code ----------
+// ---------- Terminal Claude Code (interface réelle : en-tête, ●/⎿, spinner, champ de saisie) ----------
 function terminal(t) {
   const k = back(seg(t, 13.6, 14.1)); if (k <= 0) return;
-  const x = 70, y = 440, w = 940, h = 640, K = { txt: '#e8e3dc', gray: '#8a847b', or: C.orange, grn: C.green };
-  ctx.save(); ctx.translate(W / 2, y + h / 2); ctx.scale(k, k); ctx.translate(-W / 2, -(y + h / 2)); ctx.rotate(0);
+  const x = 40, y = 390, w = 1000, h = 780, fs = 26, lh = 40;
+  const K = { bg: '#1a1816', txt: '#e8e3dc', gray: '#8a847b', dim: '#5c5750', or: '#d77757', grn: '#4ec97a', add: '#12351f', sel: '#34312e' };
+  ctx.save(); ctx.translate(W / 2, y + h / 2); ctx.scale(k, k); ctx.translate(-W / 2, -(y + h / 2));
   ctx.fillStyle = 'rgba(26,26,26,.9)'; rrect(x + 9, y + 11, w, h, 26); ctx.fill();
-  rrect(x, y, w, h, 26); ctx.fillStyle = '#1f1d1b'; ctx.fill(); ctx.lineWidth = 5; ctx.strokeStyle = C.ink; ctx.stroke();
-  [C.red, '#f59e0b', C.green].forEach((c, i) => { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x + 44 + i * 36, y + 40, 11, 0, 7); ctx.fill(); });
-  const T = (s, px, py, col = K.txt, wt = 400) => text(s, px, py, 30, col, F.code, 'left', wt), cur = Math.floor(t * 3) % 2 ? ' ' : '█';
-  T('✻ Claude Code', x + 40, y + 110, K.or, 700);
-  const msg = 'Fais-moi une pub vidéo', sent = t >= 16.7;
-  ctx.fillStyle = '#2d2a27'; rrect(x + 30, y + 160, w - 60, 62, 10); ctx.fill();
-  T('> ' + (sent ? msg : typed(msg, t, 15.1, 14) + cur), x + 50, y + 192);
-  [[17.4, 'Write(video.js)', 'Wrote 312 lines'], [18.1, 'Bash(node render.js)', 'video.mp4 ✓'], [18.8, 'Done', 'Ta pub est prête 🎬']].forEach(([t0, n, r], i) => {
-    const q = seg(t, t0, t0 + .15); if (q <= 0) return; const py = y + 300 + i * 105; ctx.save(); ctx.globalAlpha *= q;
-    T('●', x + 40, py, K.grn); T(n, x + 80, py, K.txt, 700); if (t > t0 + .3) { T('⎿', x + 60, py + 44, K.gray); T(r, x + 110, py + 44, K.gray); } ctx.restore(); });
+  rrect(x, y, w, h, 26); ctx.fillStyle = K.bg; ctx.fill(); ctx.lineWidth = 5; ctx.strokeStyle = C.ink; ctx.stroke();
+  [C.red, '#f59e0b', C.green].forEach((c, i) => { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x + 44 + i * 36, y + 38, 11, 0, 7); ctx.fill(); });
+  text('claude — ~/pub-video', x + w / 2, y + 38, 22, K.gray, F.code, 'center');
+  const T = (s, px, py, col = K.txt, wt = 400, size = fs) => text(s, px, py, size, col, F.code, 'left', wt);
+  const X = x + 34, cur = Math.floor(t * 3) % 2 ? ' ' : '█';
+  // En-tête : mascotte en blocs + version / modèle / dossier
+  ctx.fillStyle = K.or; ctx.fillRect(X + 12, y + 86, 96, 28); ctx.fillRect(X, y + 114, 120, 28); ctx.fillRect(X + 24, y + 142, 12, 14); ctx.fillRect(X + 40, y + 142, 12, 14); ctx.fillRect(X + 68, y + 142, 12, 14); ctx.fillRect(X + 84, y + 142, 12, 14);
+  ctx.fillStyle = K.bg; ctx.fillRect(X + 34, y + 92, 12, 18); ctx.fillRect(X + 74, y + 92, 12, 18); // yeux (creux)
+  T('Claude Code v2.1', X + 160, y + 105, K.txt, 700, 24); T('Opus 5.5 · Claude Max', X + 160, y + 139, K.gray, 400, 24); T('~/pub-video', X + 160, y + 173, K.gray, 400, 24);
+  // Message de l'utilisateur
+  const msg = 'Fais-moi une pub vidéo pour mon produit', sent = t >= 16.7;
+  if (sent) { ctx.fillStyle = K.sel; rrect(X - 14, y + 218, w - 40, 46, 6); ctx.fill(); T('> ' + msg, X, y + 242); }
+  // Spinner pendant la réflexion
+  if (t >= 17 && t < 17.4) T('✻ Cogitating… (esc to interrupt)', X, y + 312, K.or);
+  // Appels d'outils : ● Outil(arg) / ⎿ résultat
+  const tools = [
+    [17.4, 'Write(video.js)', 'Wrote 312 lines to video.js', 312, ['+ const W = 1080, H = 1920;', '+ function renderFrame(t) {']],
+    [18.1, 'Bash(node render.js)', 'video.mp4 rendu ✓', 500, []],
+  ];
+  tools.forEach(([t0, name, res, py, diff]) => { const q = seg(t, t0, t0 + .15); if (q <= 0) return; ctx.save(); ctx.globalAlpha *= q;
+    T('●', X, y + py, K.grn); T(name, X + 40, y + py, K.txt, 700);
+    if (t > t0 + .3) { T('⎿', X + 20, y + py + lh, K.gray); T(res, X + 70, y + py + lh, K.gray); }
+    if (t > t0 + .5) diff.forEach((d, i) => { ctx.fillStyle = K.add; ctx.fillRect(X + 70, y + py + 82 + i * 38, w - 150, 36); T(d, X + 84, y + py + 100 + i * 38, K.grn, 400, 22); });
+    ctx.restore(); });
+  if (t >= 18.8) { const q = seg(t, 18.8, 18.95); ctx.save(); ctx.globalAlpha *= q; T('●', X, y + 600, K.or); T('Ta pub est prête ! 🎬', X + 40, y + 600, K.txt); ctx.restore(); }
+  // Champ de saisie : deux traits + « > » + aide
+  const iy = y + 630; ctx.strokeStyle = K.dim; ctx.lineWidth = 2;
+  [iy, iy + 64].forEach(ly => { ctx.beginPath(); ctx.moveTo(x + 20, ly); ctx.lineTo(x + w - 20, ly); ctx.stroke(); });
+  T('> ' + (t < 16.7 ? typed(msg, t, 15.1, 24) + cur : cur), X, iy + 34);
+  T('? for shortcuts', X, iy + 100, K.gray, 400, 22);
   ctx.restore();
 }
 
