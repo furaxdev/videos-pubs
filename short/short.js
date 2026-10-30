@@ -127,24 +127,30 @@ function scene4(t) {
 function scene5(t) {
   const a = life(t, 14.4, 20, .3); if (a <= 0) return;
   ctx.save(); ctx.globalAlpha = a; ctx.translate(0, (1 - easeOut(seg(t, 14.4, 15))) * 300);
-  const x = 60, y = 330, w = 960, h = 1160;
-  ctx.save(); ctx.shadowColor = C.orange; ctx.shadowBlur = 70; rrect(x, y, w, h, 34); ctx.fillStyle = 'rgba(12,12,20,.97)'; ctx.fill(); ctx.restore();
-  ctx.strokeStyle = 'rgba(217,119,87,.7)'; ctx.lineWidth = 3; rrect(x, y, w, h, 34); ctx.stroke();
-  [C.red, '#f59e0b', C.green].forEach((c, i) => { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x + 50 + i * 42, y + 50, 13, 0, 7); ctx.fill(); });
-  logo(x + w - 70, y + 50, 46);
-  const cur = Math.floor(t * 3) % 2 ? '' : '▍', fs = 38;
-  text('$ claude', x + 50, y + 150, fs, C.orange, F.code, 'left', 700);
-  const prompt = ['> Crée-moi un SaaS complet', '  avec auth et paiement.'];
-  const p = typed(prompt.join('\n'), t, 15.3, 22).split('\n');
-  p.forEach((l, i) => text(l + (i === p.length - 1 && t < 17.6 ? cur : ''), x + 50, y + 250 + i * 60, fs, '#fff', F.code, 'left', 700));
-  const steps = ['Lecture du projet', 'Écriture de 24 fichiers', 'Tests : 58/58 OK', 'Déployé en prod 🚀'];
-  steps.forEach((s, i) => { const k = seg(t, 17.2 + i * .5, 17.45 + i * .5); if (k <= 0) return;
-    ctx.save(); ctx.globalAlpha *= k; ctx.translate((1 - k) * 40, 0);
-    text('✓', x + 50, y + 470 + i * 90, 44, C.green, F.code, 'left', 700); text(s, x + 120, y + 470 + i * 90, fs, '#e5e7eb', F.code, 'left'); ctx.restore(); });
-  const pr = easeInOut(seg(t, 17.2, 19.2)); rrect(x + 50, y + 900, w - 100, 34, 17); ctx.fillStyle = '#1f2937'; ctx.fill();
-  if (pr > 0) { const g = ctx.createLinearGradient(x, 0, x + w, 0); g.addColorStop(0, C.orange); g.addColorStop(1, '#fbbf24');
-    rrect(x + 50, y + 900, (w - 100) * pr, 34, 17); ctx.fillStyle = g; ctx.fill(); }
-  text(Math.round(pr * 100) + '%', x + w / 2, y + 1010, 70, C.cream, F.bebas);
+  const x = 60, y = 500, w = 960, h = 900, fs = 28, K = { bg: '#1f1d1b', txt: '#e8e3dc', gray: '#8a847b', or: '#d77757', grn: '#4ec97a' };
+  ctx.save(); ctx.shadowColor = 'rgba(23,20,31,.35)'; ctx.shadowBlur = 50; ctx.shadowOffsetY = 20; rrect(x, y, w, h, 30); ctx.fillStyle = K.bg; ctx.fill(); ctx.restore();
+  [C.red, '#f59e0b', C.green].forEach((c, i) => { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x + 46 + i * 38, y + 42, 11, 0, 7); ctx.fill(); });
+  text('claude — ~/saas', x + w / 2, y + 42, 24, K.gray, F.code, 'center');
+  const T = (s, px, py, col = K.txt, wt = 400) => text(s, px, py, fs, col, F.code, 'left', wt);
+  // Bandeau d'accueil avec la mascotte
+  ctx.strokeStyle = K.or; ctx.lineWidth = 2.5; rrect(x + 40, y + 90, w - 80, 190, 14); ctx.stroke();
+  ['  ▐▛███▜▌', ' ▝▜█████▛▘', '   ▘▘ ▝▝'].forEach((l, i) => T(l, x + 70, y + 140 + i * 30, K.or));
+  T('Claude Code', x + 330, y + 140, K.txt, 700); T('Opus 5.5', x + 330, y + 176, K.gray); T('~/saas', x + 330, y + 212, K.gray);
+  // Ce que l'utilisateur a envoyé
+  const sent = t >= 16.7, cur = Math.floor(t * 3) % 2 ? ' ' : '█';
+  const msg = 'Crée-moi un SaaS complet avec auth + paiement';
+  if (sent) { ctx.fillStyle = '#2d2a27'; rrect(x + 40, y + 310, w - 80, 56, 8); ctx.fill(); T('> ' + msg, x + 58, y + 338, K.txt); }
+  const sp = '✻✽✶✳'[Math.floor(t * 8) % 4];
+  if (t >= 17 && t < 17.4) T(sp + ' Pondering… (esc to interrupt)', x + 40, y + 420, K.or);
+  const tools = [[17.4, 'Write(app/api/checkout/route.ts)', 'Wrote 48 lines'], [18.1, 'Bash(npm test)', '58 tests passed ✓'], [18.8, 'Bash(vercel --prod)', 'Deployed to production 🚀']];
+  tools.forEach(([t0, name, res], i) => { const k = seg(t, t0, t0 + .15); if (k <= 0) return; const py = y + 420 + i * 110;
+    ctx.save(); ctx.globalAlpha *= k; T('●', x + 40, py, K.grn); T(name, x + 80, py, K.txt, 700);
+    if (t > t0 + .3) { T('⎿', x + 60, py + 44, K.gray); T(res, x + 110, py + 44, K.gray); } ctx.restore(); });
+  // Zone de saisie
+  const iy = y + h - 150; ctx.strokeStyle = '#4a4540'; ctx.lineWidth = 2; rrect(x + 40, iy, w - 80, 70, 12); ctx.stroke();
+  const typedMsg = t < 16.7 ? typed(msg, t, 15.1, 30) : '';
+  T('> ' + typedMsg + (t < 16.7 ? cur : ''), x + 62, iy + 36, K.txt);
+  T('? for shortcuts', x + 50, iy + 105, K.gray);
   ctx.restore();
 }
 
