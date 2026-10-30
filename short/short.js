@@ -1,5 +1,5 @@
 // Short YouTube 9:16 — style "cahier + personnage qui réagit + gros sous-titres".
-// Tout est fonction du temps t (s). Les repères de temps collent aux sons de music.js.
+// Tout est fonction du temps t (s).
 const W = 1080, H = 1920, DURATION = 28;
 const CHANNEL = '@FuraxDev';
 const cv = document.getElementById('c'), ctx = cv.getContext('2d');
@@ -175,10 +175,10 @@ window.renderFrame = renderFrame; window.DURATION = DURATION;
 window.ready = Promise.all(Object.values(F).map(f => document.fonts.load(`40px ${f}`))).then(() => logoImg.decode());
 
 if (!location.search.includes('render')) {
-  const audio = new Audio('music.wav'), hud = document.getElementById('hud'); let t0 = null;
-  document.body.onclick = () => { t0 = performance.now(); audio.currentTime = 0; audio.play().catch(() => {}); };
+  const hud = document.getElementById('hud'); let t0 = null;
+  document.body.onclick = () => { t0 = performance.now(); };
   window.ready.then(() => (function loop(now) {
     if (t0 === null) t0 = now; const t = ((now - t0) / 1000) % DURATION;
-    renderFrame(t); hud.textContent = `${t.toFixed(2)}s — clic pour relancer avec le son`; requestAnimationFrame(loop);
+    renderFrame(t); hud.textContent = `${t.toFixed(2)}s — clic pour relancer`; requestAnimationFrame(loop);
   })(performance.now()));
 }

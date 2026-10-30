@@ -10,4 +10,4 @@
 | 24.6 – 27.8 | Abonne-toi pour la suite ! |
 
 Les sous-titres et les animations suivent ces temps (`SUBS` dans `short.js`).
-Pour mettre ta voix : mixe-la avec `music.wav` (ou baisse la musique), puis remplace l'audio du rendu.
+La vidéo est muette : ajoute ta voix off (ou ta musique) dans ton appli de montage.

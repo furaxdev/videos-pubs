@@ -1,4 +1,4 @@
-// Rend le short image par image (1080x1920) puis assemble avec ffmpeg + musique.
+// Rend le short image par image (1080x1920) puis assemble avec ffmpeg (vidéo muette).
 const { chromium } = require('playwright');
 const { spawn } = require('child_process');
 const path = require('path');
@@ -12,8 +12,7 @@ const FPS = 30;
   const total = await page.evaluate(() => window.DURATION) * FPS;
   const out = path.join(__dirname, 'short-claude-code.mp4');
   const ff = spawn('ffmpeg', ['-y', '-f', 'image2pipe', '-framerate', String(FPS), '-c:v', 'mjpeg', '-i', '-',
-    '-i', path.join(__dirname, 'music.wav'), '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '18',
-    '-preset', 'medium', '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', out], { stdio: ['pipe', 'ignore', 'inherit'] });
+    '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '18', '-preset', 'medium', '-an', '-movflags', '+faststart', out], { stdio: ['pipe', 'ignore', 'inherit'] });
   for (let f = 0; f < total; f++) {
     const data = await page.evaluate(t => { renderFrame(t); return document.getElementById('c').toDataURL('image/jpeg', .95); }, f / FPS);
     if (!ff.stdin.write(Buffer.from(data.split(',')[1], 'base64'))) await new Promise(r => ff.stdin.once('drain', r));
