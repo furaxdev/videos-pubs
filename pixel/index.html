@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Short — Tout est fait en code (pixel)</title>
+<style>
+  @font-face { font-family: 'Press Start 2P'; src: url(assets/PressStart2P.ttf); }
+  @font-face { font-family: 'Silkscreen'; src: url(assets/Silkscreen.ttf); font-weight: 700; }
+  @font-face { font-family: 'Bungee'; src: url(assets/Bungee.ttf); }
+  @font-face { font-family: 'VT323'; src: url(assets/VT323.ttf); }
+  @font-face { font-family: 'Pixelify Sans'; src: url(assets/PixelifySans.ttf); font-weight: 700; }
+  @font-face { font-family: 'Jersey 10'; src: url(assets/Jersey10.ttf); }
+  @font-face { font-family: 'Fira Code'; src: url(assets/FiraCode.ttf); font-weight: 300 700; }
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  canvas { display: block; height: 100vh; width: auto; margin: 0 auto; }
+  #hud { position: fixed; left: 12px; bottom: 10px; color: #888; font: 12px monospace; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<div id="hud"></div>
+<script src="logos.js"></script>
+<script src="timeline.js"></script>
+<script src="scene.js"></script>
+</body>
+</html>
