@@ -49,14 +49,10 @@ function logo(name, cx, cy, size, rot = 0, alpha = 1) {
 // ---------- Fond : grille bleue (puis multicolore sur une partie du script) ----------
 function multicolor(t) { return easeOut(seg(t, K.multi, K.multi + .5)) * (1 - easeOut(seg(t, K.remets, K.base + .1))); }
 function background(t) {
-  const g = ctx.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#2f6bff'); g.addColorStop(1, '#5aa2ff'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-  const mc = multicolor(t);
-  if (mc > 0) { const m = ctx.createLinearGradient(0, 0, W, H); for (let i = 0; i <= 5; i++) m.addColorStop(i / 5, `hsl(${(t * 70 + i * 62) % 360} 90% 58%)`);
-    ctx.globalAlpha = mc; ctx.fillStyle = m; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1; }
-  const step = 90, off = (t * 40) % step; ctx.lineWidth = 2; ctx.strokeStyle = `rgba(255,255,255,${.3 - mc * .1})`; ctx.beginPath();
-  for (let x = -step + off; x < W + step; x += step) { ctx.moveTo(x, 0); ctx.lineTo(x, H); }
-  for (let y = -step + off; y < H + step; y += step) { ctx.moveTo(0, y); ctx.lineTo(W, y); }
-  ctx.stroke();
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
+  const mc = multicolor(t), step = 90, off = (t * 40) % step; ctx.lineCap = 'butt';
+  for (let x = -step + off; x < W + step; x += step) { ctx.lineWidth = 2.5 + mc * 1.5; ctx.strokeStyle = mc > 0 ? `hsl(${(x * .35 + t * 90) % 360} 95% 55% / ${.35 + mc * .55})` : 'rgba(47,107,255,.5)'; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+  for (let y = -step + off; y < H + step; y += step) { ctx.lineWidth = 2.5 + mc * 1.5; ctx.strokeStyle = mc > 0 ? `hsl(${(y * .2 + 180 + t * 90) % 360} 95% 55% / ${.35 + mc * .55})` : 'rgba(47,107,255,.5)'; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
 }
 
 // ---------- Autocollants ----------
@@ -73,7 +69,7 @@ function poof(cx, cy, t0, t) {
   const k = (t - t0) / .6; if (k < 0 || k > 1) return;
   ctx.save(); ctx.globalAlpha = 1 - k;
   for (let i = 0; i < 16; i++) { const a = i / 16 * Math.PI * 2 + rnd(i) * .5, d = easeOut(k) * (110 + rnd(i + 9) * 90);
-    ctx.fillStyle = i % 2 ? '#fff' : '#dbeafe'; ctx.beginPath(); ctx.arc(cx + Math.cos(a) * d, cy + Math.sin(a) * d, 30 * (1 - k) + 6, 0, 7); ctx.fill(); }
+    ctx.fillStyle = i % 2 ? '#2f6bff' : '#9bbcff'; ctx.beginPath(); ctx.arc(cx + Math.cos(a) * d, cy + Math.sin(a) * d, 30 * (1 - k) + 6, 0, 7); ctx.fill(); }
   ctx.restore();
 }
 
@@ -201,23 +197,21 @@ function football(x, y, r, rot) {
   ctx.restore(); ctx.lineWidth = 8; ctx.strokeStyle = C.ink; ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.stroke(); ctx.restore();
 }
 
-// ---------- Ronds orange -> logos Claude, qui tombent ----------
-const BALLS = Array.from({ length: 26 }, (_, i) => ({ x: 40 + rnd(i) * 1000, v: 380 + rnd(i + 5) * 260, r: 38 + rnd(i + 11) * 32, s: K.ronds + i * .07, ph: rnd(i + 3) * 6 }));
-function fallingBalls(t) {
-  if (t < K.ronds || t > K.remets + .7) return;
-  const m = easeOut(seg(t, K.logoC, K.logoC + .7)), fade = 1 - seg(t, K.remets, K.base);
-  BALLS.forEach((b, i) => { if (t < b.s) return; const y = ((t - b.s) * b.v) % (H + 300) - 150, x = b.x + Math.sin(t * 2 + b.ph) * 30;
-    ctx.save(); ctx.globalAlpha = fade * seg(t, b.s, b.s + .2);
-    if (m < 1) { ctx.globalAlpha *= 1 - m; ctx.fillStyle = C.orange; ctx.lineWidth = 6; ctx.strokeStyle = C.ink; ctx.beginPath(); ctx.arc(x, y, b.r, 0, 7); ctx.fill(); ctx.stroke(); ctx.globalAlpha /= (1 - m) || 1; }
-    if (m > 0) { ctx.globalAlpha = fade * m; logo('claude-color', x, y, b.r * 3.1 * (.5 + .5 * back(m)), t * .8 + b.ph); }
-    ctx.restore(); });
-}
+// ---------- Grille d'objets qui défile vers le bas : ronds orange -> logos Claude, ballons, logos IA ----------
 const BGLOGOS = ['openai', 'gemini-color', 'midjourney', 'sora', 'grok', 'deepseek-color', 'meta-color', 'mistral-color', 'perplexity-color', 'copilot-color'];
-function bgLogos(t) {
-  const a = seg(t, K.logosIA, K.logosIA + .5) * (1 - seg(t, K.remets, K.base)); if (a <= 0) return;
-  BGLOGOS.forEach((n, i) => { const x = 140 + (i % 3) * 400 + Math.sin(t * 1.3 + i) * 40, y = 380 + Math.floor(i / 3) * 360 + Math.cos(t * 1.1 + i * 2) * 40;
-    ctx.save(); ctx.globalAlpha = a * .75; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x, y, 118, 0, 7); ctx.fill(); ctx.lineWidth = 5; ctx.strokeStyle = C.ink; ctx.stroke();
-    logo(n, x, y, 150, Math.sin(t + i) * .15); ctx.restore(); });
+function objectGrid(t) {
+  if (t < K.ronds || t > K.base + .1) return;
+  const COLS = 4, CELL = 270, s = (t - K.ronds) * 230, base = Math.floor(s / CELL), frac = s % CELL, fade = 1 - seg(t, K.remets, K.base);
+  for (let i = 0; i <= Math.ceil(H / CELL) + 1; i++) { const row = base - i; if (row < 0) continue;
+    for (let c = 0; c < COLS; c++) { const x = CELL / 2 + c * CELL + (W - COLS * CELL) / 2, y = frac + i * CELL - CELL / 2, kind = (row + c) % 3, id = row * COLS + c;
+      const m = easeOut(seg(t, K.logoC + c * .06, K.logoC + .7 + c * .06)), fb = pop(t, K.ballon + c * .05, 999, .35, .01), ai = pop(t, K.logosIA + c * .05, 999, .35, .01);
+      ctx.save(); ctx.globalAlpha = fade; ctx.translate(x, y + Math.sin(t * 3 + id) * 6);
+      const orb = 1 - m;                                                    // rond orange
+      if (orb > 0 && !(kind === 0 && fb > 0) && !(kind === 1 && ai > 0)) { ctx.globalAlpha = fade * orb; ctx.fillStyle = C.orange; ctx.lineWidth = 6; ctx.strokeStyle = C.ink; ctx.beginPath(); ctx.arc(0, 0, 80 * Math.min(1, seg(t, K.ronds, K.ronds + .3) + .01), 0, 7); ctx.fill(); ctx.stroke(); ctx.globalAlpha = fade; }
+      if (m > 0 && !(kind === 0 && fb > 0) && !(kind === 1 && ai > 0)) logo('claude-color', 0, 0, 190 * (.5 + .5 * back(m)), t * .6 + id);   // logo Claude
+      if (kind === 0 && fb > 0) { ctx.rotate(t * 2 + id); ctx.scale(fb, fb); football(0, 0, 80, 0); }                                        // ballon de foot
+      if (kind === 1 && ai > 0) { ctx.scale(ai, ai); ctx.fillStyle = '#fff'; ctx.lineWidth = 5; ctx.strokeStyle = C.ink; ctx.beginPath(); ctx.arc(0, 0, 90, 0, 7); ctx.fill(); ctx.stroke(); logo(BGLOGOS[(row * COLS + c) % BGLOGOS.length], 0, 0, 120); } // logos IA
+      ctx.restore(); } }
 }
 
 // ---------- « Abonnez-vous ! » : polices, glitch, surbrillance, logo YouTube ----------
@@ -304,15 +298,8 @@ function scenes(t) {
 }
 function renderFrame(t) {
   background(t);
-  bgLogos(t); fallingBalls(t);
+  objectGrid(t);
   scenes(t);
-  // ballon de foot qui rebondit
-  const fa = pop(t, K.ballon, K.remets + .3, .25, .3);
-  if (fa > 0) { const lt = t - K.ballon, x = 540 + 360 * Math.sin(lt * 1.4), y = 1080 - Math.abs(Math.sin(lt * 2.8)) * 620, s = 1 + (1 - Math.abs(Math.sin(lt * 2.8))) * 0;
-    ctx.save(); ctx.globalAlpha = .3; ctx.fillStyle = '#000'; ctx.beginPath(); ctx.ellipse(x, 1090, 90 * (1 - (1080 - y) / 1400), 18, 0, 0, 7); ctx.fill(); ctx.restore();
-    ctx.save(); ctx.translate(x, y); ctx.scale(fa * s, fa * s); football(0, 0, 100, lt * 5); ctx.restore(); }
-  // mascotte du bas (jusqu'à « efface tout »)
-  mascot(540, 1850, 16, t < END_INTRO ? 'wave' : 'idle', t, pop(t, .1, K.tout + .25, .35, .3));
   // mascotte centrale et ses émotions
   const mk = pop(t, K.masc, K.cc - .2, .35, .3);
   if (mk > 0) { const pose = t < K.ang ? 'idle' : t < K.sho ? 'angry' : t < K.sad ? 'shock' : t < K.cry ? 'sad' : 'cry';
