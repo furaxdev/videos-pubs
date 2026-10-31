@@ -323,6 +323,7 @@ function drawPresenter(pose, t) {
   [[gw, '#ffffff'], [gk, '#17120f']].forEach(([c, col]) => { c.clearRect(0, 0, PW, PH); c.globalCompositeOperation = 'source-over'; c.drawImage(pc, 0, 0); c.globalCompositeOperation = 'source-in'; c.fillStyle = col; c.fillRect(0, 0, PW, PH); });
 }
 function presenter(cx, fy, s, pose, t, k) {
+  return; // personnage supprimé
   if (k <= 0) return; drawPresenter(pose, t); ctx.save(); ctx.translate(cx, fy + (1 - Math.min(1, k)) * 300); ctx.scale(s * k, s * k); ctx.translate(-450, -1050);
   for (let i = 0; i < 16; i++) { const a = i / 16 * Math.PI * 2; ctx.drawImage(pcK, Math.cos(a) * 12 + 12, Math.sin(a) * 12 + 12); }
   for (let i = 0; i < 16; i++) { const a = i / 16 * Math.PI * 2; ctx.drawImage(pcW, Math.cos(a) * 12, Math.sin(a) * 12); }
@@ -336,12 +337,12 @@ function headline(parts, y, size, k) { // titre en capitales : [[texte, couleur]
 const OR = '#e8552d';
 function beats(t) {
   const win = (a, b) => pop(t, a, b, .3, .25);
-  headline([['FURAXDEV', OR]], 690, 150, win(K.yo, END_INTRO - .1)); headline([['DÉVELOPPEUR ', C.ink], ['FULL STACK PRO', OR]], 800, 54, win(K.dev, END_INTRO - .1));
+  headline([['FURAXDEV', OR]], 900, 150, win(K.yo, END_INTRO - .1)); headline([['DÉVELOPPEUR ', C.ink], ['FULL STACK PRO', OR]], 1020, 54, win(K.dev, END_INTRO - .1));
   presenter(540, 1900, 1.0, 'wave', t, win(.1, END_INTRO - .1));
-  headline([['VOICI ', C.ink], ['LE TRUC', OR]], 720, 110, win(K.voici, K.claude - .15)); presenter(540, 1900, 1.0, 'point', t, win(K.voici, K.claude - .15));
-  headline([['FOND ', C.ink], ['DE BASE', OR]], 720, 110, win(K.remets - .1, K.abon - .5)); presenter(540, 1900, 1.0, 'shrug', t, win(K.remets - .1, K.abon - .5));
+  headline([['VOICI ', C.ink], ['LE TRUC', OR]], 960, 110, win(K.voici, K.claude - .15)); presenter(540, 1900, 1.0, 'point', t, win(K.voici, K.claude - .15));
+  headline([['FOND ', C.ink], ['DE BASE', OR]], 960, 110, win(K.remets - .1, K.abon - .5)); presenter(540, 1900, 1.0, 'shrug', t, win(K.remets - .1, K.abon - .5));
   presenter(540, 1900, 1.0, 'cheer', t, win(K.multi + .2, K.remets - .3));
-  headline([['EFFACE ', C.ink], ['TOUT', OR]], 720, 130, win(K.tout + .1, K.masc - .15)); presenter(540, 1900, 1.0, 'cheer', t, win(K.tout + .1, K.masc - .15));
+  headline([['EFFACE ', C.ink], ['TOUT', OR]], 960, 130, win(K.tout + .1, K.masc - .15)); presenter(540, 1900, 1.0, 'cheer', t, win(K.tout + .1, K.masc - .15));
 }
 
 // ---------- Montage ----------
@@ -386,10 +387,10 @@ function renderFrame(t) {
   // final
   const ck = pop(t, K.cc - .1, DURATION, .3, .01);
   if (ck > 0) { presenter(540, 1900, .9, 'wave', t, ck);
-    sticker('Claude Code', W / 2, 650, 760, 160, '#86efac', -2, pop(t, K.cc, DURATION, .3, .01), 78, 'claude-color');
+    sticker('Claude Code', W / 2, 880, 760, 160, '#86efac', -2, pop(t, K.cc, DURATION, .3, .01), 78, 'claude-color');
     const bk = pop(t, K.abonner, DURATION, .3, .01) * (1 + Math.sin(t * 7) * .03);
-    sticker('🔔 Abonne-toi !', W / 2, 775, 720, 140, '#fde68a', 2, bk, 72);
-    sticker('Ciao les BG 👋', W / 2, 895, 700, 130, '#fca5a5', -2, pop(t, K.ciao, DURATION, .3, .01), 66); }
+    sticker('🔔 Abonne-toi !', W / 2, 1020, 720, 140, '#fde68a', 2, bk, 72);
+    sticker('Ciao les BG 👋', W / 2, 1160, 700, 130, '#fca5a5', -2, pop(t, K.ciao, DURATION, .3, .01), 66); }
   subtitles(t);
   ctx.fillStyle = '#e8552d'; ctx.fillRect(0, 0, W * t / DURATION, 8);
 }
