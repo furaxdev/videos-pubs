@@ -127,7 +127,8 @@ function terminal(t) {
   const T = (s, px, py, col = K.txt, wt = 400, size = fs) => text(s, px, py, size, col, F.code, 'left', wt);
   const X = x + 34, cur = Math.floor(t * 3) % 2 ? ' ' : '█';
   // En-tête : mascotte en blocs + version / modèle / dossier
-  ctx.fillStyle = K.or; ctx.fillRect(X + 12, y + 86, 96, 28); ctx.fillRect(X, y + 114, 120, 28); ctx.fillRect(X + 24, y + 142, 12, 14); ctx.fillRect(X + 40, y + 142, 12, 14); ctx.fillRect(X + 68, y + 142, 12, 14); ctx.fillRect(X + 84, y + 142, 12, 14);
+  ctx.fillStyle = K.or; ctx.fillRect(X + 12, y + 86, 96, 56); ctx.fillRect(X, y + 114, 12, 12); ctx.fillRect(X + 108, y + 114, 12, 12); // corps + bras d'un pixel
+  [24, 40, 68, 84].forEach(dx => ctx.fillRect(X + dx, y + 142, 12, 12)); // pattes
   ctx.fillStyle = K.bg; ctx.fillRect(X + 34, y + 92, 12, 18); ctx.fillRect(X + 74, y + 92, 12, 18); // yeux (creux)
   T('Claude Code v2.1', X + 160, y + 105, K.txt, 700, 24); T('Opus 5.5 · Claude Max', X + 160, y + 139, K.gray, 400, 24); T('~/pub-video', X + 160, y + 173, K.gray, 400, 24);
   // Message de l'utilisateur
