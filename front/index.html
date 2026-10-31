@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Short — Grand front</title>
+<style>
+  @font-face { font-family: 'Fredoka'; src: url(assets/Fredoka.ttf); font-weight: 300 700; }
+  @font-face { font-family: 'Kalam'; src: url(assets/Kalam.ttf); font-weight: 700; }
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  canvas { display: block; height: 100vh; width: auto; margin: 0 auto; }
+  #hud { position: fixed; left: 12px; bottom: 10px; color: #888; font: 12px monospace; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<div id="hud"></div>
+<script src="timeline.js"></script>
+<script src="scene.js"></script>
+</body>
+</html>
