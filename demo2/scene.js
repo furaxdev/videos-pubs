@@ -150,17 +150,17 @@ function terminal(t, t0, k, cy, sc, idle) {
 // ---------- Fenêtre de code (« ceci est fait en code ») ----------
 const CODE = ['const video = new Video();', "video.add(text, cat, logo);", "video.render(); // 🎬"];
 function codeWindow(t, t0, k) {
-  if (k <= 0) return; const lt = t - t0, x = 60, y = 520, w = 960, h = 460;
+  if (k <= 0) return; const lt = t - t0, x = 60, y = 500, w = 960, h = 500;
   ctx.save(); ctx.translate(W / 2, y + h / 2); ctx.scale(k, k); ctx.translate(-W / 2, -(y + h / 2));
-  ctx.fillStyle = 'rgba(22,19,31,.9)'; rrect(x + 9, y + 11, w, h, 26); ctx.fill(); rrect(x, y, w, h, 26); ctx.fillStyle = '#1f1d2b'; ctx.fill(); ctx.lineWidth = 5; ctx.strokeStyle = C.ink; ctx.stroke();
-  [C.red, '#f59e0b', C.green].forEach((c, i) => { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x + 44 + i * 36, y + 40, 11, 0, 7); ctx.fill(); });
-  text('video.js', x + w / 2, y + 40, 24, '#8a8aa5', F.code, 'center');
-  const cols = [[/^(const|new)$/, '#f472b6'], [/^(video)$/, '#7dd3fc'], [/^(render|add|Video)$/, '#fde68a']];
-  CODE.forEach((l, i) => { const shown = typed(l, lt, .1 + i * .55, 30); ctx.font = `400 34px ${F.code}`; let cx = x + 50; const ly = y + 130 + i * 90;
-    text(String(i + 1), x + 24, ly, 22, '#4b4b66', F.code, 'left'); cx = x + 80;
-    (shown.match(/\w+|\s+|[^\w\s]/gu) || []).forEach(tok => { const col = l.startsWith('//', l.indexOf('//')) && shown.indexOf('//') >= 0 && shown.indexOf('//') <= cx ? '#6b7280' : (cols.find(([r]) => r.test(tok)) || [0, '#e8e3dc'])[1];
-      ctx.fillStyle = tok.trim() ? col : '#000'; ctx.textAlign = 'left'; ctx.fillText(tok, cx, ly); cx += ctx.measureText(tok).width; }); });
-  if (lt > 1.7) text('▍', x + 80, y + 400, 34, '#e8e3dc', F.code, 'left');
+  ctx.fillStyle = C.ink; rrect(x + 16, y + 16, w, h, 10); ctx.fill(); rrect(x, y, w, h, 10); ctx.fillStyle = '#fffdf6'; ctx.fill(); ctx.lineWidth = 7; ctx.strokeStyle = C.ink; ctx.stroke();
+  ctx.save(); rrect(x, y, w, h, 10); ctx.clip(); ctx.fillStyle = '#f1ead9'; ctx.fillRect(x, y, w, 76); ctx.restore(); ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(x, y + 76); ctx.lineTo(x + w, y + 76); ctx.stroke();
+  [OR, '#fff', '#fff'].forEach((c, i) => { ctx.fillStyle = c; ctx.fillRect(x + 28 + i * 40, y + 28, 24, 24); ctx.lineWidth = 5; ctx.strokeStyle = C.ink; ctx.strokeRect(x + 28 + i * 40, y + 28, 24, 24); });
+  text('storyboard.js', x + 190, y + 40, 28, '#6b6358', F.code, 'left', 700);
+  const cols = [[/^(const|new)$/, '#e8552d'], [/^(video)$/, '#16131f'], [/^(render|add|Video)$/, '#b4501f']];
+  CODE.forEach((l, i) => { const shown = typed(l, lt, .1 + i * .55, 30); ctx.font = `700 38px ${F.code}`; const ly = y + 150 + i * 105;
+    text(String(i + 1), x + 40, ly, 26, '#b9b09c', F.code, 'left'); let cx = x + 90;
+    (shown.match(/\w+|\s+|[^\w\s]/gu) || []).forEach(tok => { const com = shown.indexOf('//') >= 0 && cx > x + 90 + ctx.measureText(shown.slice(0, shown.indexOf('//'))).width - 2; ctx.fillStyle = com ? '#9a9181' : (cols.find(([r]) => r.test(tok)) || [0, '#16131f'])[1]; ctx.textAlign = 'left'; ctx.fillText(tok, cx, ly); cx += ctx.measureText(tok).width; }); });
+  if (lt > 1.7) { ctx.fillStyle = OR; ctx.fillRect(x + 92, y + 410, 20, 38); }
   ctx.restore();
 }
 
@@ -267,29 +267,60 @@ const pcW = document.createElement('canvas'); pcW.width = PW; pcW.height = PH; c
 const pcK = document.createElement('canvas'); pcK.width = PW; pcK.height = PH; const gk = pcK.getContext('2d');
 function drawPresenter(pose, t) {
   g.clearRect(0, 0, PW, PH); g.save(); g.translate(450, 1050); g.lineJoin = 'round'; g.lineCap = 'round';
-  const SK = '#d9a066', DK = '#1a1a1a', st = (fill, lw = 7) => { if (fill) { g.fillStyle = fill; g.fill(); } g.lineWidth = lw; g.strokeStyle = DK; g.stroke(); };
-  const rr = (x, y, w, h, r) => { g.beginPath(); g.roundRect(x, y, w, h, r); };
-  const limb = (a, b, c) => { g.lineWidth = 78; g.strokeStyle = DK; g.beginPath(); g.moveTo(...a); g.lineTo(...b); g.stroke(); g.lineWidth = 64; g.strokeStyle = '#2a2a2a'; g.stroke();
-    g.lineWidth = 66; g.strokeStyle = DK; g.beginPath(); g.moveTo(...b); g.lineTo(...c); g.stroke(); g.lineWidth = 52; g.strokeStyle = SK; g.stroke(); g.beginPath(); g.arc(c[0], c[1], 36, 0, 7); st(SK); };
-  [-1, 1].forEach(d => { rr(d * 30 - 32, -310, 64, 310, 18); st('#2d3b6b'); rr(d * 30 - 44 + d * 8, -28, 88, 28, 12); st(DK); });
-  rr(-125, -650, 250, 360, 60); st('#262626'); g.fillStyle = '#e8552d'; g.font = '800 64px Montserrat'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('</>', 0, -520);
-  g.beginPath(); g.rect(-34, -700, 68, 70); st(SK);
-  const L = [-125, -600], R = [125, -600], w = Math.sin(t * 9) * 22; let mouth = 'smile';
-  if (pose === 'wave') { limb(L, [-175, -470], [-185, -360]); limb(R, [235, -650], [265 + w, -800]); mouth = 'grin'; }
-  else if (pose === 'point') { limb(L, [-175, -470], [-185, -360]); limb(R, [240, -560], [400, -610]); g.beginPath(); g.moveTo(430, -622); g.lineTo(500, -640); g.lineWidth = 30; g.strokeStyle = DK; g.stroke(); g.lineWidth = 18; g.strokeStyle = SK; g.stroke(); }
-  else if (pose === 'shrug') { limb(L, [-250, -520], [-340, -610]); limb(R, [250, -520], [340, -610]); mouth = 'flat'; }
-  else { limb(L, [-215, -720], [-235, -900]); limb(R, [215, -720], [235, -900]); mouth = 'grin'; }
-  g.beginPath(); g.ellipse(-122, -760, 24, 36, 0, 0, 7); st(SK); g.beginPath(); g.ellipse(122, -760, 24, 36, 0, 0, 7); st(SK);
-  g.beginPath(); g.ellipse(0, -770, 128, 142, 0, 0, 7); st(SK, 8);
-  g.beginPath(); g.moveTo(-132, -790); g.quadraticCurveTo(-120, -935, 0, -925); g.quadraticCurveTo(120, -935, 132, -790); g.quadraticCurveTo(70, -840, 0, -830); g.quadraticCurveTo(-70, -840, -132, -790); st('#1f1b1a', 7);
-  [-1, 1].forEach(d => { g.beginPath(); g.arc(d * 58, -765, 42, 0, 7); g.lineWidth = 8; g.strokeStyle = '#c9a227'; g.stroke(); g.fillStyle = DK; g.beginPath(); g.arc(d * 58 + Math.sin(t * 2) * 4, -765, 11, 0, 7); g.fill(); });
-  g.lineWidth = 7; g.strokeStyle = '#c9a227'; g.beginPath(); g.moveTo(-18, -768); g.lineTo(18, -768); g.stroke();
-  g.strokeStyle = DK; g.lineWidth = 8; g.beginPath(); g.moveTo(-96, -830); g.lineTo(-30, -840); g.moveTo(96, -830); g.lineTo(30, -840); g.stroke();
-  if (mouth === 'grin') { g.beginPath(); g.moveTo(-52, -705); g.quadraticCurveTo(0, -630, 52, -705); g.closePath(); st('#7a1f2b', 6); g.fillStyle = '#fff'; g.beginPath(); g.moveTo(-40, -702); g.lineTo(40, -702); g.lineTo(34, -688); g.lineTo(-34, -688); g.fill(); }
-  else if (mouth === 'flat') { g.beginPath(); g.moveTo(-34, -690); g.quadraticCurveTo(0, -702, 34, -684); g.lineWidth = 8; g.strokeStyle = DK; g.stroke(); }
-  else { g.beginPath(); g.arc(0, -722, 46, .15 * Math.PI, .85 * Math.PI); g.lineWidth = 8; g.strokeStyle = DK; g.stroke(); }
+  const INK = '#17120f', SK = '#c98b5e', SKL = '#e3ae7d', SKD = '#a46b43', TEE = '#222228', TEEL = '#3a3a44', JE = '#2c3a70', JEL = '#41559c', OR = '#e8552d', HAIR = '#1c1514';
+  const stroke = (w = 8) => { g.lineWidth = w; g.strokeStyle = INK; g.stroke(); }, fillS = (c, w = 8) => { g.fillStyle = c; g.fill(); stroke(w); };
+  const lin = (x0, y0, x1, y1, a, b) => { const gr = g.createLinearGradient(x0, y0, x1, y1); gr.addColorStop(0, a); gr.addColorStop(1, b); return gr; };
+  // jambes + baskets
+  [-1, 1].forEach(d => {
+    g.beginPath(); g.moveTo(d * 6, -345); g.lineTo(d * 152, -345); g.lineTo(d * 134, -66); g.lineTo(d * 26, -66); g.closePath(); fillS(lin(d * 6, 0, d * 152, 0, JEL, JE));
+    g.beginPath(); g.roundRect(d > 0 ? 14 : -196, -78, 182, 62, 28); fillS('#f7f7f4'); g.beginPath(); g.roundRect(d > 0 ? 14 : -196, -30, 182, 30, 14); fillS(OR, 7);
+    g.strokeStyle = 'rgba(0,0,0,.12)'; g.lineWidth = 6; g.beginPath(); g.moveTo(d * 40, -62); g.lineTo(d * 120, -62); g.stroke(); });
+  // torse
+  g.beginPath(); g.moveTo(-152, -640); g.quadraticCurveTo(0, -690, 152, -640); g.lineTo(140, -320); g.quadraticCurveTo(0, -300, -140, -320); g.closePath(); fillS(lin(-150, 0, 150, 0, TEEL, TEE));
+  g.strokeStyle = 'rgba(255,255,255,.07)'; g.lineWidth = 10; [[-90, -560, -80, -400], [70, -580, 90, -420]].forEach(([a, b, c, d]) => { g.beginPath(); g.moveTo(a, b); g.quadraticCurveTo((a + c) / 2 + 14, (b + d) / 2, c, d); g.stroke(); });
+  g.fillStyle = OR; g.font = '800 76px Montserrat'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('</>', 0, -500);
+  g.beginPath(); g.roundRect(-46, -740, 92, 110, 22); fillS(SKD, 8);                                                  // cou
+  g.beginPath(); g.ellipse(0, -648, 58, 26, 0, 0, Math.PI); fillS(SKD, 8);
+  // bras : manche + avant-bras + main
+  const hand = (p, ang, kind) => { const [x, y] = p, dx = Math.cos(ang), dy = Math.sin(ang), fing = (a, l, w) => { const sx = x + Math.cos(a) * 26, sy = y + Math.sin(a) * 26, ex = x + Math.cos(a) * (26 + l), ey = y + Math.sin(a) * (26 + l);
+      g.strokeStyle = INK; g.lineWidth = w + 10; g.beginPath(); g.moveTo(sx, sy); g.lineTo(ex, ey); g.stroke(); g.strokeStyle = SK; g.lineWidth = w; g.stroke(); };
+    if (kind === 'open') [-.55, -.18, .18, .55].forEach((o, i) => fing(ang + o, 46 - Math.abs(o) * 22, 22)); if (kind === 'point') { fing(ang, 70, 24); }
+    g.beginPath(); g.arc(x, y, 40, 0, 7); fillS(SK, 8); if (kind === 'open' || kind === 'rest') fing(ang + (dx > 0 ? 1.25 : -1.25), 34, 22);
+    if (kind === 'fist') { g.strokeStyle = SKD; g.lineWidth = 6; [-14, 0, 14].forEach(o => { g.beginPath(); g.moveTo(x + dx * 18 - dy * o, y + dy * 18 + dx * o); g.lineTo(x + dx * 34 - dy * o, y + dy * 34 + dx * o); g.stroke(); }); } };
+  const arm = (sh, el, ha, kind) => {
+    g.strokeStyle = INK; g.lineWidth = 98; g.beginPath(); g.moveTo(...sh); g.lineTo(...el); g.stroke(); g.strokeStyle = TEE; g.lineWidth = 82; g.stroke(); g.strokeStyle = 'rgba(255,255,255,.08)'; g.lineWidth = 22; g.beginPath(); g.moveTo(sh[0] - 16, sh[1]); g.lineTo(el[0] - 16, el[1]); g.stroke();
+    g.strokeStyle = INK; g.lineWidth = 76; g.beginPath(); g.moveTo(...el); g.lineTo(...ha); g.stroke(); g.strokeStyle = SK; g.lineWidth = 60; g.stroke(); g.strokeStyle = SKL; g.lineWidth = 12; g.beginPath(); g.moveTo(el[0] - 12, el[1]); g.lineTo(ha[0] - 12, ha[1]); g.stroke();
+    hand(ha, Math.atan2(ha[1] - el[1], ha[0] - el[0]), kind); };
+  const L = [-146, -610], R = [146, -610], w = Math.sin(t * 9) * 26; let face = 'smile';
+  if (pose === 'wave') { arm(L, [-186, -470], [-196, -352], 'rest'); arm(R, [250, -690], [278 + w, -840], 'open'); face = 'grin'; }
+  else if (pose === 'point') { arm(L, [-186, -470], [-196, -352], 'rest'); arm(R, [250, -560], [410, -606], 'point'); face = 'smile'; }
+  else if (pose === 'shrug') { arm(L, [-262, -520], [-352, -616], 'open'); arm(R, [262, -520], [352, -616], 'open'); face = 'flat'; }
+  else { arm(L, [-226, -735], [-246, -910], 'fist'); arm(R, [226, -735], [246, -910], 'fist'); face = 'grin'; }
+  // tête
+  g.beginPath(); g.ellipse(-136, -790, 26, 38, 0, 0, 7); fillS(SK, 8); g.beginPath(); g.ellipse(136, -790, 26, 38, 0, 0, 7); fillS(SK, 8);
+  g.beginPath(); g.moveTo(-132, -800); g.bezierCurveTo(-142, -690, -72, -626, 0, -626); g.bezierCurveTo(72, -626, 142, -690, 132, -800); g.bezierCurveTo(126, -902, 62, -952, 0, -952); g.bezierCurveTo(-62, -952, -126, -902, -132, -800); g.closePath();
+  const hg = g.createRadialGradient(-30, -840, 20, 0, -790, 170); hg.addColorStop(0, SKL); hg.addColorStop(1, SK); fillS(hg, 9);
+  g.fillStyle = 'rgba(20,12,10,.42)'; g.beginPath(); g.moveTo(-112, -740); g.bezierCurveTo(-120, -660, -60, -632, 0, -632); g.bezierCurveTo(60, -632, 120, -660, 112, -740); g.bezierCurveTo(100, -704, 70, -690, 44, -694); g.quadraticCurveTo(0, -668, -44, -694); g.bezierCurveTo(-70, -690, -100, -704, -112, -740); g.fill();
+  g.fillStyle = 'rgba(224,110,90,.35)'; [-1, 1].forEach(d => { g.beginPath(); g.ellipse(d * 88, -724, 28, 18, 0, 0, 7); g.fill(); });
+  // cheveux
+  const hairC = [[-112, -884, 64], [-62, -930, 72], [2, -944, 74], [66, -930, 72], [114, -882, 64], [-138, -828, 40], [138, -828, 40]];
+  g.strokeStyle = INK; g.lineWidth = 18; hairC.forEach(([x, y, r]) => { g.beginPath(); g.arc(x, y, r, 0, 7); g.stroke(); }); g.fillStyle = HAIR; hairC.forEach(([x, y, r]) => { g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); });
+  g.beginPath(); g.moveTo(-128, -852); g.quadraticCurveTo(-70, -800, -8, -842); g.quadraticCurveTo(54, -866, 128, -832); g.lineTo(128, -900); g.lineTo(-128, -900); g.closePath(); g.fillStyle = HAIR; g.fill();
+  g.strokeStyle = '#4b3c38'; g.lineWidth = 9; [[-92, -930, -52, -958], [-20, -962, 24, -968], [52, -948, 98, -930]].forEach(([a, b, c, d]) => { g.beginPath(); g.moveTo(a, b); g.quadraticCurveTo((a + c) / 2, b - 20, c, d); g.stroke(); });
+  g.fillStyle = HAIR; [-1, 1].forEach(d => { g.beginPath(); g.ellipse(d * 124, -770, 14, 46, 0, 0, 7); g.fill(); });
+  // lunettes, yeux, sourcils
+  const eyes = (d, ex) => { const lx = d * 64; g.beginPath(); g.arc(lx, -772, 48, 0, 7); g.fillStyle = 'rgba(255,255,255,.35)'; g.fill(); g.beginPath(); g.ellipse(lx, -770, 21, face === 'grin' ? 18 : 25, 0, 0, 7); g.fillStyle = '#fff'; g.fill(); g.strokeStyle = INK; g.lineWidth = 5; g.stroke();
+    g.fillStyle = '#2b1a12'; g.beginPath(); g.arc(lx + Math.sin(t * 1.7) * 5, -768, 11, 0, 7); g.fill(); g.fillStyle = '#fff'; g.beginPath(); g.arc(lx + Math.sin(t * 1.7) * 5 + 4, -773, 4, 0, 7); g.fill();
+    g.strokeStyle = INK; g.lineWidth = 10; g.beginPath(); g.arc(lx, -772, 48, 0, 7); g.stroke(); g.strokeStyle = 'rgba(255,255,255,.8)'; g.lineWidth = 6; g.beginPath(); g.arc(lx, -772, 36, Math.PI * 1.15, Math.PI * 1.45); g.stroke();
+    g.strokeStyle = HAIR; g.lineWidth = 15; g.beginPath(); const by = face === 'flat' ? -835 : face === 'grin' ? -846 : -840; g.moveTo(lx - d * 46, by + (face === 'flat' ? 8 * d : 0)); g.quadraticCurveTo(lx, by - 12, lx + d * 44, by + (face === 'flat' ? -8 * d : 4)); g.stroke(); };
+  eyes(-1); eyes(1); g.strokeStyle = INK; g.lineWidth = 9; g.beginPath(); g.moveTo(-18, -774); g.quadraticCurveTo(0, -786, 18, -774); g.stroke(); g.lineWidth = 8; g.beginPath(); g.moveTo(-112, -776); g.lineTo(-132, -784); g.moveTo(112, -776); g.lineTo(132, -784); g.stroke();
+  g.strokeStyle = SKD; g.lineWidth = 8; g.beginPath(); g.moveTo(-9, -748); g.quadraticCurveTo(0, -718, 16, -736); g.stroke();
+  g.fillStyle = HAIR; g.beginPath(); g.ellipse(0, -704, 38, 11, 0, 0, 7); g.fill();                                          // moustache
+  if (face === 'grin') { g.beginPath(); g.moveTo(-54, -694); g.quadraticCurveTo(0, -618, 54, -694); g.closePath(); fillS('#6d1d28', 7); g.save(); g.clip(); g.fillStyle = '#fff'; g.fillRect(-54, -696, 108, 18); g.fillStyle = '#e8758a'; g.beginPath(); g.ellipse(0, -640, 30, 18, 0, 0, 7); g.fill(); g.restore(); }
+  else if (face === 'flat') { g.strokeStyle = '#f3d9c4'; g.lineWidth = 8; g.beginPath(); g.moveTo(-34, -676); g.quadraticCurveTo(0, -690, 36, -668); g.stroke(); }
+  else { g.strokeStyle = '#f3d9c4'; g.lineWidth = 9; g.beginPath(); g.arc(0, -704, 42, .2 * Math.PI, .8 * Math.PI); g.stroke(); }
   g.restore();
-  [[gw, '#ffffff'], [gk, DK]].forEach(([c, col]) => { c.clearRect(0, 0, PW, PH); c.globalCompositeOperation = 'source-over'; c.drawImage(pc, 0, 0); c.globalCompositeOperation = 'source-in'; c.fillStyle = col; c.fillRect(0, 0, PW, PH); });
+  [[gw, '#ffffff'], [gk, '#17120f']].forEach(([c, col]) => { c.clearRect(0, 0, PW, PH); c.globalCompositeOperation = 'source-over'; c.drawImage(pc, 0, 0); c.globalCompositeOperation = 'source-in'; c.fillStyle = col; c.fillRect(0, 0, PW, PH); });
 }
 function presenter(cx, fy, s, pose, t, k) {
   if (k <= 0) return; drawPresenter(pose, t); ctx.save(); ctx.translate(cx, fy + (1 - Math.min(1, k)) * 300); ctx.scale(s * k, s * k); ctx.translate(-450, -1050);
@@ -305,10 +336,11 @@ function headline(parts, y, size, k) { // titre en capitales : [[texte, couleur]
 const OR = '#e8552d';
 function beats(t) {
   const win = (a, b) => pop(t, a, b, .3, .25);
-  headline([['JE SUIS', C.ink]], 650, 64, win(K.yo, END_INTRO - .1)); headline([['FURAXDEV', OR]], 770, 150, win(K.furax, END_INTRO - .1)); headline([['DÉVELOPPEUR ', C.ink], ['FULL STACK PRO', OR]], 880, 54, win(K.dev, END_INTRO - .1));
+  headline([['FURAXDEV', OR]], 690, 150, win(K.yo, END_INTRO - .1)); headline([['DÉVELOPPEUR ', C.ink], ['FULL STACK PRO', OR]], 800, 54, win(K.dev, END_INTRO - .1));
   presenter(540, 1900, 1.0, 'wave', t, win(.1, END_INTRO - .1));
   headline([['VOICI ', C.ink], ['LE TRUC', OR]], 720, 110, win(K.voici, K.claude - .15)); presenter(540, 1900, 1.0, 'point', t, win(K.voici, K.claude - .15));
   headline([['FOND ', C.ink], ['DE BASE', OR]], 720, 110, win(K.remets - .1, K.abon - .5)); presenter(540, 1900, 1.0, 'shrug', t, win(K.remets - .1, K.abon - .5));
+  presenter(540, 1900, 1.0, 'cheer', t, win(K.multi + .2, K.remets - .3));
   headline([['EFFACE ', C.ink], ['TOUT', OR]], 720, 130, win(K.tout + .1, K.masc - .15)); presenter(540, 1900, 1.0, 'cheer', t, win(K.tout + .1, K.masc - .15));
 }
 
@@ -317,15 +349,14 @@ function scenes(t) {
   const K_ = K;
   // 2. « cette vidéo » : un cadre de lecture
   const vk = pop(t, K_.voyez, K_.elle + .3, .3, .25);
-  if (vk > 0) { ctx.save(); ctx.translate(W / 2, 640); ctx.rotate(-.03); ctx.scale(vk, vk); ctx.fillStyle = 'rgba(22,19,31,.9)'; rrect(-300 + 9, -330 + 11, 600, 660, 36); ctx.fill();
-    rrect(-300, -330, 600, 660, 36); ctx.fillStyle = '#16131f'; ctx.fill(); ctx.lineWidth = 6; ctx.strokeStyle = '#fff'; ctx.stroke();
-    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.moveTo(-50, -80); ctx.lineTo(-50, 80); ctx.lineTo(90, 0); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = '#ffffff44'; rrect(-240, 250, 480, 14, 7); ctx.fill(); ctx.fillStyle = C.orange; rrect(-240, 250, 480 * ((t * .25) % 1), 14, 7); ctx.fill();
-    text('Cette vidéo', 0, -230, 70, '#fff', F.kalam, 'center', 700); ctx.restore(); }
+  if (vk > 0) { ctx.save(); ctx.translate(W / 2, 650); ctx.rotate(-.02); ctx.scale(vk, vk); ctx.fillStyle = C.ink; rrect(-290 + 18, -320 + 18, 580, 640, 14); ctx.fill();
+    rrect(-290, -320, 580, 640, 14); ctx.fillStyle = '#e8552d'; ctx.fill(); ctx.lineWidth = 8; ctx.strokeStyle = C.ink; ctx.stroke();
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.moveTo(-70, -110); ctx.lineTo(-70, 110); ctx.lineTo(120, 0); ctx.closePath(); ctx.fill(); ctx.lineWidth = 8; ctx.strokeStyle = C.ink; ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.fillRect(-230, 235, 460, 22); ctx.fillStyle = '#fff'; ctx.fillRect(-230, 235, 460 * ((t * .25) % 1), 22); ctx.strokeStyle = C.ink; ctx.lineWidth = 6; ctx.strokeRect(-230, 235, 460, 22); ctx.restore(); }
   // 3. « ni Sora, ni ChatGPT, ni Gemini Veo 3 » : trois cartes barrées
   [['Sora', 'sora', K_.sora, 520, -3], ['ChatGPT', 'openai', K_.chatgpt, 720, 2], ['Gemini Veo 3', 'gemini-color', K_.gemini, 920, -2]].forEach(([n, img, a, y, r]) => {
     const k = pop(t, a, K_.ceci + .3, .28, .3); sticker(n, W / 2, y, 880, 150, '#fff', r, k, 66, img);
-    const x = seg(t, a + .45, a + .7); if (k > 0 && x > 0) { ctx.save(); ctx.translate(W / 2, y); ctx.rotate(r * Math.PI / 180); ctx.scale(k, k); ctx.strokeStyle = C.red; ctx.lineWidth = 20; ctx.lineCap = 'round';
+    const x = seg(t, a + .45, a + .7); if (k > 0 && x > 0) { ctx.save(); ctx.translate(W / 2, y); ctx.rotate(r * Math.PI / 180); ctx.scale(k, k); ctx.strokeStyle = '#e8552d'; ctx.lineWidth = 26; ctx.lineCap = 'round';
       ctx.beginPath(); ctx.moveTo(-410, 30); ctx.lineTo(-410 + 820 * easeOut(x), -20 - 10 * easeOut(x)); ctx.stroke(); ctx.restore(); } });
   // 4. « fait en code »
   codeWindow(t, K_.ceci, pop(t, K_.ceci, K_.voici + .1, .3, .3));
@@ -351,14 +382,14 @@ function renderFrame(t) {
   const mk = pop(t, K.masc, K.cc - .2, .35, .3);
   if (mk > 0) { const pose = t < K.ang ? 'idle' : t < K.sho ? 'angry' : t < K.sad ? 'shock' : t < K.cry ? 'sad' : 'cry';
     const lab = [[K.ang, K.sho, '😡 ÉNERVÉ', '#fca5a5'], [K.sho, K.sad, '😱 CHOQUÉ', '#fde68a'], [K.sad, K.cry, '😢 TRISTE', '#93c5fd'], [K.cry, K.cc - .2, '😭 EN LARMES', '#a5b4fc']];
-    mascot(540, 1700, 26, pose, t, mk); lab.forEach(([a, b, s, c]) => sticker(s, W / 2, 720, 700, 140, c, -2, pop(t, a, b, .25, .1), 70)); }
+    mascot(540, 1740, 32, pose, t, mk); lab.forEach(([a, b, s, c]) => sticker(s, W / 2, 700, 700, 140, c, -2, pop(t, a, b, .25, .1), 70)); }
   // final
   const ck = pop(t, K.cc - .1, DURATION, .3, .01);
-  if (ck > 0) { presenter(540, 1900, 1.0, 'wave', t, ck);
-    sticker('Claude Code', W / 2, 660, 760, 160, '#86efac', -2, pop(t, K.cc, DURATION, .3, .01), 78, 'claude-color');
+  if (ck > 0) { presenter(540, 1900, .9, 'wave', t, ck);
+    sticker('Claude Code', W / 2, 650, 760, 160, '#86efac', -2, pop(t, K.cc, DURATION, .3, .01), 78, 'claude-color');
     const bk = pop(t, K.abonner, DURATION, .3, .01) * (1 + Math.sin(t * 7) * .03);
-    sticker('🔔 Abonne-toi !', W / 2, 800, 720, 140, '#fde68a', 2, bk, 72);
-    sticker('Ciao les BG 👋', W / 2, 940, 700, 130, '#fca5a5', -2, pop(t, K.ciao, DURATION, .3, .01), 66); }
+    sticker('🔔 Abonne-toi !', W / 2, 775, 720, 140, '#fde68a', 2, bk, 72);
+    sticker('Ciao les BG 👋', W / 2, 895, 700, 130, '#fca5a5', -2, pop(t, K.ciao, DURATION, .3, .01), 66); }
   subtitles(t);
   ctx.fillStyle = '#e8552d'; ctx.fillRect(0, 0, W * t / DURATION, 8);
 }
