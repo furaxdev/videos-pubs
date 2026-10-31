@@ -6,12 +6,18 @@ import edge_tts
 VOICE, RATE = 'fr-CH-FabriceNeural', '+8%'
 TEXT = (
     "Pourquoi c'est horrible de naître avec un grand front ? "
-    "Déjà, à l'école, tout le monde t'appelle écran de cinéma. "
-    "Dès qu'il y a du soleil, ton front reflète la lumière, et les avions te prennent pour une piste d'atterrissage. "
-    "Chez le coiffeur, personne ne sait quoi faire de ta frange. "
-    "Tu mets un bonnet, il glisse. Tu mets une casquette, elle ne tient pas. "
-    "Et le pire, c'est que tu ne peux rien cacher. Chaque pensée se voit, sur ton front. "
-    "Mais bon, on dit qu'un grand front, c'est un grand cerveau. Enfin, c'est ce qu'on dit. "
+    "Tu arrives à la plage. Grand soleil. Tout va bien. "
+    "Tu t'allonges. Une mouette passe. Elle regarde ton front. Elle ralentit. Elle descend. "
+    "Atterrissage. Sur toi ! "
+    "Ton front vient officiellement d'être classé aéroport. Magnifique. "
+    "Parce que contrairement à ce qu'on croit, un grand front ne veut pas dire un gros cerveau. "
+    "Ça veut juste dire que la ligne des cheveux est plus haute. "
+    "Et c'est une grande surface plate, pile face au ciel, donc la zone qui prend le plus de soleil. "
+    "Au bout de vingt minutes, il est rouge. Tu ressembles à un feu de signalisation. "
+    "Ton pote te rassure. T'inquiète, mets de la crème. Super. Sauf qu'il te faut un tube entier. "
+    "Tu mets une casquette. Elle tombe. Tu mets un bonnet. Il glisse. "
+    "Tu regardes la mouette. La mouette te regarde. "
+    "Le seul qui t'aime vraiment sur cette plage, c'est celui qui voulait se poser sur toi. "
     "Abonne-toi, c'est gratuit !"
 )
 
