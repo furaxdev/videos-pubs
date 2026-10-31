@@ -98,11 +98,14 @@ const SUBS = [
 function subtitles(t) {
   const sub = SUBS.find(([a, b]) => t >= a && t < b); if (!sub) return;
   const [a, b, str] = sub, words = str.split(' '), n = words.length, wd = (b - a - .3) / n;
-  const i = Math.min(n - 1, Math.floor((t - a) / wd)), g = Math.floor(i / 3), grp = words.slice(g * 3, g * 3 + 3);
-  const size = 92; ctx.font = `800 ${size}px ${F.mont}`;
-  const ws = grp.map(w => ctx.measureText(w.replace('*', '')).width), gap = 26, total = ws.reduce((x, y) => x + y, 0) + gap * (grp.length - 1);
+  const i = Math.min(n - 1, Math.floor((t - a) / wd)), size = 92, gap = 26, MAXW = 960;
+  ctx.font = `800 ${size}px ${F.mont}`;
+  const wid = w => ctx.measureText(w.replace('*', '')).width, groups = []; // groupes de 3 mots max, jamais plus larges que l'écran
+  for (let j = 0, cur = [], cw = 0; j < n; j++) { const w = wid(words[j]); if (cur.length && (cur.length >= 3 || cw + gap + w > MAXW)) { groups.push(cur); cur = []; cw = 0; } cur.push(j); cw += (cur.length > 1 ? gap : 0) + w; if (j === n - 1) groups.push(cur); }
+  const grpIdx = groups.find(g => g.includes(i)), grp = grpIdx.map(j => words[j]);
+  const ws = grp.map(wid), total = ws.reduce((x, y) => x + y, 0) + gap * (grp.length - 1);
   let x = W / 2 - total / 2;
-  grp.forEach((w, j) => { const idx = g * 3 + j, k = idx <= i ? back(seg(t, a + idx * wd, a + idx * wd + .15)) : 0, hl = w.startsWith('*'), s = w.replace('*', '');
+  grp.forEach((w, j) => { const idx = grpIdx[j], k = idx <= i ? back(seg(t, a + idx * wd, a + idx * wd + .15)) : 0, hl = w.startsWith('*'), s = w.replace('*', '');
     if (k > 0) { ctx.save(); ctx.translate(x + ws[j] / 2, 1245); ctx.scale(k, k); ctx.font = `800 ${size}px ${F.mont}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.lineJoin = 'round'; ctx.lineWidth = 20; ctx.strokeStyle = C.ink; ctx.strokeText(s, 0, 0); ctx.fillStyle = hl ? C.yellow : '#fff'; ctx.fillText(s, 0, 0); ctx.restore(); }
     x += ws[j] + gap; });
