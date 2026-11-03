@@ -4,12 +4,21 @@
  "theme": "night",
  "voice": "fr-FR-RemyMultilingualNeural",
  "rate": "-8%",
- "gap": 0.4,
+ "gap": 0.35,
  "segments": [
   {
    "text": "Des jeunes croyants se sont endormis dans une grotte, et se sont réveillés trois cent neuf ans plus tard.",
-   "icon": "cave",
-   "big": "309 ANS",
+   "beats": [
+    {
+     "at": 0,
+     "scene": "cave_night"
+    },
+    {
+     "at": "trois",
+     "scene": "cave_night",
+     "big": "309 ANS"
+    }
+   ],
    "hl": [
     "trois",
     "cent",
@@ -18,52 +27,187 @@
    ]
   },
   {
-   "text": "Ils vivaient dans une ville où l'on adorait autre qu'Allah. Eux, ils croyaient en Allah, et ils ont refusé de renier leur foi.",
-   "icon": "city",
+   "text": "Ils vivaient dans un très ancien village, où leur peuple adorait d'autres dieux qu'Allah.",
+   "beats": [
+    {
+     "at": 0,
+     "scene": "village_dusk"
+    },
+    {
+     "at": "adorait",
+     "scene": "altar"
+    }
+   ],
+   "hl": [
+    "village",
+    "adorait",
+    "Allah"
+   ]
+  },
+  {
+   "text": "Eux, ils croyaient en Allah seul. Et même sous la pression, ils ont refusé de renier leur foi.",
+   "beats": [
+    {
+     "at": 0,
+     "scene": "faith_light"
+    },
+    {
+     "at": "pression",
+     "scene": "stand_firm"
+    }
+   ],
    "hl": [
     "Allah",
-    "foi"
+    "foi",
+    "refusé"
    ]
   },
   {
-   "text": "Alors ils ont fui, pour protéger leur religion. Ils se sont réfugiés dans une grotte, en priant : Notre Seigneur, accorde-nous une miséricorde de Ta part.",
-   "icon": "mountain",
+   "text": "Alors, une nuit, ils ont quitté le village, discrètement, pour protéger leur religion.",
+   "beats": [
+    {
+     "at": 0,
+     "scene": "flee_gate"
+    }
+   ],
    "hl": [
-    "grotte",
-    "miséricorde"
+    "nuit",
+    "quitté",
+    "religion"
    ]
   },
   {
-   "text": "Et Allah les a plongés dans un profond sommeil. Leur chien restait là, à l'entrée de la grotte.",
-   "icon": "sleep",
+   "text": "Ils ont marché, longtemps, loin des maisons, jusqu'à une montagne, et se sont réfugiés dans une grotte.",
+   "beats": [
+    {
+     "at": 0,
+     "scene": "flee_path"
+    },
+    {
+     "at": "montagne",
+     "scene": "mountain_far"
+    },
+    {
+     "at": "grotte",
+     "scene": "cave_entrance"
+    }
+   ],
    "hl": [
-    "sommeil",
-    "chien"
+    "marché",
+    "montagne",
+    "grotte"
    ]
   },
   {
-   "text": "Les années passaient. Le soleil se levait, se couchait, encore et encore, sans jamais les déranger.",
-   "icon": "time",
+   "text": "En priant : Ô notre Seigneur, donne-nous de Ta part une miséricorde, et assure-nous la droiture dans tout ce qui nous concerne.",
+   "beats": [
+    {
+     "at": 0,
+     "scene": "dua_light"
+    }
+   ],
+   "arabic": [
+    "رَبَّنَا آتِنَا مِن لَّدُنكَ رَحْمَةً",
+    "وَهَيِّئْ لَنَا مِنْ أَمْرِنَا رَشَدًا"
+   ],
+   "source": "Sourate Al-Kahf · 18:10",
+   "gapAfter": 0.5,
+   "hl": [
+    "miséricorde",
+    "droiture"
+   ]
+  },
+  {
+   "text": "Et Allah les a plongés dans un profond sommeil.",
+   "beats": [
+    {
+     "at": 0,
+     "scene": "cave_sleep"
+    }
+   ],
+   "hl": [
+    "Allah",
+    "sommeil"
+   ]
+  },
+  {
+   "text": "Leur chien restait là, étendu à l'entrée de la grotte.",
+   "beats": [
+    {
+     "at": 0,
+     "scene": "dog_guard"
+    }
+   ],
+   "hl": [
+    "chien",
+    "entrée"
+   ]
+  },
+  {
+   "text": "Les années passaient. Le soleil se levait, se couchait, encore et encore.",
+   "beats": [
+    {
+     "at": 0,
+     "scene": "time_lapse"
+    }
+   ],
    "hl": [
     "années",
     "soleil"
    ]
   },
   {
-   "text": "Quand ils se sont réveillés, ils se sont demandé : combien de temps sommes-nous restés ? Un jour, ou une partie d'un jour ?",
-   "icon": "wake",
-   "big": "1 JOUR ?",
+   "text": "Quand le soleil se levait, il s'écartait de leur grotte, et quand il se couchait, il les évitait.",
+   "beats": [
+    {
+     "at": 0,
+     "scene": "sun_avoids"
+    }
+   ],
+   "hl": [
+    "soleil",
+    "grotte",
+    "évitait"
+   ]
+  },
+  {
+   "text": "Puis, un jour, Allah les a réveillés.",
+   "beats": [
+    {
+     "at": 0,
+     "scene": "wake_dawn"
+    }
+   ],
+   "hl": [
+    "réveillés",
+    "Allah"
+   ]
+  },
+  {
+   "text": "Ils se sont demandé : combien de temps sommes-nous restés ? Un jour, ou une partie d'un jour ?",
+   "beats": [
+    {
+     "at": 0,
+     "scene": "question_clock",
+     "big": "1 JOUR ?"
+    }
+   ],
    "hl": [
     "jour"
    ]
   },
   {
    "text": "Mais en réalité, il s'était écoulé trois cent neuf ans.",
-   "icon": "counter",
-   "counter": {
-    "to": 309,
-    "label": "ANS"
-   },
+   "beats": [
+    {
+     "at": 0,
+     "scene": "counter_vortex",
+     "counter": {
+      "to": 309,
+      "label": "ANS"
+     }
+    }
+   ],
    "hl": [
     "trois",
     "cent",
@@ -73,13 +217,18 @@
   },
   {
    "text": "Ils demeurèrent dans leur caverne trois cents ans, et y ajoutèrent neuf.",
-   "icon": "book",
+   "beats": [
+    {
+     "at": 0,
+     "scene": "dua_light"
+    }
+   ],
    "arabic": [
     "وَلَبِثُوا فِي كَهْفِهِمْ",
     "ثَلَاثَ مِائَةٍ سِنِينَ وَازْدَادُوا تِسْعًا"
    ],
    "source": "Sourate Al-Kahf · 18:25",
-   "gapAfter": 0.7,
+   "gapAfter": 0.6,
    "hl": [
     "trois",
     "neuf"
@@ -87,7 +236,12 @@
   },
   {
    "text": "Celui qui protège sa foi, Allah prend soin de lui. Et rien n'est impossible pour Lui.",
-   "icon": "lantern",
+   "beats": [
+    {
+     "at": 0,
+     "scene": "light_dark"
+    }
+   ],
    "hl": [
     "foi",
     "Allah"
@@ -95,8 +249,13 @@
   },
   {
    "text": "Pense à lire la sourate Al-Kahf, chaque vendredi. Partage ce rappel, qu'Allah t'en récompense.",
-   "icon": "book",
-   "big": "AL-KAHF",
+   "beats": [
+    {
+     "at": 0,
+     "scene": "friday",
+     "big": "AL-KAHF"
+    }
+   ],
    "hl": [
     "vendredi",
     "sourate",
