@@ -1,0 +1,67 @@
+{
+ "id": "fajr",
+ "title": "Les deux rak'at de Fajr",
+ "theme": "dawn",
+ "voice": "fr-FR-HenriNeural",
+ "rate": "-3%",
+ "gap": 0.4,
+ "segments": [
+  {
+   "text": "Deux rak'at. Rien que deux petites rak'at. Et pourtant, elles valent mieux que le monde entier.",
+   "icon": "mosque",
+   "big": "2 RAK'AT",
+   "hl": [
+    "Deux",
+    "monde"
+   ]
+  },
+  {
+   "text": "Le Prophète, que la paix et la bénédiction d'Allah soient sur lui, a dit : les deux rak'at de Fajr valent mieux que ce bas monde, et tout ce qu'il contient.",
+   "icon": "mosque",
+   "arabic": [
+    "رَكْعَتَا الْفَجْرِ",
+    "خَيْرٌ مِنَ الدُّنْيَا وَمَا فِيهَا"
+   ],
+   "source": "Rapporté par Muslim · 725",
+   "gapAfter": 0.6,
+   "hl": [
+    "Fajr",
+    "monde"
+   ]
+  },
+  {
+   "text": "Je parle de la sunna du Fajr : deux rak'at légères, juste avant la prière obligatoire.",
+   "icon": "rug",
+   "hl": [
+    "sunna",
+    "Fajr"
+   ]
+  },
+  {
+   "text": "Elles ne prennent même pas deux minutes. Et elles valent plus que ton téléphone, ta voiture, ton argent. Tout ce que tu possèdes.",
+   "icon": "worth",
+   "hl": [
+    "téléphone",
+    "voiture",
+    "argent"
+   ]
+  },
+  {
+   "text": "Alors demain, quand l'adhan du Fajr retentit, ne te rendors pas. Lève-toi, prie deux rak'at, et commence ta journée avec Allah.",
+   "icon": "alarm",
+   "hl": [
+    "adhan",
+    "Fajr",
+    "Allah"
+   ]
+  },
+  {
+   "text": "Partage ce rappel à quelqu'un qui dort encore. Qu'Allah t'en récompense.",
+   "icon": "lantern",
+   "hl": [
+    "Partage",
+    "rappel"
+   ]
+  }
+ ]
+}

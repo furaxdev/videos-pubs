@@ -1,0 +1,70 @@
+{
+ "id": "duha",
+ "title": "La prière du Duha",
+ "theme": "paper",
+ "voice": "fr-CA-AntoineNeural",
+ "rate": "-2%",
+ "gap": 0.4,
+ "segments": [
+  {
+   "text": "Chaque matin, ton corps te doit une aumône.",
+   "icon": "sun",
+   "big": "UNE AUMÔNE",
+   "hl": [
+    "aumône"
+   ]
+  },
+  {
+   "text": "Le Prophète a dit : chaque matin, une aumône est due pour chacune de vos articulations. Mais deux rak'at de Duha suffisent à les remplacer.",
+   "icon": "sun",
+   "arabic": [
+    "يُصْبِحُ عَلَى كُلِّ سُلَامَى مِنْ أَحَدِكُمْ صَدَقَةٌ",
+    "وَيُجْزِئُ مِنْ ذَلِكَ رَكْعَتَانِ يَرْكَعُهُمَا مِنَ الضُّحَى"
+   ],
+   "source": "Rapporté par Muslim · 720",
+   "gapAfter": 0.6,
+   "hl": [
+    "aumône",
+    "Duha"
+   ]
+  },
+  {
+   "text": "Et selon le hadith, notre corps compte trois cent soixante articulations. Cela fait trois cent soixante aumônes à donner, chaque jour.",
+   "icon": "counter",
+   "counter": {
+    "to": 360,
+    "label": "AUMÔNES"
+   },
+   "hl": [
+    "trois",
+    "cent",
+    "soixante"
+   ]
+  },
+  {
+   "text": "Allah nous a facilité les choses : deux rak'at suffisent.",
+   "icon": "rug",
+   "big": "2 RAK'AT",
+   "hl": [
+    "deux",
+    "rak'at"
+   ]
+  },
+  {
+   "text": "On les prie après le lever du soleil, une quinzaine de minutes plus tard, et jusqu'avant le milieu de la journée.",
+   "icon": "suntrack",
+   "hl": [
+    "soleil",
+    "minutes"
+   ]
+  },
+  {
+   "text": "Alors demain matin, offre ces deux rak'at à Allah. Partage ce rappel, qu'Allah t'en récompense.",
+   "icon": "lantern",
+   "hl": [
+    "Allah",
+    "Partage"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,107 @@
+{
+ "id": "kahf",
+ "title": "La grotte d'Ahl al-Kahf",
+ "theme": "night",
+ "voice": "fr-FR-RemyMultilingualNeural",
+ "rate": "-8%",
+ "gap": 0.4,
+ "segments": [
+  {
+   "text": "Des jeunes croyants se sont endormis dans une grotte, et se sont réveillés trois cent neuf ans plus tard.",
+   "icon": "cave",
+   "big": "309 ANS",
+   "hl": [
+    "trois",
+    "cent",
+    "neuf",
+    "ans"
+   ]
+  },
+  {
+   "text": "Ils vivaient dans une ville où l'on adorait autre qu'Allah. Eux, ils croyaient en Allah, et ils ont refusé de renier leur foi.",
+   "icon": "city",
+   "hl": [
+    "Allah",
+    "foi"
+   ]
+  },
+  {
+   "text": "Alors ils ont fui, pour protéger leur religion. Ils se sont réfugiés dans une grotte, en priant : Notre Seigneur, accorde-nous une miséricorde de Ta part.",
+   "icon": "mountain",
+   "hl": [
+    "grotte",
+    "miséricorde"
+   ]
+  },
+  {
+   "text": "Et Allah les a plongés dans un profond sommeil. Leur chien restait là, à l'entrée de la grotte.",
+   "icon": "sleep",
+   "hl": [
+    "sommeil",
+    "chien"
+   ]
+  },
+  {
+   "text": "Les années passaient. Le soleil se levait, se couchait, encore et encore, sans jamais les déranger.",
+   "icon": "time",
+   "hl": [
+    "années",
+    "soleil"
+   ]
+  },
+  {
+   "text": "Quand ils se sont réveillés, ils se sont demandé : combien de temps sommes-nous restés ? Un jour, ou une partie d'un jour ?",
+   "icon": "wake",
+   "big": "1 JOUR ?",
+   "hl": [
+    "jour"
+   ]
+  },
+  {
+   "text": "Mais en réalité, il s'était écoulé trois cent neuf ans.",
+   "icon": "counter",
+   "counter": {
+    "to": 309,
+    "label": "ANS"
+   },
+   "hl": [
+    "trois",
+    "cent",
+    "neuf",
+    "ans"
+   ]
+  },
+  {
+   "text": "Ils demeurèrent dans leur caverne trois cents ans, et y ajoutèrent neuf.",
+   "icon": "book",
+   "arabic": [
+    "وَلَبِثُوا فِي كَهْفِهِمْ",
+    "ثَلَاثَ مِائَةٍ سِنِينَ وَازْدَادُوا تِسْعًا"
+   ],
+   "source": "Sourate Al-Kahf · 18:25",
+   "gapAfter": 0.7,
+   "hl": [
+    "trois",
+    "neuf"
+   ]
+  },
+  {
+   "text": "Celui qui protège sa foi, Allah prend soin de lui. Et rien n'est impossible pour Lui.",
+   "icon": "lantern",
+   "hl": [
+    "foi",
+    "Allah"
+   ]
+  },
+  {
+   "text": "Pense à lire la sourate Al-Kahf, chaque vendredi. Partage ce rappel, qu'Allah t'en récompense.",
+   "icon": "book",
+   "big": "AL-KAHF",
+   "hl": [
+    "vendredi",
+    "sourate",
+    "Al-Kahf"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Hiday</title>
+<style>
+  @font-face { font-family: 'Playfair Display'; src: url(assets/Playfair.ttf); font-weight: 700; font-style: normal; }
+  @font-face { font-family: 'Playfair Display'; src: url(assets/PlayfairItalic.ttf); font-weight: 500 700; font-style: italic; }
+  @font-face { font-family: 'Amiri'; src: url(assets/Amiri.ttf); font-weight: 700; }
+  @font-face { font-family: 'Montserrat'; src: url(assets/Montserrat.ttf); font-weight: 800; }
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  canvas { display: block; height: 100vh; width: auto; margin: 0 auto; }
+  #hud { position: fixed; left: 12px; bottom: 10px; color: #888; font: 12px monospace; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<div id="hud"></div>
+<script>
+  const v = new URLSearchParams(location.search).get('v') || 'kahf';
+  document.write('<script src="out/' + v + '/video.js"><\/script><script src="engine.js"><\/script>');
+</script>
+</body>
+</html>
