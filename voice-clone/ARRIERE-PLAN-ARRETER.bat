@@ -1,8 +1,3 @@
 @echo off
-chcp 65001 >nul
-powershell -NoProfile -Command "Stop-ScheduledTask -TaskName 'ServeurDeVoix' -ErrorAction SilentlyContinue; Unregister-ScheduledTask -TaskName 'ServeurDeVoix' -Confirm:$false -ErrorAction SilentlyContinue"
-taskkill /f /im pythonw.exe >nul 2>nul
-taskkill /f /im ngrok.exe >nul 2>nul
-taskkill /f /im cloudflared.exe >nul 2>nul
-echo Serveur de voix arrete et supprime du demarrage.
-pause
+cd /d "%~dp0"
+cmd /k call "%~dp0scripts\arriere-plan-arreter.cmd"

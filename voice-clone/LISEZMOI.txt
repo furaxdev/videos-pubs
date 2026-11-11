@@ -6,6 +6,7 @@ Modèle : Chatterbox multilingue (open source, licence MIT). Ta voix ne quitte j
 1. Dézippe ce dossier (clic droit > Extraire tout), par exemple sur le Bureau.
 2. Double-clique sur INSTALLER.bat  -> 10 à 20 min, une seule fois (il télécharge ~3 Go).
    Si Windows demande « Exécuter quand même ? » : Informations complémentaires > Exécuter quand même.
+   La fenêtre noire RESTE OUVERTE même en cas d'erreur : prends-la en photo et envoie-la moi.
 3. Double-clique sur LANCER.bat :
    - il te fait lire un texte pendant 30 secondes (micro de l'écran ou micro de téléphone, voir plus bas),
    - il génère 3 phrases avec TA voix clonée,
