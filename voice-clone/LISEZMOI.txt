@@ -26,3 +26,24 @@ POUR UN MEILLEUR RÉSULTAT
 
 SI ÇA PLANTE
 Prends en photo la fenêtre noire (avec le message d'erreur) et envoie-la moi.
+
+=====================================================
+MODE SERVEUR : que Claude te parle directement (texte -> MP3)
+=====================================================
+1. (Une seule fois) Fais INSTALLER.bat, puis LANCER.bat une première fois : il enregistre ta voix de référence.
+   (ou mets « ma-voix.mp3 » dans le dossier, voir plus haut)
+2. Double-clique sur SERVEUR.bat. Il charge le modèle (quelques minutes), puis ouvre un tunnel Cloudflare gratuit
+   et affiche une ADRESSE du type  https://xxxx-xxxx.trycloudflare.com
+3. Envoie à Claude, dans la conversation, UNIQUEMENT cette adresse.
+   Le MOT DE PASSE est dans le fichier token.txt : Claude te le demandera dans un formulaire sécurisé.
+   Ne le colle jamais dans le chat et ne le donne à personne.
+4. Laisse la fenêtre OUVERTE tant que tu veux que Claude puisse générer des voix. Ferme-la = tout est coupé.
+   L'adresse change à chaque démarrage : renvoie la nouvelle adresse à chaque fois.
+
+SÉCURITÉ
+- Ta voix de référence ne sort jamais du PC. Seul l'audio GÉNÉRÉ est renvoyé.
+- Tout est protégé par le mot de passe : sans lui, le serveur répond « refusé ».
+- Mais quelqu'un qui aurait adresse + mot de passe pourrait générer des phrases avec ta voix :
+  garde token.txt secret, et supprime-le (il en recrée un nouveau) si tu penses qu'il a fuité.
+- Le texte envoyé et l'audio renvoyé transitent par Cloudflare (chiffré en HTTPS).
+- Le PC doit rester allumé et connecté pendant l'utilisation. Une phrase prend 1 à 3 minutes sur ton processeur.
