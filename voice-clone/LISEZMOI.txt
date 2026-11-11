@@ -53,6 +53,7 @@ ZÉRO MANIP : adresse fixe + démarrage automatique (à faire UNE FOIS)
 =====================================================
 1. Compte gratuit sur https://ngrok.com -> crée un « Domain » gratuit + copie ton « Authtoken ».
 2. Ouvre config.txt (Bloc-notes), remplis NGROK_DOMAIN et NGROK_AUTHTOKEN, enregistre.
-3. Double-clique sur DEMARRAGE-AUTO.bat : le serveur se lance tout seul à chaque allumage de Windows.
+3. Double-clique sur ARRIERE-PLAN-INSTALLER.bat : le serveur tourne en arrière-plan, sans fenêtre, se lance
+   tout seul à l'ouverture de session Windows et se relance s'il plante. (état : ARRIERE-PLAN-ETAT.bat, arrêt : ARRIERE-PLAN-ARRETER.bat)
 4. Envoie à Claude ton domaine fixe (une seule fois). Plus jamais besoin de lui renvoyer d'adresse.
    (Le PC doit être allumé et connecté à Internet quand Claude veut générer une voix.)

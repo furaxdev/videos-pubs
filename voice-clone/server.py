@@ -9,6 +9,8 @@ warnings.filterwarnings("ignore")
 HERE = os.path.dirname(os.path.abspath(__file__)); os.chdir(HERE)
 PORT, MAX_CHARS, FAKE = 8765, 700, bool(os.environ.get("FAKE_TTS"))
 LOCAL = "--local" in sys.argv
+SERVICE = "--service" in sys.argv  # tâche de fond : pas de fenêtre, tout va dans server.log
+if SERVICE or sys.stdout is None: sys.stdout = sys.stderr = open("server.log", "a", encoding="utf-8", buffering=1); print("\n--- démarrage", time.strftime("%Y-%m-%d %H:%M:%S"), "---")
 
 def token():
     if not os.path.exists("token.txt"): open("token.txt", "w").write(secrets.token_urlsafe(24))
@@ -34,6 +36,8 @@ def decouper(texte, n=220):  # phrases courtes = meilleure qualité
 
 def charger_modele():
     if FAKE: STATE["model"] = "ready"; return None, 24000, None
+    if SERVICE and not any(os.path.exists(f) for f in ("ma-voix.wav", "ma-voix.mp3", "ma-voix.m4a", "ma-voix.flac", "ma-voix.ogg", "reference.wav")):
+        print("ERREUR : aucune voix de référence. Lance d'abord LANCER.bat (ou mets ma-voix.mp3 dans le dossier)."); sys.exit(1)
     from clone import trouver_reference
     ref = trouver_reference()
     import torch; _l = torch.load; torch.load = lambda *a, **k: _l(*a, **{**k, "map_location": torch.device("cpu")})
