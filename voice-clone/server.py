@@ -91,6 +91,24 @@ class H(BaseHTTPRequestHandler):
             while len(ORDER) > 40: JOBS.pop(ORDER.pop(0), None)
         Q.put(jid); self._json(202, {"id": jid, "chunks": JOBS[jid]["chunks"]})
 
+def config():
+    c = {}
+    if os.path.exists("config.txt"):
+        for l in open("config.txt", encoding="utf-8"):
+            if "=" in l and not l.strip().startswith("#"): k, v = l.split("=", 1); c[k.strip()] = v.strip()
+    return c
+
+def ngrok_fixe(c):
+    """Adresse FIXE (ngrok, domaine statique gratuit) : je n'ai plus besoin qu'on me la renvoie."""
+    from pyngrok import installer
+    exe = os.path.abspath("ngrok.exe" if platform.system() == "Windows" else "ngrok")
+    if not os.path.exists(exe): print("Téléchargement de ngrok..."); installer.install_ngrok(exe)
+    dom = c["NGROK_DOMAIN"].replace("https://", "").strip("/")
+    p = subprocess.Popen([exe, "http", f"--url={dom}", str(PORT), "--authtoken", c["NGROK_AUTHTOKEN"], "--log=stdout"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    STATE["url"] = "https://" + dom; open("connexion.txt", "w").write(f"ADRESSE : {STATE['url']}\nMOT DE PASSE : {TOKEN}\n")
+    threading.Thread(target=lambda: [None for _ in p.stdout], daemon=True).start()
+    print("\n" + "=" * 62 + f"\n  SERVEUR EN LIGNE (adresse fixe)\n  Adresse : {STATE['url']}\n" + "=" * 62); return p
+
 def cloudflared():
     exe = "cloudflared.exe" if platform.system() == "Windows" else "cloudflared"
     if not os.path.exists(exe):
@@ -112,7 +130,7 @@ def main():
     threading.Thread(target=worker, args=(model, sr, ref), daemon=True).start()
     srv = ThreadingHTTPServer(("127.0.0.1", PORT), H); threading.Thread(target=srv.serve_forever, daemon=True).start()
     print(f"Serveur prêt en local : http://127.0.0.1:{PORT}  (modèle : {STATE['model']}{' - MODE TEST' if FAKE else ''})")
-    tun = None if LOCAL else cloudflared()
+    c = config(); tun = None if LOCAL else (ngrok_fixe(c) if c.get('NGROK_AUTHTOKEN') and c.get('NGROK_DOMAIN') else cloudflared())
     try:
         while True: time.sleep(1)
     except KeyboardInterrupt: pass

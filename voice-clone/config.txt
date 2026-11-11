@@ -1,0 +1,6 @@
+# ADRESSE FIXE (recommandé) : crée un compte gratuit sur https://ngrok.com
+#  1) Menu "Domains" -> "Create Domain" (1 domaine statique gratuit, ex: mon-nom-123.ngrok-free.app)
+#  2) Menu "Your Authtoken" -> copie ton token
+# Puis remplis les 2 lignes ci-dessous (sans espaces) et enregistre. Laisse vide pour une adresse temporaire.
+NGROK_DOMAIN=
+NGROK_AUTHTOKEN=

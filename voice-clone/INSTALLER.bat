@@ -15,7 +15,7 @@ set "PATH=%USERPROFILE%\.local\bin;%PATH%"
 echo [2/3] Creation de l'environnement Python 3.11...
 uv venv --python 3.11 .venv || goto :erreur
 echo [3/3] Installation de Chatterbox (clonage de voix)...
-uv pip install --python ".venv\Scripts\python.exe" chatterbox-tts sounddevice soundfile lameenc numpy || goto :erreur
+uv pip install --python ".venv\Scripts\python.exe" chatterbox-tts sounddevice soundfile lameenc numpy pyngrok || goto :erreur
 echo.
 echo ============================================================
 echo  Installation terminee ! Lance maintenant : LANCER.bat
