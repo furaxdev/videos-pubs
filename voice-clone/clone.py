@@ -6,12 +6,11 @@ import os, sys, time, glob, warnings
 warnings.filterwarnings("ignore")
 HERE = os.path.dirname(os.path.abspath(__file__)); os.chdir(HERE)
 
-TEXTE_A_LIRE = (
-    "Salut, c'est moi ! Aujourd'hui, je vais te montrer comment coder une vidéo avec l'intelligence artificielle. "
-    "Franchement, c'est incroyable : tu décris ce que tu veux, et en quelques minutes, tout est prêt. "
-    "Alors, est-ce que tu penses que c'est possible ? Eh bien oui ! Et je vais te le prouver, étape par étape. "
-    "Allez, on commence. Et surtout, n'oublie pas de t'abonner !"
-)
+TEXTE_PAR_DEFAUT = "Salut, c'est moi ! Aujourd'hui, je vais te montrer quelque chose d'incroyable. Il y a huit jours, j'ai écrit quarante-deux lignes de code, et ce matin, tout était prêt. Est-ce que c'est aussi simple ? Eh bien, oui ! Merci d'avoir regardé, abonne-toi, et à très vite !"
+
+def charger_texte():  # le texte à lire est dans texte-a-lire.txt : tu peux le modifier
+    p = os.path.join(HERE, "texte-a-lire.txt")
+    return open(p, encoding="utf-8").read().strip() if os.path.exists(p) else TEXTE_PAR_DEFAUT
 PHRASES_TEST = [
     "Salut, c'est FuraxDev ! Aujourd'hui, je vais te montrer comment Claude Code peut tout coder à ma place.",
     "Tu paies deux cents dollars par mois pour une intelligence artificielle ? Eh bien, ce n'est plus nécessaire.",
@@ -20,20 +19,28 @@ PHRASES_TEST = [
 DUREE_ENREG = 30  # secondes
 
 def enregistrer(chemin):
-    import numpy as np, sounddevice as sd, soundfile as sf
+    import threading, numpy as np, sounddevice as sd, soundfile as sf
     sr = 24000
-    print("\n=== ENREGISTREMENT (30 secondes) ===")
-    print("Mets-toi dans une pièce calme, micro à ~20 cm de la bouche, sans musique.")
-    print("Lis le texte ci-dessous à voix NATURELLE, comme dans tes vidéos :\n")
-    print("   " + TEXTE_A_LIRE.replace(". ", ".\n   ") + "\n")
-    input("Appuie sur ENTRÉE, puis commence à lire après le bip... ")
+    print("\n=== ENREGISTREMENT ===")
+    print("Pièce calme, micro à ~20 cm de la bouche, sans musique ni ventilateur.")
+    print("Lis le texte ci-dessous à voix NATURELLE, avec l'énergie de tes vidéos.")
+    print("Intonation variée : calme, question, enthousiasme. Vise 35 à 60 secondes.\n")
+    print("-" * 60 + "\n" + charger_texte() + "\n" + "-" * 60 + "\n")
+    input("Appuie sur ENTRÉE, puis commence à lire après le compte à rebours... ")
     for i in (3, 2, 1): print(i, end=" ", flush=True); time.sleep(1)
-    print("\n>>> PARLE MAINTENANT <<<")
-    audio = sd.rec(int(DUREE_ENREG * sr), samplerate=sr, channels=1, dtype="float32"); sd.wait()
-    audio = audio[:, 0]; pic = float(np.max(np.abs(audio)))
+    print("\n>>> PARLE MAINTENANT <<<   (appuie sur ENTRÉE quand tu as FINI de lire)")
+    frames, stop = [], threading.Event()
+    threading.Thread(target=lambda: (input(), stop.set()), daemon=True).start()
+    with sd.InputStream(samplerate=sr, channels=1, dtype="float32", callback=lambda d, n, t, s: frames.append(d.copy())):
+        t0 = time.time()
+        while not stop.is_set() and time.time() - t0 < 90: time.sleep(0.1)
+    if not frames: sys.exit("Aucun son enregistré. Vérifie le micro dans les paramètres Windows.")
+    audio = np.concatenate(frames)[:, 0]; pic = float(np.max(np.abs(audio)))
     if pic < 0.02: sys.exit("Micro trop faible ou muet. Vérifie le micro dans les paramètres Windows et recommence.")
-    audio = audio / pic * 0.9
-    sf.write(chemin, audio, sr); print("Enregistrement sauvegardé :", chemin)
+    voix = np.where(np.abs(audio) > pic * 0.06)[0]  # enlève les silences du début et de la fin
+    audio = audio[max(0, voix[0] - int(0.25 * sr)): voix[-1] + int(0.35 * sr)]
+    if len(audio) / sr < 15: sys.exit(f"Enregistrement trop court ({len(audio) / sr:.0f} s). Relis TOUT le texte, il faut au moins 15 secondes.")
+    sf.write(chemin, audio / pic * 0.9, sr); print(f"Enregistrement sauvegardé : {chemin}  ({len(audio) / sr:.0f} secondes)")
 
 def trouver_reference():
     for motif in ("ma-voix.wav", "ma-voix.mp3", "ma-voix.m4a", "ma-voix.flac", "ma-voix.ogg"):
