@@ -18,7 +18,7 @@ echo [2/3] Creation de l'environnement Python 3.11...
 uv venv --python 3.11 .venv
 if errorlevel 1 goto erreur
 echo [3/3] Installation de Chatterbox, le clonage de voix...
-uv pip install --python ".venv\Scripts\python.exe" chatterbox-tts sounddevice soundfile lameenc numpy pyngrok
+uv pip install --python ".venv\Scripts\python.exe" chatterbox-tts sounddevice soundfile lameenc numpy pyngrok "setuptools<81"
 if errorlevel 1 goto erreur
 echo.
 echo Installation terminee. Lance maintenant LANCER.bat

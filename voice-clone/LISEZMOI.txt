@@ -58,3 +58,8 @@ ZÉRO MANIP : adresse fixe + démarrage automatique (à faire UNE FOIS)
    tout seul à l'ouverture de session Windows et se relance s'il plante. (état : ARRIERE-PLAN-ETAT.bat, arrêt : ARRIERE-PLAN-ARRETER.bat)
 4. Envoie à Claude ton domaine fixe (une seule fois). Plus jamais besoin de lui renvoyer d'adresse.
    (Le PC doit être allumé et connecté à Internet quand Claude veut générer une voix.)
+
+SI « 'NoneType' object is not callable » (perth) AU CHARGEMENT DU MODELE
+Il manque setuptools. Dans une invite de commandes, dans le dossier du pack :
+  "%USERPROFILE%\.local\bin\uv.exe" pip install --python ".venv\Scripts\python.exe" "setuptools<81"
+(les nouvelles versions de INSTALLER.bat l'installent déjà.)
