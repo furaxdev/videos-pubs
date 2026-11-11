@@ -1,0 +1,28 @@
+CLONER MA VOIX — 100 % sur ton PC (Dell OptiPlex AIO)
+=====================================================
+Modèle : Chatterbox multilingue (open source, licence MIT). Ta voix ne quitte jamais ton ordinateur.
+
+ÉTAPES
+1. Dézippe ce dossier (clic droit > Extraire tout), par exemple sur le Bureau.
+2. Double-clique sur INSTALLER.bat  -> 10 à 20 min, une seule fois (il télécharge ~3 Go).
+   Si Windows demande « Exécuter quand même ? » : Informations complémentaires > Exécuter quand même.
+3. Double-clique sur LANCER.bat :
+   - il te fait lire un texte pendant 30 secondes (micro de l'écran ou micro de téléphone, voir plus bas),
+   - il génère 3 phrases avec TA voix clonée,
+   - il crée « ma-voix-clonee.mp3 » et ouvre le dossier.
+4. Écoute le fichier. S'il te plaît, glisse-le dans la conversation avec Claude.
+
+POUR UN MEILLEUR RÉSULTAT
+- Pièce calme, pas d'écho, pas de musique. Parle naturellement, avec l'énergie de tes vidéos.
+- Plus un micro est bon, mieux c'est : un casque-micro ou ton téléphone (Dictaphone) est souvent meilleur que le micro d'un tout-en-un.
+- Pour utiliser un enregistrement de ton téléphone : renomme-le « ma-voix.mp3 » (ou .wav/.m4a), mets-le dans ce dossier,
+  puis lance LANCER.bat : il saute l'enregistrement. 20 à 40 secondes de voix propre suffisent.
+
+À SAVOIR (ton PC n'a pas de carte graphique)
+- Le modèle tourne sur le processeur : c'est LENT. Compte plusieurs minutes pour 3 phrases. C'est normal, ne ferme pas la fenêtre.
+- Le premier lancement télécharge le modèle depuis Hugging Face (~3 Go). Ensuite, plus besoin d'Internet.
+- Il faut au moins 8 Go de RAM. Ferme Chrome et les autres programmes avant de lancer.
+- Windows uniquement. Si ton PC est sous Linux, dis-le moi et je te donne la version adaptée.
+
+SI ÇA PLANTE
+Prends en photo la fenêtre noire (avec le message d'erreur) et envoie-la moi.
