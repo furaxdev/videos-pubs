@@ -46,10 +46,9 @@ function icon(name, cx, cy, size, k) { const i = IMG['icon:' + name]; if (!i || 
 const POSES = [[0, '01-salut'], [K.vid, '02-bras-croises'], [K.codee, '03-pointe'], [K.decris - .1, '04-ordinateur-mac'], [K.ecrit - .1, '03-pointe'], [K.resultat - .2, '06-victoire'], [K.pas - .2, '07-haussement-epaules'], [K.abonne - .2, '08-pouce']];
 function avatar(t) {
   let i = 0; POSES.forEach(([a], j) => { if (t >= a) i = j; }); const [a, nm] = POSES[i], im = IMG['pose:' + nm], k = back(seg(t, a, a + .35));
-  // sautillement : petits rebonds réguliers (3 par seconde) avec écrasement à l'atterrissage et étirement en l'air
-  const ph = (t * 3) % 1, hop = Math.sin(ph * Math.PI), air = Math.max(0, hop), land = ph < .12 ? 1 - ph / .12 : (ph > .9 ? (ph - .9) / .1 : 0);
-  const jump = air * 70, sy = 1 + air * .06 - land * .09, sx = 1 - air * .035 + land * .09, tilt = Math.sin(t * 3 * Math.PI) * .05;
-  ctx.save(); ctx.fillStyle = 'rgba(0,0,0,' + (.28 - air * .15) + ')'; ctx.beginPath(); ctx.ellipse(W / 2, 1890, 190 - air * 70, 22 - air * 9, 0, 0, 7); ctx.fill(); ctx.restore();
+  // petit rebond doux (sans étirement) : lent, faible amplitude
+  const ph = (t * 1.5) % 1, air = Math.sin(ph * Math.PI), jump = air * 22, sy = 1, sx = 1, tilt = 0;
+  ctx.save(); ctx.fillStyle = 'rgba(0,0,0,' + (.28 - air * .15) + ')'; ctx.beginPath(); ctx.ellipse(W / 2, 1890, 190 - air * 18, 22 - air * 3, 0, 0, 7); ctx.fill(); ctx.restore();
   ctx.save(); ctx.translate(W / 2, 1900 + (1 - Math.min(1, k)) * 120 - jump); ctx.rotate(tilt); const s = Math.min(1, .5 + .5 * k); ctx.scale(s * sx, s * sy); ctx.drawImage(im, -im.width / 2, -im.height, im.width, im.height); ctx.restore();
 }
 let tt = 0;
