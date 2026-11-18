@@ -47,7 +47,7 @@ const POSES = [[0, '01-salut'], [K.vid, '02-bras-croises'], [K.codee, '03-pointe
 function avatar(t) {
   let i = 0; POSES.forEach(([a], j) => { if (t >= a) i = j; }); const [a, nm] = POSES[i], im = IMG['pose:' + nm], k = back(seg(t, a, a + .35));
   // petit rebond doux (sans étirement) : lent, faible amplitude
-  const ph = (t * 1.5) % 1, air = Math.sin(ph * Math.PI), jump = air * 22, sy = 1, sx = 1, tilt = 0;
+  const ph = (t * 2) % 1, air = Math.sin(ph * Math.PI), jump = air * 22, sy = 1, sx = 1, tilt = 0;
   ctx.save(); ctx.fillStyle = 'rgba(0,0,0,' + (.28 - air * .15) + ')'; ctx.beginPath(); ctx.ellipse(W / 2, 1890, 190 - air * 18, 22 - air * 3, 0, 0, 7); ctx.fill(); ctx.restore();
   ctx.save(); ctx.translate(W / 2, 1900 + (1 - Math.min(1, k)) * 120 - jump); ctx.rotate(tilt); const s = Math.min(1, .5 + .5 * k); ctx.scale(s * sx, s * sy); ctx.drawImage(im, -im.width / 2, -im.height, im.width, im.height); ctx.restore();
 }
