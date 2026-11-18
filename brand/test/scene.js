@@ -48,7 +48,7 @@ function avatar(t) {
   let i = 0; POSES.forEach(([a], j) => { if (t >= a) i = j; }); const [a, nm] = POSES[i], im = IMG['pose:' + nm], k = back(seg(t, a, a + .35));
   // sautillement : petits rebonds réguliers (3 par seconde) avec écrasement à l'atterrissage et étirement en l'air
   const ph = (t * 3) % 1, hop = Math.sin(ph * Math.PI), air = Math.max(0, hop), land = ph < .12 ? 1 - ph / .12 : (ph > .9 ? (ph - .9) / .1 : 0);
-  const jump = air * 170, sy = 1 + air * .06 - land * .09, sx = 1 - air * .035 + land * .09, tilt = Math.sin(t * 3 * Math.PI) * .05;
+  const jump = air * 70, sy = 1 + air * .06 - land * .09, sx = 1 - air * .035 + land * .09, tilt = Math.sin(t * 3 * Math.PI) * .05;
   ctx.save(); ctx.fillStyle = 'rgba(0,0,0,' + (.28 - air * .15) + ')'; ctx.beginPath(); ctx.ellipse(W / 2, 1890, 190 - air * 70, 22 - air * 9, 0, 0, 7); ctx.fill(); ctx.restore();
   ctx.save(); ctx.translate(W / 2, 1900 + (1 - Math.min(1, k)) * 120 - jump); ctx.rotate(tilt); const s = Math.min(1, .5 + .5 * k); ctx.scale(s * sx, s * sy); ctx.drawImage(im, -im.width / 2, -im.height, im.width, im.height); ctx.restore();
 }
