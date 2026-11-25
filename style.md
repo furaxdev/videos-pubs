@@ -31,5 +31,8 @@
 - Noter les sources dans `SOURCES.md` du dossier de la vidéo (modèle : `identite/hf-test/SOURCES.md`).
 - Aucun faux log présenté comme réel (illustration clairement fictive). Images : logos, visuels libres ou de presse crédités — jamais de vidéo téléchargée sans droit.
 
+## Barre de qualité : AUCUNE imperfection
+Furax relit au pixel près : rien ne doit se chevaucher, déborder, être coupé, rester figé ou être en retard sur la narration. Si une imperfection reste, on corrige ; si on n'y arrive pas, on ne livre pas (on explique pourquoi).
+
 ## Contrôle qualité (obligatoire)
 `identite/qa/make.sh <dossier> <nom>` → rend, puis `check.py` (format, image figée, zone vide, bords) + `audit.js` (chaque image : texte hors marges, texte sur texte, curseur sur texte, bot/binaire sur texte, formes qui se chevauchent). Lire la planche contact ET des crops 1:1 des moments clés. Corriger/re-rendre jusqu'à zéro problème non intentionnel. Chercher aussi les défauts que personne ne signale. Ne livrer qu'une vidéo qui passe.

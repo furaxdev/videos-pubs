@@ -4,9 +4,12 @@
 IA, code, cybersécurité, outils de dev : l'actu qui fait dire « attends, quoi ? » en 30 secondes. Gratuit/open source mis en avant. Pas de rumeurs, pas de clickbait mensonger.
 
 ## Choix du sujet du jour (le matin)
-1. Chercher l'actu des dernières 24–48 h (IA, sécurité, outils dev, open source). Sources : sites officiels (OpenAI, Anthropic, Google, Hugging Face, GitHub), grands médias tech (Fortune, NYT, The Verge, Wired, Ars Technica), arXiv pour la recherche.
-2. Retenir **un** sujet : (a) vérifiable sur une source primaire, (b) visuel (on peut le dessiner : bots, serveurs, terminal, logos), (c) pas déjà traité (voir `daily/historique.md`), (d) pas de tragédie/personne privée ciblée.
-3. Si rien de solide : prendre un sujet « évergreen » du backlog ci-dessous.
+Le sujet doit être **récent (≤ 48 h) OU en train de faire le buzz sur les réseaux** — toujours dans le délire tech / IA.
+1. Repérer le buzz : actu des dernières 24–48 h ET ce qui cartonne en ce moment — X/Twitter (tendances IA/tech), Reddit (r/technology, r/artificial, r/programming, r/LocalLLaMA), Hacker News (page d'accueil), YouTube/TikTok/Shorts tech du moment, GitHub Trending, Product Hunt, newsletters (Ben's Bites, TLDR, The Verge, Wired, Ars Technica). Noter pour chaque candidat : date, où ça buzze, signal d'ampleur (points HN, nb de reprises, vues).
+2. Classer les candidats : (a) buzz/récence, (b) vérifiable sur une source primaire (communiqué officiel, rapport, dépôt GitHub, article de fond), (c) dessinable avec nos éléments (bots têtes seules, serveurs, terminal, logos, ordi), (d) pas déjà dans `daily/historique.md`, (e) pas de tragédie ni de personne privée ciblée, pas de rumeur non sourcée.
+3. Prendre le n°1. Si le meilleur buzz n'est pas vérifiable, prendre le suivant — ne JAMAIS publier un fait non vérifié.
+4. Rien de solide ? Dernier recours : un sujet du backlog ci-dessous, en le rattachant à l'actu si possible.
+5. Inscrire dans `SOURCES.md` : pourquoi ce sujet (preuves du buzz) + faits vérifiés + liens.
 
 ## Backlog (évergreen)
 - Comment fonctionne un agent IA (boucle observe → réfléchit → agit) avec un petit bot tête seule.
