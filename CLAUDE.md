@@ -1,5 +1,6 @@
 # Règles pour les vidéos FuraxDev
-- Après CHAQUE nouvelle vidéo : lancer `python3 identite/qa/check.py <video.mp4>` (ou `identite/qa/make.sh <dossier> <nom>` qui rend puis vérifie), regarder la planche contact `*.contact.png`, corriger et re-rendre tant qu'il reste un problème. Ne livrer qu'une vidéo qui passe.
+- Après CHAQUE nouvelle vidéo : lancer `identite/qa/make.sh <dossier> <nom>` (rend, puis `qa/check.py` + `qa/audit.js` qui rejoue chaque image 30 fps : texte hors marges, texte sur texte, curseur sur du texte, bot/binaire sur du texte, formes qui se chevauchent, chiffres superposés), regarder la planche contact ET des crops 1:1 des moments clés (hors zone sûre x 120–960), corriger et re-rendre tant qu'il reste un problème non intentionnel. Chercher aussi les détails que Furax ne signale pas. Ne livrer qu'une vidéo qui passe.
+- Marges de sécurité : tout le contenu dans x 120–960 (les lecteurs/apps rognent les bords).
 - Le contrôle signale : mauvais format, image figée > 1,4 s, zone vide > 0,6 s, élément qui touche les bords. Il ne remplace pas le regard : lire la planche contact.
 - Style : minimal / clean, bleu `#2F5BFF`, pas de gros textes, pas de glow, pas d'étirement ; textes qui changent vite (jamais 2–3 s immobiles) ; sous-titres de narration en bas.
 - Terminal : un seul curseur fin à côté du texte, jamais sur le texte.
