@@ -33,3 +33,25 @@ function wipe(ctx, t, { delay = 0, color = C.blue }) { const a = ease.inout(seg(
 // 11. Barre de progression fine en haut
 function progress(ctx, p) { ctx.fillStyle = C.blue; ctx.fillRect(0, 0, 1080 * p, 8); }
 const ICONS = { code: new Path2D('M18 14 6 24l12 10M30 14l12 10-12 10'), check: new Path2D('M10 25l10 10 18-22'), rocket: new Path2D('M24 6c8 6 10 16 6 26H18C14 22 16 12 24 6zM18 32l-6 8 10-3M30 32l6 8-10-3'), play: new Path2D('M17 11l22 13-22 13z'), clock: new Path2D('M41 24a17 17 0 1 1-34 0 17 17 0 0 1 34 0zM24 14v10l7 5') };
+
+// ---------- Animations de texte (entrée + sortie) ----------
+// textFx(ctx, t, { style, text, x, y, size, color, delay, hold, font, weight, align })
+// t = secondes ; l'entrée dure DUR, puis le texte reste `hold` secondes, puis sort avec la même famille (out=true par défaut).
+const TEXT_STYLES = ['fade', 'blur', 'blurWords', 'letters', 'slideLeft', 'slideDown', 'tracking', 'wipe', 'focus', 'type'];
+function textFx(ctx, t, o) {
+  const { style, text, x, y, size, color = C.ink, delay = 0, hold = 1.1, out = true } = o, F = { font: o.font, weight: o.weight, align: o.align }, d = DUR + .1;
+  const pin = seg(t, delay, delay + d), pout = out ? seg(t, delay + d + hold, delay + d + hold + .35) : 0, e = ease.out(pin), a = clamp(pin * 2) * (1 - ease.in(pout));
+  if (pin <= 0 || pout >= 1) return; ctx.save(); const blurOut = pout * 14;
+  const withBlur = px => { ctx.filter = px > .2 ? `blur(${px.toFixed(1)}px)` : 'none'; };
+  if (style === 'fade') { ctx.globalAlpha = a; txt(ctx, text, x, y, size, color, F); }
+  else if (style === 'blur') { ctx.globalAlpha = a; withBlur((1 - e) * 18 + blurOut); txt(ctx, text, x, y, size, color, F); }
+  else if (style === 'focus') { ctx.globalAlpha = a; withBlur((1 - e) * 22 + blurOut); const s = 1.06 - .06 * e, w = width(ctx, text, size, F); ctx.translate(x, y); ctx.scale(s, s); ctx.translate(-x, -y); txt(ctx, text, x, y, size, color, F); }
+  else if (style === 'blurWords') { let cx = x; text.split(' ').forEach((w, i) => { const q = ease.out(seg(t, delay + i * .12, delay + i * .12 + DUR)), qa = clamp(q * 2) * (1 - ease.in(pout)); ctx.save(); ctx.globalAlpha = qa; withBlur((1 - q) * 16 + blurOut); txt(ctx, w, cx, y + (1 - q) * 14, size, color, F); ctx.restore(); cx += width(ctx, w + ' ', size, F); }); }
+  else if (style === 'letters') { let cx = x; [...text].forEach((ch, i) => { const q = ease.out(seg(t, delay + i * .035, delay + i * .035 + DUR)); ctx.save(); ctx.globalAlpha = clamp(q * 2) * (1 - ease.in(pout)); txt(ctx, ch, cx, y + (1 - q) * size * .5, size, color, F); ctx.restore(); cx += width(ctx, ch, size, { ...F, ls: -.035 }) + 0; }); }
+  else if (style === 'slideLeft') { ctx.globalAlpha = a; txt(ctx, text, x + (1 - e) * 120 - ease.in(pout) * 80, y, size, color, F); }
+  else if (style === 'slideDown') { ctx.globalAlpha = a; txt(ctx, text, x, y - (1 - e) * 60 + ease.in(pout) * 40, size, color, F); }
+  else if (style === 'tracking') { ctx.globalAlpha = a; txt(ctx, text, x, y, size, color, { ...F, ls: -.035 + (1 - e) * .22 }); }
+  else if (style === 'wipe') { const w = width(ctx, text, size, F) + 20, r = ease.inout(pin), r2 = ease.inout(pout); ctx.beginPath(); ctx.rect(x - 10 + w * r2, y - size * 1.1, w * r - w * r2, size * 1.5); ctx.clip(); txt(ctx, text, x, y, size, color, F); }
+  else if (style === 'type') { const n = Math.floor(text.length * clamp(t - delay, 0, 1.2) / 1.2); ctx.globalAlpha = 1 - ease.in(pout); txt(ctx, text.slice(0, n), x, y, size, color, { ...F, font: 'JetBrains Mono', ls: 0 }); if (n < text.length || Math.floor(t * 2) % 2 === 0) { ctx.fillStyle = C.blue; ctx.fillRect(x + width(ctx, text.slice(0, n), size, { font: 'JetBrains Mono', ls: 0 }) + 4, y - size * .85, size * .5, size); } }
+  ctx.restore();
+}

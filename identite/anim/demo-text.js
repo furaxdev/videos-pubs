@@ -1,0 +1,7 @@
+// Démo animations de texte : 10 styles de 3 s (entrée, pause, sortie).
+const cv = document.getElementById('c'), ctx = cv.getContext('2d'), SCENE = 3, N = TEXT_STYLES.length, DURATION = SCENE * N;
+const LABEL = { fade: 'fade · apparition', blur: 'blur · flou → net', blurWords: 'blurWords · mots flous un par un', letters: 'letters · lettre par lettre', slideLeft: 'slideLeft · glisse depuis la droite', slideDown: 'slideDown · descend', tracking: 'tracking · lettres qui se resserrent', wipe: 'wipe · révélation gauche → droite', focus: 'focus · mise au point', type: 'type · machine à écrire' };
+function renderFrame(t) { const i = Math.min(N - 1, Math.floor(t / SCENE)), lt = t - i * SCENE, st = TEXT_STYLES[i]; ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, 1080, 1920);
+  textFx(ctx, lt, { style: st, text: 'salut, c\'est', x: 90, y: 900, size: 44, color: C.grey, weight: 500 }); textFx(ctx, lt, { style: st, text: 'FuraxDev', x: 90, y: 990, size: 84, color: C.blue, delay: .12, font: 'Inter Display' });
+  txt(ctx, String(i + 1).padStart(2, '0') + ' · ' + LABEL[st], 90, 1800, 26, C.grey, { font: 'JetBrains Mono', weight: 500, ls: 0 }); progress(ctx, t / DURATION); }
+window.renderFrame = renderFrame; window.DURATION = DURATION; window.ready = Promise.all([document.fonts.load('700 40px Inter'), document.fonts.load('700 40px "Inter Display"'), document.fonts.load('600 30px "JetBrains Mono"')]);
