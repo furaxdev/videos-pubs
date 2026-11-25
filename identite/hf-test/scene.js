@@ -1,5 +1,5 @@
 // v2 — rythme rapide, bots dessinés, ordinateur qui se casse, sous-titres de narration en bas (pas de voix).
-const cv = document.getElementById('c'), ctx = cv.getContext('2d'), IM = {}, INTRO = 4.2, SHIFT = INTRO - 2.4, DURATION = 25 + SHIFT;
+const cv = document.getElementById('c'), ctx = cv.getContext('2d'), IM = {}, INTRO = 3.7, SHIFT = INTRO - 2.4, DURATION = 25 + SHIFT;
 const loads = Object.entries(window.IMGS).map(([k, s]) => new Promise(r => { const i = new Image(); i.onload = r; i.src = s; IM[k] = i; }));
 const X = 90, CX = 540, CY = 800;
 // ---- narration (sous-titres) ----
@@ -86,21 +86,21 @@ function mainFrame(t) {
 const hash = (a, b, c = 0) => ((Math.imul(a + 1, 73856093) ^ Math.imul(b + 1, 19349663) ^ Math.imul(c + 1, 83492791)) >>> 0);
 function binChar(x, y, a, size = 26) { ctx.globalAlpha = a; ctx.fillStyle = C.green; ctx.font = `700 ${size}px JetBrains Mono`; ctx.textAlign = 'center'; ctx.fillText(String(hash(Math.round(x), Math.round(y), 5) % 2), x, y); }
 function intro(t) {
-  const out = 1 - ease.in(seg(t, 3.95, 4.2)), CYI = CY - 40, XL = CX - 165, XR = CX + 165; ctx.save(); ctx.globalAlpha = out;
-  textFx(ctx, t, { style: 'blur', text: 'OpenAI × Hugging Face', x: X, y: 330, size: 54, color: C.ink, delay: .1, hold: 3, out: false, font: 'Inter Display' });
-  const angry = ease.out(seg(t, 1.0, 1.2)), shake = t > 1.0 ? Math.sin(t * 70) * 5 * (1 - seg(t, 1.0, 1.5)) + Math.sin(t * 40) * 1.2 : 0;
+  const out = 1 - ease.in(seg(t, 3.45, 3.7)), CYI = CY - 40, XL = CX - 165, XR = CX + 165; ctx.save(); ctx.globalAlpha = out;
+  textFx(ctx, t, { style: 'blur', text: 'OpenAI × Hugging Face', x: X, y: 330, size: 54, color: C.ink, delay: .1, hold: 2.4, out: false, font: 'Inter Display' });
+  const angry = ease.out(seg(t, .9, 1.1)), shake = t > .9 ? Math.sin(t * 70) * 5 * (1 - seg(t, .9, 1.4)) + Math.sin(t * 40) * 1.2 : 0;
   // trait pointillé qui relie les deux (devient rouge quand ça tourne mal)
-  const lq = clamp(seg(t, .7, 1)); ctx.save(); ctx.strokeStyle = t > 1.0 ? C.red : C.blue; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.setLineDash([2, 16]); ctx.lineDashOffset = -t * 60; ctx.globalAlpha *= lq; ctx.beginPath(); ctx.moveTo(XL + 110, CYI); ctx.lineTo(XR - 110, CYI); ctx.stroke(); ctx.restore();
+  const lq = clamp(seg(t, .7, 1)); ctx.save(); ctx.strokeStyle = t > .9 ? C.red : C.blue; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.setLineDash([2, 16]); ctx.lineDashOffset = -t * 60; ctx.globalAlpha *= lq; ctx.beginPath(); ctx.moveTo(XL + 110, CYI); ctx.lineTo(XR - 110, CYI); ctx.stroke(); ctx.restore();
   // OpenAI : tuile blanche, yeux rouges énervés
   { const q = ease.out(seg(t, .15, .7)); ctx.save(); ctx.translate(XL + shake, CYI + (1 - q) * 50); ctx.globalAlpha *= clamp(q * 2); ctx.fillStyle = '#fff'; ctx.strokeStyle = angry > .1 ? C.red : C.ink; ctx.lineWidth = 4 + angry * 2; ctx.beginPath(); ctx.roundRect(-110, -110, 220, 220, 44); ctx.fill(); ctx.stroke(); ctx.globalAlpha *= 1 - .65 * angry; ctx.drawImage(IM.oa, -56, -56, 112, 112); ctx.globalAlpha = out * clamp(q * 2);
     if (angry > 0) { ctx.save(); ctx.scale(.6 + .4 * angry, .6 + .4 * angry); ctx.fillStyle = C.red; ctx.strokeStyle = C.red; ctx.lineWidth = 5; ctx.lineJoin = 'round'; [-1, 1].forEach(sd => { ctx.beginPath(); ctx.moveTo(sd * 58, -16); ctx.lineTo(sd * 20, -2); ctx.lineTo(sd * 23, 16); ctx.lineTo(sd * 54, 13); ctx.closePath(); ctx.fill(); ctx.stroke(); }); ctx.restore(); } ctx.restore(); }
   // pluie de binaire vert au-dessus de Hugging Face (1,7 → 3,5 s)
-  const rain = seg(t, 1.7, 2.1) * (1 - seg(t, 3.2, 3.6));
-  if (rain > 0) for (let c = 0; c < 9; c++) for (let k = 0; k < 9; k++) { const sp = 380 + (hash(c, 1) % 140), y = ((t - 1.7) * sp + k * 62 + (hash(c, 2) % 60)) % 660, top = CYI - 560 + y; if (hash(c, k, 3) % 100 > rain * 85) continue; ctx.save(); const al = clamp(y / 140) * .95 * (top > CYI + 100 ? 0 : 1); if (al > 0) binChar(XR - 108 + c * 27, top, al); ctx.restore(); }
+  const rain = seg(t, 1.5, 1.9) * (1 - seg(t, 2.7, 3.1));
+  if (rain > 0) for (let c = 0; c < 9; c++) for (let k = 0; k < 9; k++) { const sp = 380 + (hash(c, 1) % 140), y = ((t - 1.5) * sp + k * 62 + (hash(c, 2) % 60)) % 660, top = CYI - 560 + y; if (hash(c, k, 3) % 100 > rain * 85) continue; ctx.save(); const al = clamp(y / 140) * .95 * (top > CYI + 100 ? 0 : 1); if (al > 0) binChar(XR - 48 + c * 27, top, al); ctx.restore(); }
   // Hugging Face : devient sombre, pivote et tombe sur le côté, binaire qui apparaît / disparaît dessus
-  { const q = ease.out(seg(t, .3, .85)), ang = ease.in(seg(t, 2.55, 3.2)) * 1.38, inf = seg(t, 2.0, 2.5); ctx.save(); ctx.translate(XR + 110, CYI + 110 + (1 - q) * 50); ctx.rotate(ang); ctx.translate(-110, -110); ctx.globalAlpha *= clamp(q * 2);
+  { const q = ease.out(seg(t, .3, .85)), ang = ease.in(seg(t, 2.2, 2.7)) * 1.38, inf = seg(t, 1.8, 2.2); ctx.save(); ctx.translate(XR + 110, CYI + 110 + (1 - q) * 50); ctx.rotate(ang); ctx.translate(-110, -110); ctx.globalAlpha *= clamp(q * 2);
     ctx.beginPath(); ctx.roundRect(0, 0, 220, 220, 44); ctx.fillStyle = C.blue; ctx.fill(); ctx.globalAlpha *= 1; ctx.fillStyle = C.deep; ctx.save(); ctx.globalAlpha = out * clamp(q * 2) * inf; ctx.fill(); ctx.restore(); ctx.strokeStyle = C.blue; ctx.lineWidth = 4; ctx.stroke(); ctx.drawImage(IM.hfw, 54, 54, 112, 112);
-    ctx.save(); ctx.beginPath(); ctx.roundRect(0, 0, 220, 220, 44); ctx.clip(); if (t > 2.0 && t < 4.0) for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) { const h = hash(r, c, 9), ph = (t * 2.2 + (h % 100) / 100) % 1; if (ph < .5 && h % 3) binChar(14 + c * 27, 26 + r * 27, Math.min(1, ph * 6) * Math.min(1, (.5 - ph) * 6) * .95 * seg(t, 2.0, 2.4)); } ctx.restore(); ctx.restore(); }
+    ctx.save(); ctx.beginPath(); ctx.roundRect(0, 0, 220, 220, 44); ctx.clip(); if (t > 1.8 && t < 3.3) for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) { const h = hash(r, c, 9), ph = (t * 2.2 + (h % 100) / 100) % 1; if (ph < .5 && h % 3) binChar(14 + c * 27, 26 + r * 27, Math.min(1, ph * 6) * Math.min(1, (.5 - ph) * 6) * .95 * seg(t, 1.8, 2.1)); } ctx.restore(); ctx.restore(); }
   ctx.restore();
 }
 function renderFrame(t) { if (t < INTRO) { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, 1080, 1920); intro(t); subtitles(t * 2.4 / INTRO); } else mainFrame(t - SHIFT); progress(ctx, t / DURATION); }
