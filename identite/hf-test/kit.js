@@ -1,6 +1,6 @@
 // FuraxDev — kit d'animations (minimal / clean). Tout est une fonction du temps : fn(ctx, t, opts), t en secondes depuis le début de l'effet.
 // Règles : mouvements courts (0,4–0,6 s), easing « expo out », jamais de rebond ni d'étirement, pas de glow. Un seul élément bleu à la fois.
-const C = { blue: '#2f5bff', deep: '#0a1230', ink: '#0b1020', mist: '#eef2ff', sky: '#a9bcff', grey: '#8a93b8', white: '#fff' };
+const C = { blue: '#2f5bff', deep: '#0a1230', ink: '#0b1020', mist: '#eef2ff', sky: '#a9bcff', grey: '#8a93b8', white: '#fff', red: '#ff3b4e', green: '#12b76a', amber: '#ffb020' };
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x)), seg = (t, a, b) => clamp((t - a) / (b - a));
 const ease = { out: x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x), inout: x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2, in: x => x * x * x };
 const DUR = .5, STAGGER = .06;   // durée standard et décalage entre éléments

@@ -11,7 +11,7 @@ h6{font:600 15px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;
 .name{font:800 64px/1 'Inter Display';letter-spacing:-.035em}.name b{color:var(--blue);font-weight:900}
 .tag{font:500 24px 'JetBrains Mono';color:#55608a;text-align:right;line-height:1.5}
 .row{display:grid;gap:40px;margin-top:70px}
-.pal{grid-template-columns:2fr 1.2fr 1fr 1fr 1fr}
+.pal{grid-template-columns:2fr 1.2fr 1fr 1fr 1fr}.pal2{grid-template-columns:repeat(3,1fr);margin-top:30px}.pal2 .sw{height:130px}
 .sw{height:220px;border-radius:26px;padding:22px;display:flex;flex-direction:column;justify-content:flex-end;font:500 16px 'JetBrains Mono'}
 .sw b{font:800 26px 'Inter Display';display:block;margin-bottom:4px}
 .type{grid-template-columns:1.4fr 1fr}
@@ -41,9 +41,13 @@ svg{width:70px;height:70px;fill:none;stroke:var(--ink);stroke-width:5;stroke-lin
 <div class="sw" style="background:#a9bcff;color:var(--ink)"><b>Ciel</b>#A9BCFF</div>
 <div class="sw" style="background:#fff;border:2px solid var(--ink);color:var(--ink)"><b>Blanc</b>#FFFFFF</div></div>
 
+<div class="row pal2">
+<div class="sw" style="background:#ff3b4e;color:#fff"><b>Rouge · danger</b>#FF3B4E — attaque, alerte, plainte</div>
+<div class="sw" style="background:#12b76a;color:#fff"><b>Vert · validé</b>#12B76A — bloqué, réussi</div>
+<div class="sw" style="background:#ffb020;color:var(--ink)"><b>Ambre · attention</b>#FFB020 — date, avertissement</div></div>
 <div class="row type">
 <div class="card"><h6>Typographie</h6><div class="small">tu décris ton idée à</div><div class="big">Claude <span style="color:var(--blue)">Code</span></div></div>
-<div class="card"><h6>Règles</h6><div class="mono">Titres : Inter Display Black<br>Code : JetBrains Mono<br>Textes petits à moyens, jamais géants<br>Une courte phrase par écran<br>Un seul mot en bleu<br>Pas de glow, pas de dégradé<br>Beaucoup de vide, bords nets<br>Ombres pleines décalées (bleu)</div></div></div>
+<div class="card"><h6>Règles</h6><div class="mono">Titres : Inter Display Black<br>Code : JetBrains Mono<br>Textes petits à moyens, jamais géants<br>Une courte phrase par écran<br>Bleu = marque · rouge = danger<br>vert = validé · ambre = attention<br>Jamais tout en bleu<br>Pas de glow, pas de dégradé<br>Beaucoup de vide, bords nets<br>Ombres pleines décalées (bleu)</div></div></div>
 
 <div class="row type">
 <div><h6>Fenêtre</h6><div class="win"><div class="bar"><s></s><s></s><s></s><span style="margin-left:14px;color:#55608a">terminal</span></div><div class="body"><em>$</em> claude<br><em>&gt;</em> fais-moi une vidéo<span class="cur"></span></div></div></div>
