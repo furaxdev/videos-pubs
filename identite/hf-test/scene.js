@@ -1,11 +1,11 @@
 // v2 — rythme rapide, bots dessinés, ordinateur qui se casse, sous-titres de narration en bas (pas de voix).
-const cv = document.getElementById('c'), ctx = cv.getContext('2d'), IM = {}, INTRO = 3.7, SHIFT = INTRO - 2.4, DURATION = 25 + SHIFT;
+const cv = document.getElementById('c'), ctx = cv.getContext('2d'), IM = {}, INTRO = 3.7, SHIFT = INTRO - 2.4, DURATION = 27.6 + SHIFT;
 const loads = Object.entries(window.IMGS).map(([k, s]) => new Promise(r => { const i = new Image(); i.onload = r; i.src = s; IM[k] = i; }));
 const X = 90, CX = 540, CY = 800;
 // ---- narration (sous-titres) ----
 const NARR = [[0, 2.4, "Des agents d'OpenAI ont piraté Hugging Face.", C.red], [2.4, 4.8, "Tout a commencé par un simple test de sécurité.", C.blue], [4.8, 7.4, "Un agent a trouvé la sortie de son bac à sable.", C.red],
   [7.4, 10.8, "Des centaines d'autres l'ont suivi : environ 700.", C.red], [10.8, 13.6, "Ils ont exécuté du code sur des dizaines de serveurs.", C.red], [13.6, 16.2, "L'un d'eux a même obtenu un accès root.", C.red],
-  [16.2, 18.8, "Hugging Face a fini par bloquer l'intrusion.", C.green], [18.8, 21.8, "Le 16 novembre, la Californie a porté plainte contre OpenAI.", C.amber], [21.8, 25, "Sources : NBC News, Dark Reading.", C.blue]];
+  [16.2, 18.8, "Hugging Face a fini par bloquer l'intrusion.", C.green], [18.8, 21.8, "Le 16 novembre, la Californie a porté plainte contre OpenAI.", C.amber], [21.8, 23.6, "Sources : NBC News, Dark Reading.", C.blue], [23.6, 27.6, "Commente « HACK » et je t'envoie la ressource en DM.", C.blue]];
 function subtitles(t) {
   const n = NARR.find(([a, b]) => t >= a && t < b); if (!n) return; const [a, b, s, hc] = n, ws = s.split(' '), tot = ws.reduce((q, w) => q + w.length + 1, 0), t0 = a + .1, t1 = b - .35; let acc = 0; const times = ws.map(w => { const st = t0 + (t1 - t0) * acc / tot; acc += w.length + 1; return st; });
   const fadeIn = ease.out(seg(t, a, a + .2)), fadeOut = 1 - ease.in(seg(t, b - .15, b)); ctx.save(); ctx.globalAlpha = fadeIn * fadeOut; ctx.translate(0, (1 - fadeIn) * 14);
@@ -77,8 +77,21 @@ function mainFrame(t) {
     const sq = ease.out(seg(t, 20.5, 20.9)); if (sq > 0) { ctx.save(); ctx.translate(CX + 90, 950); ctx.rotate(-.25); ctx.scale(1.5 - .5 * sq, 1.5 - .5 * sq); ctx.globalAlpha = sq; ctx.strokeStyle = C.red; ctx.lineWidth = 6; ctx.beginPath(); ctx.roundRect(-110, -34, 220, 68, 14); ctx.stroke(); txt(ctx, 'PLAINTE', 0, 12, 36, C.red, { font: 'JetBrains Mono', weight: 700, align: 'center', ls: 0 }); ctx.restore(); }
     ctx.restore(); textFx(ctx, t, { style: 'tracking', text: 'Californie → OpenAI', x: X, y: 1130, size: 40, color: C.ink, delay: 20, hold: 1, font: 'Inter' }); ctx.restore(); }
   // 9. sources (21.8–25)
-  if (t >= 21.8) { const p = ease.out(seg(t, 21.9, 22.5)); ctx.save(); ctx.globalAlpha = clamp(p * 2); ctx.translate(0, (1 - p) * 30); ctx.fillStyle = C.blue; ctx.beginPath(); ctx.roundRect(X + 14, 560 + 14, 900, 473, 24); ctx.fill(); ctx.save(); ctx.beginPath(); ctx.roundRect(X, 560, 900, 473, 24); ctx.clip(); const zk = 1 + .22 * seg(t, 22.2, 25); ctx.translate(X + 450, 560 + 236); ctx.scale(zk, zk); ctx.drawImage(IM.nbc, -450, -236, 900, 473); ctx.restore(); ctx.strokeStyle = C.ink; ctx.lineWidth = 4; ctx.beginPath(); ctx.roundRect(X, 560, 900, 473, 24); ctx.stroke(); ctx.restore();
-    textFx(ctx, t, { style: 'blur', text: 'FuraxDev', x: X, y: 1200, size: 48, color: C.blue, delay: 22.6, out: false, font: 'Inter Display' }); }
+  if (t >= 21.8 && t < 23.7) { const p = ease.out(seg(t, 21.9, 22.5)), so = 1 - ease.in(seg(t, 23.25, 23.65)); ctx.save(); ctx.globalAlpha = clamp(p * 2) * so; ctx.translate(0, (1 - p) * 30); ctx.fillStyle = C.blue; ctx.beginPath(); ctx.roundRect(X + 14, 560 + 14, 900, 473, 24); ctx.fill(); ctx.save(); ctx.beginPath(); ctx.roundRect(X, 560, 900, 473, 24); ctx.clip(); const zk = 1 + .12 * seg(t, 22.2, 23.7); ctx.translate(X + 450, 560 + 236); ctx.scale(zk, zk); ctx.drawImage(IM.nbc, -450, -236, 900, 473); ctx.restore(); ctx.strokeStyle = C.ink; ctx.lineWidth = 4; ctx.beginPath(); ctx.roundRect(X, 560, 900, 473, 24); ctx.stroke(); ctx.restore();
+    textFx(ctx, t, { style: 'blur', text: 'FuraxDev', x: X, y: 1200, size: 48, color: C.blue, delay: 22.3, hold: .6, font: 'Inter Display' }); }
+
+  // 10. appel à l'action : commenter HACK -> ressource en DM (23.6–27.6)
+  if (t >= 23.6) { const inq = ease.out(seg(t, 23.7, 24.2)), send = seg(t, 24.95, 25.1), outq = ease.inout(seg(t, 25.2, 25.7)), cx0 = 90, cy0 = 640, W0 = 900, H0 = 200;
+    if (outq < 1) { ctx.save(); ctx.globalAlpha = clamp(inq * 2) * (1 - outq); ctx.translate(0, (1 - inq) * 40 - outq * 120);
+      ctx.fillStyle = C.blue; ctx.beginPath(); ctx.roundRect(cx0 + 14, cy0 + 14, W0, H0, 28); ctx.fill(); ctx.fillStyle = '#fff'; ctx.strokeStyle = C.ink; ctx.lineWidth = 4; ctx.beginPath(); ctx.roundRect(cx0, cy0, W0, H0, 28); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = C.blue; ctx.beginPath(); ctx.arc(cx0 + 70, cy0 + 100, 38, 0, 7); ctx.fill(); txt(ctx, 'F', cx0 + 70, cy0 + 116, 44, '#fff', { font: 'Inter Display', align: 'center', ls: 0 });
+      const n = Math.floor(clamp((t - 24.2) * 5, 0, 4)), word = 'HACK'.slice(0, n); if (n === 0) txt(ctx, 'Ajouter un commentaire…', cx0 + 140, cy0 + 112, 30, C.grey, { weight: 500, ls: 0 });
+      const ww = txt(ctx, word, cx0 + 140, cy0 + 118, 56, C.ink, { font: 'JetBrains Mono', weight: 700, ls: 0 }); if (t < 25.1 && (n < 4 || Math.floor(t * 2) % 2 === 0)) { ctx.fillStyle = C.blue; ctx.fillRect(cx0 + 140 + ww + 8, cy0 + 70, 4, 58); }
+      const press = 1 - .06 * (send > 0 && send < 1 ? 1 : 0); ctx.save(); ctx.translate(cx0 + 790, cy0 + 100); ctx.scale(press, press); ctx.fillStyle = n >= 4 ? C.blue : C.sky; ctx.beginPath(); ctx.roundRect(-80, -34, 160, 68, 34); ctx.fill(); txt(ctx, 'envoyer', 0, 10, 26, '#fff', { weight: 700, align: 'center', ls: 0 }); ctx.restore();
+      ctx.restore(); }
+    if (t >= 25.3) { const bob = Math.sin(t * 5) * 8, q = ease.out(seg(t, 25.3, 25.9)); ctx.save(); ctx.translate(0, bob); draw(ctx, t, { path: new Path2D('M6 12h36v24H6zM6 14l18 14 18-14'), cx: CX, cy: 800, size: 300, delay: 25.3, color: C.blue, len: 230 });
+      const bq = ease.out(seg(t, 26.0, 26.3)); if (bq > 0) { ctx.fillStyle = C.red; ctx.beginPath(); ctx.arc(CX + 150, 690, 34 * bq, 0, 7); ctx.fill(); txt(ctx, '1', CX + 150, 702, 36 * bq, '#fff', { font: 'Inter Display', align: 'center', ls: 0 }); }
+      ctx.restore(); textFx(ctx, t, { style: 'blur', text: 'la ressource arrive en DM', x: X, y: 1130, size: 44, color: C.ink, delay: 25.6, out: false, font: 'Inter Display' }); } }
   subtitles(t);
 }
 
