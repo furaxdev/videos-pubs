@@ -1,0 +1,1 @@
+const {chromium}=require('playwright');(async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:1600,height:900},deviceScaleFactor:1});await p.goto('file://'+__dirname+'/board.html');await p.waitForTimeout(500);await p.screenshot({path:__dirname+'/identite-furaxdev.png',fullPage:true});await b.close()})()
