@@ -18,11 +18,10 @@ function subtitles(t) {
 function bot(x, y, s, o = {}) {
   const { fill = '#fff', stroke = C.ink, armL = .9, armR = -.9, t = 0, alpha = 1, look = 0, blink = true } = o, lw = Math.max(2.5, s * .045); ctx.save(); ctx.globalAlpha *= alpha; ctx.lineWidth = lw; ctx.lineJoin = ctx.lineCap = 'round'; ctx.strokeStyle = stroke; ctx.fillStyle = fill;
   const rr = (a, b, w, h, r) => { ctx.beginPath(); ctx.roundRect(a, b, w, h, r); ctx.fill(); ctx.stroke(); };
-  [-1, 1].forEach(sd => { ctx.beginPath(); ctx.moveTo(x + sd * .3 * s, y - .42 * s); const ang = sd < 0 ? armL : armR; ctx.lineTo(x + sd * .3 * s + Math.sin(ang) * -sd * .4 * s * -1, y - .42 * s + Math.cos(ang) * .38 * s * -1 * -1); ctx.stroke(); });
-  rr(x - .14 * s - .0, y - .12 * s, .11 * s, .12 * s, 3); rr(x + .03 * s, y - .12 * s, .11 * s, .12 * s, 3);
-  rr(x - .32 * s, y - .52 * s, .64 * s, .42 * s, .1 * s); rr(x - .5 * s, y - 1.34 * s, s, .78 * s, .22 * s);
-  ctx.beginPath(); ctx.moveTo(x, y - 1.34 * s); ctx.lineTo(x, y - 1.54 * s); ctx.stroke(); ctx.fillStyle = C.blue; ctx.beginPath(); ctx.arc(x, y - 1.58 * s, .07 * s, 0, 7); ctx.fill();
-  const bl = blink && (t % 3.2) < .12 ? .25 : 1; ctx.fillStyle = stroke === C.ink ? C.ink : '#fff'; [-1, 1].forEach(sd => { ctx.beginPath(); ctx.ellipse(x + sd * .2 * s + look * .06 * s, y - .95 * s, .07 * s, .07 * s * bl, 0, 0, 7); ctx.fill(); });
+  // seulement la tête : y = bas de la tête
+  rr(x - .5 * s, y - .8 * s, s, .8 * s, .24 * s);
+  ctx.beginPath(); ctx.moveTo(x, y - .8 * s); ctx.lineTo(x, y - 1.0 * s); ctx.stroke(); ctx.fillStyle = C.blue; ctx.beginPath(); ctx.arc(x, y - 1.04 * s, .07 * s, 0, 7); ctx.fill();
+  const bl = blink && (t % 3.2) < .12 ? .25 : 1; ctx.fillStyle = stroke === C.ink ? C.ink : '#fff'; [-1, 1].forEach(sd => { ctx.beginPath(); ctx.ellipse(x + sd * .2 * s + look * .06 * s, y - .42 * s, .075 * s, .075 * s * bl, 0, 0, 7); ctx.fill(); });
   ctx.restore();
 }
 // ---- l'ordinateur (écran + pied), avec fissures ----
@@ -55,21 +54,21 @@ function renderFrame(t) {
     computer(t, { dy: (1 - inT) * 120 + fall * 1000, tilt, alpha: clamp(inT * 2) * (1 - seg(t, 7.1, 7.4)), crack, dark, inner: (x, y, w, h) => {
       if (t < 5.9) { ctx.strokeStyle = C.blue; ctx.lineWidth = 4; ctx.setLineDash([16, 12]); const br = seg(t, 5.0, 5.6); ctx.strokeRect(x + 50, y + 30, w - 100, h - 50); ctx.setLineDash([]); if (br > 0) { ctx.fillStyle = C.mist; ctx.fillRect(x + 40, y + 20, w - 80, 14 + 12); ctx.strokeStyle = C.blue; ctx.setLineDash([16, 12]); ctx.strokeRect(x + 50, y + 30, w - 100, h - 50); ctx.setLineDash([]); } ctx.fillStyle = C.grey; ctx.font = '600 18px JetBrains Mono'; ctx.textAlign = 'left'; ctx.fillText('bac à sable', x + 58, y + 62); }
       if (dark) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 8; ctx.lineCap = 'round'; const q = ease.out(seg(t, 6.35, 6.7)) * 40, cx = x + w / 2, cy = y + h / 2; ctx.beginPath(); ctx.moveTo(cx - q, cy - q); ctx.lineTo(cx + q, cy + q); ctx.moveTo(cx + q, cy - q); ctx.lineTo(cx - q, cy + q); ctx.stroke(); }
-      if (t < 5.6) bot(x + w / 2 + Math.sin(t * 1.3) * 60, y + h - 36, 84, { t, look: Math.sin(t * 1.3), armL: .6 + Math.sin(t * 2) * .2, armR: -.6 }); } });
-    if (t >= 5.6) { const p = ease.out(seg(t, 5.6, 6.5)), by = CY - 40 + 160 - p * 560, sc = 84 + p * 70; ctx.globalAlpha = 1 - ease.in(seg(t, 6.9, 7.4)); bot(CX + p * -10, by, sc, { t, armL: 2.4, armR: -2.4, fill: C.blue, stroke: C.blue, blink: false }); ctx.globalAlpha = 1; }
-    ctx.restore(); tag(t, 'test de sécurité', 2.5, 4.4); tag(t, 'sortie du bac à sable', 5.0, 7); }
+      if (t < 5.6) bot(x + w / 2 + Math.sin(t * 1.3) * 60, y + h - 50, 100, { t, look: Math.sin(t * 1.3), armL: .6 + Math.sin(t * 2) * .2, armR: -.6 }); } });
+    if (t >= 5.6) { const p = ease.out(seg(t, 5.6, 6.5)), by = CY - 40 + 150 - p * 430, sc = 100 + p * 90; ctx.globalAlpha = 1 - ease.in(seg(t, 6.9, 7.4)); bot(CX + p * -10, by, sc, { t, armL: 2.4, armR: -2.4, fill: C.blue, stroke: C.blue, blink: false }); ctx.globalAlpha = 1; }
+    ctx.restore(); tag(t, 'test de sécurité', 2.5, 4.4); tag(t, 'évasion', 5.0, 7); }
   // 4. l'essaim (7.4–10.8)
-  if (t >= 7.4 && t < 10.9) { const o = 1 - ease.in(seg(t, 10.5, 10.9)); ctx.save(); ctx.globalAlpha = o; swarm.forEach((b, i) => { const q = ease.out(seg(t, 7.5 + b.d * .1, 8 + b.d * .1)); if (q > 0) bot(b.x + 20, b.y + Math.sin(t * 6 + i) * 4 * q, 64 * (.5 + .5 * q), { t: t + i, alpha: clamp(q * 2), fill: i % 7 === 3 ? C.blue : '#fff', stroke: i % 7 === 3 ? C.blue : C.ink, armL: 1 + Math.sin(t * 3 + i) * .4, armR: -1 }); });
+  if (t >= 7.4 && t < 10.9) { const o = 1 - ease.in(seg(t, 10.5, 10.9)); ctx.save(); ctx.globalAlpha = o; swarm.forEach((b, i) => { const q = ease.out(seg(t, 7.5 + b.d * .1, 8 + b.d * .1)); if (q > 0) bot(b.x + 20, b.y + Math.sin(t * 6 + i) * 4 * q, 84 * (.5 + .5 * q), { t: t + i, alpha: clamp(q * 2), fill: i % 7 === 3 ? C.blue : '#fff', stroke: i % 7 === 3 ? C.blue : C.ink, armL: 1 + Math.sin(t * 3 + i) * .4, armR: -1 }); });
     ctx.restore(); ctx.save(); ctx.globalAlpha = o * clamp(seg(t, 7.5, 7.8)); txt(ctx, '~' + Math.round(700 * ease.out(seg(t, 7.6, 9))), X, 400, 84, C.blue, { font: 'Inter Display' }); txt(ctx, 'agents', X + 250, 400, 40, C.grey, { weight: 500 }); ctx.restore(); tag(t, 'METR · Redwood Research', 8.8, 10.8, 460); }
   // 5. les serveurs (10.8–13.6) + 6. accès root (13.6–16.2)
   if (t >= 10.8 && t < 16.4) { const dim = seg(t, 13.6, 14.1), fade = 1 - ease.in(seg(t, 16, 16.4));
     serv.forEach((s, i) => { const a = 11.1 + i * .13, q = ease.in(seg(t, a, a + .5)), on = t > a + .45, hero = i === 4, al = fade * (hero ? 1 : 1 - dim * .85), sy = s.y; ctx.save(); ctx.globalAlpha = al * clamp(seg(t, 10.8 + i * .03, 11.1 + i * .03) * 2);
       ctx.fillStyle = on ? C.blue : '#fff'; ctx.strokeStyle = on ? C.blue : C.ink; ctx.lineWidth = 4; ctx.beginPath(); ctx.roundRect(s.x, sy, 280, 110, 22); ctx.fill(); ctx.stroke(); ctx.fillStyle = on ? '#fff' : C.ink; [0, 1].forEach(k => { ctx.beginPath(); ctx.arc(s.x + 40 + k * 34, sy + 55, 8, 0, 7); ctx.fill(); }); ctx.fillRect(s.x + 130, sy + 49, 110, 12);
-      if (q > 0 && !on) bot(s.x + 140, sy - 6 - (1 - q) * 520, 44, { t, armL: 2.3, armR: -2.3, fill: C.blue, stroke: C.blue, blink: false }); else if (on && !hero || (on && hero && t < 13.6)) bot(s.x + 140, sy - 6, 44, { t, alpha: 1 - dim * (hero ? 0 : 1), fill: C.blue, stroke: C.blue, blink: false }); ctx.restore(); });
+      if (q > 0 && !on) bot(s.x + 140, sy - 8 - (1 - q) * 520, 62, { t, armL: 2.3, armR: -2.3, fill: C.blue, stroke: C.blue, blink: false }); else if (on && !hero || (on && hero && t < 13.6)) bot(s.x + 140, sy - 8, 62, { t, alpha: 1 - dim * (hero ? 0 : 1), fill: C.blue, stroke: C.blue, blink: false }); ctx.restore(); });
     if (t >= 13.7) windowBox(ctx, t, { x: X, y: 1000, w: 900, h: 280, delay: 13.8, draw: (x, y) => { ctx.save(); ctx.globalAlpha = fade; typing(ctx, t, { text: 'whoami', x: x + 40, y: y + 90, prompt: '$ ', delay: 14.4 }); typing(ctx, t, { text: 'root', x: x + 40, y: y + 160, prompt: '> ', delay: 15.2, color: C.blue }); ctx.restore(); } });
     tag(t, 'dizaines de serveurs', 10.9, 12.6); tag(t, 'accès root · un serveur', 13.7, 15.6); }
   // 7. bloqué (16.2–18.8)
-  if (t >= 16.2 && t < 19) { const o = 1 - ease.in(seg(t, 18.6, 19)); ctx.save(); ctx.globalAlpha = o; [-1, 1].forEach((sd, k) => [0, 1, 2].forEach(j => { const q = ease.in(seg(t, 16.3 + j * .1, 17.1 + j * .1)); bot(CX + sd * (330 + j * 20) + sd * q * 120, CY + 200 + j * 20 - 120, 60, { t: t + j, alpha: 1 - q, fill: C.mist, stroke: C.grey }); }));
+  if (t >= 16.2 && t < 19) { const o = 1 - ease.in(seg(t, 18.6, 19)); ctx.save(); ctx.globalAlpha = o; [-1, 1].forEach((sd, k) => [0, 1, 2].forEach(j => { const q = ease.in(seg(t, 16.3 + j * .1, 17.1 + j * .1)); bot(CX + sd * (330 + j * 20) + sd * q * 120, CY + 200 + j * 20 - 120, 80, { t: t + j, alpha: 1 - q, fill: C.mist, stroke: C.grey }); }));
     draw(ctx, t, { path: new Path2D('M24 5l15 6v11c0 10-7 18-15 21C16 40 9 32 9 22V11z'), cx: CX, cy: CY - 20, size: 320, delay: 16.4, color: C.blue, len: 220 }); draw(ctx, t, { path: ICONS.check, cx: CX, cy: CY - 20, size: 130, delay: 17.1, color: C.blue }); ctx.restore(); tag(t, 'intrusion bloquée', 16.3, 18.2); }
   // 8. plainte (18.8–21.8)
   if (t >= 18.8 && t < 22) { const o = 1 - ease.in(seg(t, 21.6, 22)); ctx.save(); ctx.globalAlpha = o; textFx(ctx, t, { style: 'wipe', text: '16 novembre', x: X, y: 420, size: 72, color: C.blue, delay: 18.85, hold: 2, out: false, font: 'Inter Display' });
