@@ -36,7 +36,7 @@ function computer(t, o) {
   if (crack > 0) { ctx.save(); ctx.beginPath(); ctx.roundRect(x + 24, y + 24, w - 48, h - 48, 14); ctx.clip(); ctx.strokeStyle = dark > 0 ? '#fff' : C.ink; ctx.lineWidth = 4; ctx.lineCap = ctx.lineJoin = 'round'; CRACKS.forEach((pl, i) => { const L = pl.reduce((s, p, j) => j ? s + Math.hypot(p[0] - pl[j - 1][0], p[1] - pl[j - 1][1]) : 0, 0); ctx.setLineDash([L, L]); ctx.lineDashOffset = L * (1 - clamp(crack * 1.4 - i * .08)); ctx.beginPath(); pl.forEach((p, j) => j ? ctx.lineTo(CX + p[0], y + h / 2 + p[1]) : ctx.moveTo(CX + p[0], y + h / 2 + p[1])); ctx.stroke(); }); ctx.restore(); }
   ctx.restore();
 }
-const tag = (t, text, a, b, y = 330, col = C.blue) => { if (t >= a && t < b) textFx(ctx, t, { style: 'blur', text, x: X, y, size: 38, color: col, delay: a, hold: b - a - .8, font: 'JetBrains Mono', weight: 600, ls: 0 }); };
+const tag = (t, text, a, b, y = 330, col = C.blue) => { if (text.includes('METR') && t >= a && t < b) textFx(ctx, t, { style: 'blur', text, x: X, y, size: 38, color: col, delay: a, hold: b - a - .8, font: 'JetBrains Mono', weight: 600, ls: 0 }); };
 const swarm = [], serv = [];
 for (let r = 0; r < 5; r++) for (let c = 0; c < 6; c++) swarm.push({ x: 140 + c * 160, y: 560 + r * 150 + 90, d: Math.hypot(c - 2.5, r - 2) });
 for (let r = 0; r < 4; r++) for (let c = 0; c < 3; c++) serv.push({ x: 90 + c * 320, y: 520 + r * 170 });
@@ -63,19 +63,21 @@ function mainFrame(t) {
     ctx.restore(); ctx.save(); ctx.globalAlpha = o * clamp(seg(t, 7.5, 7.8)); txt(ctx, '~' + Math.round(700 * ease.out(seg(t, 7.6, 9))), X, 400, 84, C.red, { font: 'Inter Display' }); txt(ctx, 'agents', X + 250, 400, 40, C.grey, { weight: 500 }); ctx.restore(); tag(t, 'METR · Redwood Research', 8.8, 10.8, 460, C.grey); }
   // 5. les serveurs (10.8–13.6) + 6. accès root (13.6–16.2)
   if (t >= 10.8 && t < 16.4) { const dim = seg(t, 13.6, 14.1), fade = 1 - ease.in(seg(t, 16, 16.4));
-    serv.forEach((s, i) => { const a = 11.1 + i * .13, q = ease.in(seg(t, a, a + .5)), on = t > a + .45, hero = i === 4, al = fade * (hero ? 1 : 1 - dim * .85), sy = s.y; ctx.save(); ctx.globalAlpha = al * clamp(seg(t, 10.8 + i * .03, 11.1 + i * .03) * 2);
+    serv.forEach((s, i) => { const a = 11.1 + i * .13, q = ease.in(seg(t, a, a + .5)), on = t > a + .45, hero = i === 4, al = fade * (hero ? 1 : 1 - dim * .85), sy = s.y; ctx.save(); ctx.globalAlpha = al * clamp(seg(t, 10.8 + i * .03, 11.1 + i * .03) * 2); if (hero && t > 13.7) ctx.translate(Math.sin(t * 55) * 4, 0);
       ctx.fillStyle = on ? C.red : '#fff'; ctx.strokeStyle = on ? C.red : C.ink; ctx.lineWidth = 4; ctx.beginPath(); ctx.roundRect(s.x, sy, 280, 110, 22); ctx.fill(); ctx.stroke(); ctx.fillStyle = on ? '#fff' : C.ink; [0, 1].forEach(k => { ctx.beginPath(); ctx.arc(s.x + 40 + k * 34, sy + 55, 8, 0, 7); ctx.fill(); }); ctx.fillRect(s.x + 130, sy + 49, 110, 12);
       if (q > 0 && !on) bot(s.x + 140, sy - 8, 42, { alpha: q, t, armL: 2.3, armR: -2.3, fill: C.red, stroke: C.red, blink: false }); else if (on && !hero || (on && hero && t < 13.6)) bot(s.x + 140, sy - 8, 42, { t, alpha: 1 - dim * (hero ? 0 : 1), fill: C.red, stroke: C.red, blink: false }); ctx.restore(); });
-    if (t >= 13.7) windowBox(ctx, t, { x: X, y: 1200, w: 900, h: 280, delay: 13.8, draw: (x, y) => { ctx.save(); ctx.globalAlpha = fade; typing(ctx, t, { text: 'whoami', x: x + 40, y: y + 90, prompt: '$ ', delay: 14.4, last: false }); typing(ctx, t, { text: 'root', x: x + 40, y: y + 160, prompt: '> ', delay: 15.2, color: C.red }); ctx.restore(); } });
+    if (t >= 13.7) windowBox(ctx, t, { x: X, y: 1165, w: 900, h: 280, delay: 13.8, draw: (x, y) => { ctx.save(); ctx.globalAlpha = fade; typing(ctx, t, { text: 'whoami', x: x + 40, y: y + 90, prompt: '$ ', delay: 14.4, last: false }); typing(ctx, t, { text: 'root', x: x + 40, y: y + 160, prompt: '> ', delay: 15.2, color: C.red }); ctx.restore(); } });
     tag(t, 'dizaines de serveurs', 10.9, 12.6, 330, C.red); tag(t, 'accès root · un serveur', 13.7, 15.6, 330, C.red); }
   // 7. bloqué (16.2–18.8)
   if (t >= 16.2 && t < 19) { const o = 1 - ease.in(seg(t, 18.6, 19)); ctx.save(); ctx.globalAlpha = o; [-1, 1].forEach((sd, k) => [0, 1, 2].forEach(j => { const q = ease.in(seg(t, 16.3 + j * .1, 17.1 + j * .1)); bot(CX + sd * (300 + (j % 2) * 60) + sd * q * 60, CY - 120 + j * 120, 64, { t: t + j, alpha: 1 - q, fill: C.mist, stroke: C.grey }); }));
-    draw(ctx, t, { path: new Path2D('M24 5l15 6v11c0 10-7 18-15 21C16 40 9 32 9 22V11z'), cx: CX, cy: CY - 20, size: 320, delay: 16.4, color: C.green, len: 220 }); draw(ctx, t, { path: ICONS.check, cx: CX, cy: CY - 20, size: 130, delay: 17.1, color: C.green }); ctx.restore(); tag(t, 'intrusion bloquée', 16.3, 18.2, 330, C.green); }
+    draw(ctx, t, { path: new Path2D('M24 5l15 6v11c0 10-7 18-15 21C16 40 9 32 9 22V11z'), cx: CX, cy: CY - 20, size: 320, delay: 16.4, color: C.green, len: 220 }); draw(ctx, t, { path: ICONS.check, cx: CX, cy: CY - 20, size: 130, delay: 17.1, color: C.green });
+    for (let k = 0; k < 2; k++) { const ph = ((t - 17.6 - k * .5) % 1 + 1) % 1; if (t > 17.6 + k * .5) { ctx.save(); ctx.globalAlpha *= .5 * (1 - ph); ctx.strokeStyle = C.green; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(CX, CY - 20, 170 + ph * 190, 0, 7); ctx.stroke(); ctx.restore(); } }
+    ctx.restore(); tag(t, 'intrusion bloquée', 16.3, 18.2, 330, C.green); }
   // 8. plainte (18.8–21.8)
   if (t >= 18.8 && t < 22) { const o = 1 - ease.in(seg(t, 21.3, 21.75)); ctx.save(); ctx.globalAlpha = o; textFx(ctx, t, { style: 'wipe', text: '16 novembre', x: X, y: 420, size: 72, color: C.ink, delay: 18.85, hold: 2, out: false, font: 'Inter Display' });
     const dq = ease.out(seg(t, 19.2, 19.8)); ctx.save(); ctx.globalAlpha *= clamp(dq * 2); ctx.translate(0, (1 - dq) * 40); ctx.fillStyle = '#fff'; ctx.strokeStyle = C.ink; ctx.lineWidth = 5; ctx.beginPath(); ctx.roundRect(CX - 170, 560, 340, 440, 24); ctx.fill(); ctx.stroke(); ctx.strokeStyle = C.sky; ctx.lineWidth = 8; ctx.lineCap = 'round'; [0, 1, 2, 3, 4].forEach(i => { const lp = ease.out(seg(t, 19.7 + i * .12, 20.1 + i * .12)); ctx.beginPath(); ctx.moveTo(CX - 120, 640 + i * 62); ctx.lineTo(CX - 120 + (i === 4 ? 140 : 240) * lp, 640 + i * 62); ctx.stroke(); });
     const sq = ease.out(seg(t, 20.5, 20.9)); if (sq > 0) { ctx.save(); ctx.translate(CX + 90, 950); ctx.rotate(-.25); ctx.scale(1.5 - .5 * sq, 1.5 - .5 * sq); ctx.globalAlpha = sq; ctx.strokeStyle = C.red; ctx.lineWidth = 6; ctx.beginPath(); ctx.roundRect(-110, -34, 220, 68, 14); ctx.stroke(); txt(ctx, 'PLAINTE', 0, 12, 36, C.red, { font: 'JetBrains Mono', weight: 700, align: 'center', ls: 0 }); ctx.restore(); }
-    ctx.restore(); textFx(ctx, t, { style: 'tracking', text: 'Californie → OpenAI', x: X, y: 1130, size: 40, color: C.ink, delay: 20, hold: 1, font: 'Inter' }); ctx.restore(); }
+    ctx.restore();  ctx.restore(); }
   // 9. sources (21.8–25)
   if (t >= 21.8 && t < 23.7) { const p = ease.out(seg(t, 21.9, 22.5)), so = 1 - ease.in(seg(t, 23.25, 23.65)); ctx.save(); ctx.globalAlpha = clamp(p * 2) * so; ctx.translate(0, (1 - p) * 30); ctx.fillStyle = C.blue; ctx.beginPath(); ctx.roundRect(X + 14, 560 + 14, 900, 473, 24); ctx.fill(); ctx.save(); ctx.beginPath(); ctx.roundRect(X, 560, 900, 473, 24); ctx.clip(); const zk = 1 + .12 * seg(t, 22.2, 23.7); ctx.translate(X + 450, 560 + 236); ctx.scale(zk, zk); ctx.drawImage(IM.nbc, -450, -236, 900, 473); ctx.restore(); ctx.strokeStyle = C.ink; ctx.lineWidth = 4; ctx.beginPath(); ctx.roundRect(X, 560, 900, 473, 24); ctx.stroke(); ctx.restore();
     textFx(ctx, t, { style: 'blur', text: 'FuraxDev', x: X, y: 1200, size: 48, color: C.blue, delay: 22.3, hold: .6, font: 'Inter Display' }); }
@@ -91,7 +93,7 @@ function mainFrame(t) {
       ctx.restore(); }
     if (t >= 25.3) { const bob = Math.sin(t * 5) * 8, q = ease.out(seg(t, 25.3, 25.9)); ctx.save(); ctx.translate(0, bob); draw(ctx, t, { path: new Path2D('M6 12h36v24H6zM6 14l18 14 18-14'), cx: CX, cy: 800, size: 300, delay: 25.3, color: C.blue, len: 230 });
       const bq = ease.out(seg(t, 26.0, 26.3)); if (bq > 0) { ctx.fillStyle = C.red; ctx.beginPath(); ctx.arc(CX + 150, 690, 34 * bq, 0, 7); ctx.fill(); txt(ctx, '1', CX + 150, 702, 36 * bq, '#fff', { font: 'Inter Display', align: 'center', ls: 0 }); }
-      ctx.restore(); textFx(ctx, t, { style: 'blur', text: 'la ressource arrive en DM', x: X, y: 1130, size: 44, color: C.ink, delay: 25.6, out: false, font: 'Inter Display' }); } }
+      ctx.restore();  } }
   subtitles(t);
 }
 
