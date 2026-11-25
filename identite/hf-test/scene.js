@@ -1,5 +1,5 @@
 // v2 — rythme rapide, bots dessinés, ordinateur qui se casse, sous-titres de narration en bas (pas de voix).
-const cv = document.getElementById('c'), ctx = cv.getContext('2d'), IM = {}, DURATION = 25;
+const cv = document.getElementById('c'), ctx = cv.getContext('2d'), IM = {}, INTRO = 4.2, SHIFT = INTRO - 2.4, DURATION = 25 + SHIFT;
 const loads = Object.entries(window.IMGS).map(([k, s]) => new Promise(r => { const i = new Image(); i.onload = r; i.src = s; IM[k] = i; }));
 const X = 90, CX = 540, CY = 800;
 // ---- narration (sous-titres) ----
@@ -40,10 +40,10 @@ const tag = (t, text, a, b, y = 330, col = C.blue) => { if (t >= a && t < b) tex
 const swarm = [], serv = [];
 for (let r = 0; r < 5; r++) for (let c = 0; c < 6; c++) swarm.push({ x: 140 + c * 160, y: 560 + r * 150 + 90, d: Math.hypot(c - 2.5, r - 2) });
 for (let r = 0; r < 4; r++) for (let c = 0; c < 3; c++) serv.push({ x: 90 + c * 320, y: 520 + r * 170 });
-function renderFrame(t) {
+function mainFrame(t) {
   ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, 1080, 1920);
   // 1. OpenAI × Hugging Face (0–2.4)
-  if (t < 2.7) { const out = 1 - ease.in(seg(t, 2.1, 2.7)); ctx.save(); ctx.globalAlpha = out;
+  if (false) { const out = 1 - ease.in(seg(t, 2.1, 2.7)); ctx.save(); ctx.globalAlpha = out;
     [['oa', 0], ['hf', 1]].forEach(([k, i]) => { const q = ease.out(seg(t, .15 + i * .2, .7 + i * .2)); ctx.save(); ctx.translate(CX + (i ? 1 : -1) * (170 - 55 * ease.inout(seg(t, .8, 2.2))), CY - 40 + (1 - q) * 50 - ease.in(seg(t, 2.1, 2.7)) * 60); ctx.globalAlpha *= clamp(q * 2); ctx.fillStyle = i ? C.blue : '#fff'; ctx.strokeStyle = i ? C.blue : C.ink; ctx.lineWidth = 4; ctx.beginPath(); ctx.roundRect(-110, -110, 220, 220, 44); ctx.fill(); ctx.stroke(); ctx.drawImage(IM[i ? 'hfw' : 'oa'], -56, -56, 112, 112); ctx.restore(); });
     ctx.strokeStyle = C.blue; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.setLineDash([2, 16]); ctx.lineDashOffset = -t * 60; ctx.beginPath(); ctx.moveTo(CX - 170 + 55 * ease.inout(seg(t, .8, 2.2)) + 110, CY - 40); ctx.lineTo(CX + 170 - 55 * ease.inout(seg(t, .8, 2.2)) - 110, CY - 40); ctx.globalAlpha = out * clamp(seg(t, .7, 1)); ctx.stroke(); ctx.setLineDash([]);
     ctx.restore(); textFx(ctx, t, { style: 'blur', text: 'OpenAI × Hugging Face', x: X, y: 330, size: 54, color: C.ink, delay: .1, hold: 1.4, font: 'Inter Display' }); }
@@ -79,6 +79,29 @@ function renderFrame(t) {
   // 9. sources (21.8–25)
   if (t >= 21.8) { const p = ease.out(seg(t, 21.9, 22.5)); ctx.save(); ctx.globalAlpha = clamp(p * 2); ctx.translate(0, (1 - p) * 30); ctx.fillStyle = C.blue; ctx.beginPath(); ctx.roundRect(X + 14, 560 + 14, 900, 473, 24); ctx.fill(); ctx.save(); ctx.beginPath(); ctx.roundRect(X, 560, 900, 473, 24); ctx.clip(); const zk = 1 + .22 * seg(t, 22.2, 25); ctx.translate(X + 450, 560 + 236); ctx.scale(zk, zk); ctx.drawImage(IM.nbc, -450, -236, 900, 473); ctx.restore(); ctx.strokeStyle = C.ink; ctx.lineWidth = 4; ctx.beginPath(); ctx.roundRect(X, 560, 900, 473, 24); ctx.stroke(); ctx.restore();
     textFx(ctx, t, { style: 'blur', text: 'FuraxDev', x: X, y: 1200, size: 48, color: C.blue, delay: 22.6, out: false, font: 'Inter Display' }); }
-  subtitles(t); progress(ctx, t / DURATION);
+  subtitles(t);
 }
+
+// ---- intro : ChatGPT aux yeux rouges, pluie de binaire vert sur Hugging Face qui tombe ----
+const hash = (a, b, c = 0) => ((Math.imul(a + 1, 73856093) ^ Math.imul(b + 1, 19349663) ^ Math.imul(c + 1, 83492791)) >>> 0);
+function binChar(x, y, a, size = 26) { ctx.globalAlpha = a; ctx.fillStyle = C.green; ctx.font = `700 ${size}px JetBrains Mono`; ctx.textAlign = 'center'; ctx.fillText(String(hash(Math.round(x), Math.round(y), 5) % 2), x, y); }
+function intro(t) {
+  const out = 1 - ease.in(seg(t, 3.95, 4.2)), CYI = CY - 40, XL = CX - 165, XR = CX + 165; ctx.save(); ctx.globalAlpha = out;
+  textFx(ctx, t, { style: 'blur', text: 'OpenAI × Hugging Face', x: X, y: 330, size: 54, color: C.ink, delay: .1, hold: 3, out: false, font: 'Inter Display' });
+  const angry = ease.out(seg(t, 1.0, 1.2)), shake = t > 1.0 ? Math.sin(t * 70) * 5 * (1 - seg(t, 1.0, 1.5)) + Math.sin(t * 40) * 1.2 : 0;
+  // trait pointillé qui relie les deux (devient rouge quand ça tourne mal)
+  const lq = clamp(seg(t, .7, 1)); ctx.save(); ctx.strokeStyle = t > 1.0 ? C.red : C.blue; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.setLineDash([2, 16]); ctx.lineDashOffset = -t * 60; ctx.globalAlpha *= lq; ctx.beginPath(); ctx.moveTo(XL + 110, CYI); ctx.lineTo(XR - 110, CYI); ctx.stroke(); ctx.restore();
+  // OpenAI : tuile blanche, yeux rouges énervés
+  { const q = ease.out(seg(t, .15, .7)); ctx.save(); ctx.translate(XL + shake, CYI + (1 - q) * 50); ctx.globalAlpha *= clamp(q * 2); ctx.fillStyle = '#fff'; ctx.strokeStyle = angry > .1 ? C.red : C.ink; ctx.lineWidth = 4 + angry * 2; ctx.beginPath(); ctx.roundRect(-110, -110, 220, 220, 44); ctx.fill(); ctx.stroke(); ctx.globalAlpha *= 1 - .65 * angry; ctx.drawImage(IM.oa, -56, -56, 112, 112); ctx.globalAlpha = out * clamp(q * 2);
+    if (angry > 0) { ctx.save(); ctx.scale(.6 + .4 * angry, .6 + .4 * angry); ctx.fillStyle = C.red; ctx.strokeStyle = C.red; ctx.lineWidth = 8; ctx.lineJoin = 'round'; [-1, 1].forEach(sd => { ctx.beginPath(); ctx.moveTo(sd * 86, -30); ctx.lineTo(sd * 30, -4); ctx.lineTo(sd * 34, 24); ctx.lineTo(sd * 80, 20); ctx.closePath(); ctx.fill(); ctx.stroke(); }); ctx.restore(); } ctx.restore(); }
+  // pluie de binaire vert au-dessus de Hugging Face (1,7 → 3,5 s)
+  const rain = seg(t, 1.7, 2.1) * (1 - seg(t, 3.2, 3.6));
+  if (rain > 0) for (let c = 0; c < 9; c++) for (let k = 0; k < 9; k++) { const sp = 380 + (hash(c, 1) % 140), y = ((t - 1.7) * sp + k * 62 + (hash(c, 2) % 60)) % 660, top = CYI - 560 + y; if (hash(c, k, 3) % 100 > rain * 85) continue; ctx.save(); const al = clamp(y / 140) * .95 * (top > CYI + 100 ? 0 : 1); if (al > 0) binChar(XR - 108 + c * 27, top, al); ctx.restore(); }
+  // Hugging Face : devient sombre, pivote et tombe sur le côté, binaire qui apparaît / disparaît dessus
+  { const q = ease.out(seg(t, .3, .85)), ang = ease.in(seg(t, 2.55, 3.2)) * 1.38, inf = seg(t, 2.0, 2.5); ctx.save(); ctx.translate(XR + 110, CYI + 110 + (1 - q) * 50); ctx.rotate(ang); ctx.translate(-110, -110); ctx.globalAlpha *= clamp(q * 2);
+    ctx.beginPath(); ctx.roundRect(0, 0, 220, 220, 44); ctx.fillStyle = C.blue; ctx.fill(); ctx.globalAlpha *= 1; ctx.fillStyle = C.deep; ctx.save(); ctx.globalAlpha = out * clamp(q * 2) * inf; ctx.fill(); ctx.restore(); ctx.strokeStyle = C.blue; ctx.lineWidth = 4; ctx.stroke(); ctx.drawImage(IM.hfw, 54, 54, 112, 112);
+    ctx.save(); ctx.beginPath(); ctx.roundRect(0, 0, 220, 220, 44); ctx.clip(); if (t > 2.0 && t < 4.0) for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) { const h = hash(r, c, 9), ph = (t * 2.2 + (h % 100) / 100) % 1; if (ph < .5 && h % 3) binChar(14 + c * 27, 26 + r * 27, Math.min(1, ph * 6) * Math.min(1, (.5 - ph) * 6) * .95 * seg(t, 2.0, 2.4)); } ctx.restore(); ctx.restore(); }
+  ctx.restore();
+}
+function renderFrame(t) { if (t < INTRO) { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, 1080, 1920); intro(t); subtitles(t * 2.4 / INTRO); } else mainFrame(t - SHIFT); progress(ctx, t / DURATION); }
 window.renderFrame = renderFrame; window.DURATION = DURATION; window.ready = Promise.all([document.fonts.load('700 40px Inter'), document.fonts.load('700 40px "Inter Display"'), document.fonts.load('600 30px "JetBrains Mono"'), ...loads]);
