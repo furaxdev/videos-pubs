@@ -1,0 +1,9 @@
+{
+  "titre": "1Password piraté : ce qui a fuité (et ce qui est intact)",
+  "description": "Le 19 novembre, un compte GitHub d'employé 1Password a été compromis. Selon 1Password : noms et e-mails de clients téléchargés, mais ni coffres-forts ni mots de passe.\nSource : https://1password.com/blog/update-on-nov-2026-security-incident\nCommente « SAFE » et je t'envoie la ressource en DM.",
+  "hashtags": ["#IA", "#Cybersécurité", "#Dev", "#1Password", "#DataBreach", "#GitHub", "#Shorts"],
+  "mot_cta": "SAFE",
+  "reponse_dm": "Voici ta checklist en 5 points + la source officielle : https://1password.com/blog/update-on-nov-2026-security-incident (ressource.md)",
+  "heure_publication": "07:30 Europe/Paris (repli 12:30 / 18:30)",
+  "sources": ["https://1password.com/blog/update-on-nov-2026-security-incident", "https://news.ycombinator.com/item?id=50644817", "https://www.theverge.com/tech/1042409/1password-data-breach-leak"]
+}
