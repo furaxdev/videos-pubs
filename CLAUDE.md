@@ -6,3 +6,4 @@
 - Terminal : un seul curseur fin à côté du texte, jamais sur le texte.
 - Ne pas mettre de voix tant que Furax n'a pas demandé la sienne.
 - Couleurs : le bleu `#2F5BFF` est la marque, MAIS pas tout en bleu. Sens : rouge `#FF3B4E` = danger/attaque/plainte, vert `#12B76A` = validé/bloqué, ambre `#FFB020` = date/avertissement, gris pour le secondaire. Choisir la couleur selon le sens de chaque élément.
+- Chaque vidéo a un `ressource.json` (voir `site/build.py`) ; lancer `python3 site/build.py` pour régénérer le site des ressources (mot d'appel → ressource).
