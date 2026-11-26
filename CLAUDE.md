@@ -16,3 +16,4 @@ Chaque jour, la vidéo du jour ET sa ressource sur le site, dans le même passag
 3. Lancer `python3 site/build.py && node site/qa.js` ; regarder des captures mobile 390 px (clair + sombre) de l'accueil et de la nouvelle page ; zéro problème. Commiter le mp4, `thumb.jpg` et `ressource.json`.
 4. `publication.json` / `publication.txt` : le lien DM est `<url>/?q=MOT` avec `<url>` lu dans `site/config.json` (clé `url`) ; si vide, mettre le placeholder `<url-du-site>`.
 5. Mettre à jour `daily/historique.md` (mot d'appel compris), commit, push, page Artifact de secours, message final à Furax.
+6. **Livraison à Furax = le fichier MP4**, pas seulement une page : la page Artifact doit contenir un gros bouton « Télécharger le MP4 » (lien direct `<a download>` vers le fichier publié avec l'artifact) EN PLUS du lecteur vidéo ; le message final donne le chemin du mp4 dans la branche. Ne jamais livrer seulement un lien d'artifact sans possibilité de télécharger le fichier.
