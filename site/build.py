@@ -12,15 +12,15 @@ def fdate(s):
 def norm(s): return re.sub(r'[^a-z0-9 ]+', ' ', unicodedata.normalize('NFD', str(s).lower()).encode('ascii', 'ignore').decode()).strip()
 FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">'
 CSS = """
-:root{--blue:#2f5bff;--ink:#0b1020;--mut:#5a6385;--bg:#fff;--card:#fff;--line:#e3e8ff;--mist:#eef2ff;--red:#ff3b4e;--green:#12b76a}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--ink:#f3f5ff;--mut:#9aa4c8;--bg:#0a1230;--card:#111a3d;--line:#223063;--mist:#162251}}
+:root{--blue:#2f5bff;--acc:#2f5bff;--ink:#0b1020;--mut:#5a6385;--bg:#fff;--card:#fff;--line:#e3e8ff;--mist:#eef2ff;--red:#ff3b4e;--green:#12b76a}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--ink:#f3f5ff;--mut:#9aa4c8;--bg:#0a1230;--card:#111a3d;--line:#223063;--mist:#162251;--acc:#9db4ff}}
 *{box-sizing:border-box;margin:0}html{-webkit-text-size-adjust:100%}
-body{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;min-height:100vh}
+body{overflow-wrap:anywhere;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;min-height:100vh}
 a{color:inherit;text-decoration:none}.wrap{max-width:680px;margin:0 auto;padding:0 20px 80px}
-.top{display:flex;align-items:center;gap:12px;padding:18px 0}
+.top{display:flex;align-items:center;gap:12px;padding:8px 0}.top a{display:flex;align-items:center;gap:12px;min-height:44px;flex-wrap:wrap;min-width:0}.top a>div:last-child{min-width:0}
 .mark{width:36px;height:36px;border-radius:10px;background:var(--blue);display:grid;place-items:center;color:#fff;font:800 20px Inter}
-.top b{font-weight:700;letter-spacing:-.02em}.top span{color:var(--mut)}
-.badge{display:inline-block;font:600 14px Inter;color:var(--blue);letter-spacing:.01em}
+.brand{line-height:1.15}.brand b{display:block;font-weight:700;letter-spacing:-.02em}.brand span{display:block;color:var(--mut);font-size:.85em}
+.badge{display:inline-block;font:600 14px Inter;color:var(--acc);letter-spacing:.01em}
 h1{font:800 clamp(30px,7vw,44px)/1.08 Inter;letter-spacing:-.04em;margin:10px 0 12px}
 .sub{color:var(--mut);font-size:17px}
 .search{margin:26px 0 8px;position:relative}
@@ -32,25 +32,25 @@ h1{font:800 clamp(30px,7vw,44px)/1.08 Inter;letter-spacing:-.04em;margin:10px 0 
 .card:hover{border-color:var(--blue);transform:translateY(-1px)}
 .card.hit{border-color:var(--blue);box-shadow:6px 6px 0 var(--blue)}
 .card img{width:92px;height:92px;border-radius:14px;object-fit:cover;flex:none;background:var(--mist)}
-.card h3{font:700 17px/1.25 Inter;letter-spacing:-.02em;margin-bottom:4px}
+.card>div{min-width:0;flex:1}@media(max-width:300px){.card{flex-direction:column;align-items:flex-start}.card .go{display:none}.card img{width:100%;height:auto;aspect-ratio:1}}.card h3{font:700 17px/1.25 Inter;letter-spacing:-.02em;margin-bottom:4px}
 .card p{color:var(--mut);font-size:14.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.card .mot{display:inline-block;font:700 12px 'JetBrains Mono',monospace;color:var(--blue);background:var(--mist);padding:2px 8px;border-radius:8px;margin-bottom:6px}
+.card .mot{display:inline-block;font:700 12px 'JetBrains Mono',monospace;color:var(--acc);background:var(--mist);padding:2px 8px;border-radius:8px;margin-bottom:6px}
 .card .go{margin-left:auto;color:var(--mut);font-size:22px;flex:none}
 .none{padding:26px;border:2px dashed var(--line);border-radius:20px;color:var(--mut);text-align:center}
 .found{color:var(--green);font:700 14px Inter;margin:6px 2px 0;min-height:20px}
 footer{margin-top:50px;color:var(--mut);font-size:14px;text-align:center}
-.back{display:block;margin:6px 0 16px;color:var(--mut);font-weight:600}
+.back{display:flex;align-items:center;min-height:44px;margin:0 0 8px;color:var(--mut);font-weight:600}
 .pill{display:inline-block;font:700 13px 'JetBrains Mono',monospace;color:#fff;background:var(--blue);padding:3px 10px;border-radius:9px}
 .meta{color:var(--mut);margin-bottom:22px}
 video{width:100%;max-height:70vh;border-radius:20px;border:2px solid var(--ink);box-shadow:8px 8px 0 var(--blue);background:#000;margin:6px 0 26px}
 h2{font:800 22px Inter;letter-spacing:-.03em;margin:30px 0 10px}
 ol,ul{padding-left:22px}li{margin:8px 0}
-.src a{color:var(--blue);font-weight:600;word-break:break-word}.src li{margin:10px 0}
-.copy{margin-top:26px;display:inline-block;font:600 15px Inter;color:var(--blue);background:var(--mist);border:0;border-radius:12px;padding:11px 16px;cursor:pointer}
+.src a{color:var(--acc);font-weight:600;word-break:break-word;display:inline-block;padding:10px 0;min-height:44px}.src li{margin:6px 0}
+.copy{margin-top:26px;display:inline-block;min-height:44px;font:600 15px Inter;color:var(--acc);background:var(--mist);border:0;border-radius:12px;padding:11px 18px;cursor:pointer}
 .note{margin-top:26px;padding:14px 16px;background:var(--mist);border-radius:14px;color:var(--mut);font-size:14.5px}
 """
 HEAD = lambda title, desc, extra='': f'<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{E(title)}</title><meta name="description" content="{E(desc)}"><meta property="og:title" content="{E(title)}"><meta property="og:description" content="{E(desc)}"><meta name="theme-color" content="#2f5bff">{FONTS}<style>{CSS}</style>{extra}</head><body><div class="wrap">'
-TOP = lambda base: f'<div class="top"><a href="{base}" style="display:flex;gap:12px;align-items:center"><div class="mark">F</div><div><b>FuraxDev</b> <span>· Ressources</span></div></a></div>'
+TOP = lambda base: f'<div class="top"><a href="{base}"><div class="mark">F</div><div class="brand"><b>FuraxDev</b><span>Ressources</span></div></a></div>'
 FOOT = '<footer>FuraxDev · ressources gratuites, accès instantané.<br>Pas de spam : juste ce que tu as demandé en commentaire.</footer></div></body></html>'
 ICON = '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>'
 

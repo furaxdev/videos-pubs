@@ -7,3 +7,4 @@
 - Ne pas mettre de voix tant que Furax n'a pas demandé la sienne.
 - Couleurs : le bleu `#2F5BFF` est la marque, MAIS pas tout en bleu. Sens : rouge `#FF3B4E` = danger/attaque/plainte, vert `#12B76A` = validé/bloqué, ambre `#FFB020` = date/avertissement, gris pour le secondaire. Choisir la couleur selon le sens de chaque élément.
 - Chaque vidéo a un `ressource.json` (voir `site/build.py`) ; lancer `python3 site/build.py` pour régénérer le site des ressources (mot d'appel → ressource).
+- Site des ressources : après CHAQUE changement de `site/build.py` ou nouvelle ressource, lancer `python3 site/build.py && node site/qa.js` (6 largeurs d'écran 320–1280 px, clair/sombre, zoom navigateur 100/150/200 %, recherche) ET regarder des captures mobile (390 px) en clair et en sombre. Zéro problème avant de livrer.
