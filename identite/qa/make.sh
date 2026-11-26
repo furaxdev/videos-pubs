@@ -1,3 +1,9 @@
 #!/usr/bin/env bash
-# Rend un projet vidéo puis lance TOUTES les vérifications : qa/make.sh identite/hf-test hugging-face-test
-set -e; cd "$(dirname "$0")/.."; ( cd "$1" && node render.js ); python3 qa/check.py "$1/$2.mp4"; ( cd "$1" && node ../qa/audit.js . )
+# Rend un projet vidéo puis lance TOUTES les vérifications, depuis n'importe quel dossier :
+#   identite/qa/make.sh <dossier-projet> <nom-du-mp4-sans-extension>
+set -e
+QA="$(cd "$(dirname "$0")" && pwd)"            # dossier identite/qa (chemin absolu)
+PROJ="$(cd "$1" && pwd)"                       # dossier du projet (n'importe où dans le dépôt)
+( cd "$PROJ" && node render.js )
+python3 "$QA/check.py" "$PROJ/$2.mp4"
+( cd "$PROJ" && node "$QA/audit.js" . )
