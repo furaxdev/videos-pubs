@@ -8,3 +8,11 @@
 - Couleurs : le bleu `#2F5BFF` est la marque, MAIS pas tout en bleu. Sens : rouge `#FF3B4E` = danger/attaque/plainte, vert `#12B76A` = validé/bloqué, ambre `#FFB020` = date/avertissement, gris pour le secondaire. Choisir la couleur selon le sens de chaque élément.
 - Chaque vidéo a un `ressource.json` (voir `site/build.py`) ; lancer `python3 site/build.py` pour régénérer le site des ressources (mot d'appel → ressource).
 - Site des ressources : après CHAQUE changement de `site/build.py` ou nouvelle ressource, lancer `python3 site/build.py && node site/qa.js` (6 largeurs d'écran 320–1280 px, clair/sombre, zoom navigateur 100/150/200 %, recherche) ET regarder des captures mobile (390 px) en clair et en sombre. Zéro problème avant de livrer.
+
+# Routine du matin — checklist complète (prioritaire sur le texte de la tâche si différent)
+Chaque jour, la vidéo du jour ET sa ressource sur le site, dans le même passage :
+1. Vidéo : `daily/AAAA-MM-JJ-slug/` (copie de `identite/hf-test`), QA vidéo à zéro problème.
+2. **Ressource sur le site** : écrire `ressource.json` dans ce dossier (PAS de `ressource.md`) — modèle `identite/hf-test/ressource.json`, schéma en tête de `site/build.py` : slug (minuscules-tirets), `mot` unique (un seul mot ; vérifier qu'aucun autre `ressource.json` du dépôt ne l'utilise), titre, resume, 5 points vrais et sourcés, sources (liens), tags, date, video (nom du mp4), thumb_at (seconde lisible).
+3. Lancer `python3 site/build.py && node site/qa.js` ; regarder des captures mobile 390 px (clair + sombre) de l'accueil et de la nouvelle page ; zéro problème. Commiter le mp4, `thumb.jpg` et `ressource.json`.
+4. `publication.json` / `publication.txt` : le lien DM est `<url>/?q=MOT` avec `<url>` lu dans `site/config.json` (clé `url`) ; si vide, mettre le placeholder `<url-du-site>`.
+5. Mettre à jour `daily/historique.md` (mot d'appel compris), commit, push, page Artifact de secours, message final à Furax.
