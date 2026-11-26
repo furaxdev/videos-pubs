@@ -1,0 +1,270 @@
+{
+ "github": {
+  "title": "GitHub",
+  "hex": "181717"
+ },
+ "gitlab": {
+  "title": "GitLab",
+  "hex": "FC6D26"
+ },
+ "1password": {
+  "title": "1Password",
+  "hex": "3B66BC"
+ },
+ "bitwarden": {
+  "title": "Bitwarden",
+  "hex": "175DDC"
+ },
+ "lastpass": {
+  "title": "LastPass",
+  "hex": "D32D27"
+ },
+ "openai": {
+  "title": "OpenAI",
+  "hex": "412991"
+ },
+ "anthropic": {
+  "title": "Anthropic",
+  "hex": "191919"
+ },
+ "google": {
+  "title": "Google",
+  "hex": "4285F4"
+ },
+ "googlegemini": {
+  "title": "Google Gemini",
+  "hex": "8E75B2"
+ },
+ "huggingface": {
+  "title": "Hugging Face",
+  "hex": "FFD21E"
+ },
+ "meta": {
+  "title": "Meta",
+  "hex": "0467DF"
+ },
+ "nvidia": {
+  "title": "NVIDIA",
+  "hex": "76B900"
+ },
+ "apple": {
+  "title": "Apple",
+  "hex": "000000"
+ },
+ "x": {
+  "title": "X",
+  "hex": "000000"
+ },
+ "reddit": {
+  "title": "Reddit",
+  "hex": "FF4500"
+ },
+ "discord": {
+  "title": "Discord",
+  "hex": "5865F2"
+ },
+ "slack": {
+  "title": "Slack",
+  "hex": "4A154B"
+ },
+ "linux": {
+  "title": "Linux",
+  "hex": "FCC624"
+ },
+ "android": {
+  "title": "Android",
+  "hex": "34A853"
+ },
+ "npm": {
+  "title": "npm",
+  "hex": "CB3837"
+ },
+ "python": {
+  "title": "Python",
+  "hex": "3776AB"
+ },
+ "rust": {
+  "title": "Rust",
+  "hex": "000000"
+ },
+ "docker": {
+  "title": "Docker",
+  "hex": "2496ED"
+ },
+ "kubernetes": {
+  "title": "Kubernetes",
+  "hex": "326CE5"
+ },
+ "cloudflare": {
+  "title": "Cloudflare",
+  "hex": "F38020"
+ },
+ "vercel": {
+  "title": "Vercel",
+  "hex": "000000"
+ },
+ "netlify": {
+  "title": "Netlify",
+  "hex": "00C7B7"
+ },
+ "supabase": {
+  "title": "Supabase",
+  "hex": "3FCF8E"
+ },
+ "firebase": {
+  "title": "Firebase",
+  "hex": "DD2C00"
+ },
+ "stripe": {
+  "title": "Stripe",
+  "hex": "008CDD"
+ },
+ "paypal": {
+  "title": "PayPal",
+  "hex": "003087"
+ },
+ "telegram": {
+  "title": "Telegram",
+  "hex": "26A5E4"
+ },
+ "whatsapp": {
+  "title": "WhatsApp",
+  "hex": "25D366"
+ },
+ "signal": {
+  "title": "Signal",
+  "hex": "3A76F0"
+ },
+ "tiktok": {
+  "title": "TikTok",
+  "hex": "000000"
+ },
+ "youtube": {
+  "title": "YouTube",
+  "hex": "FF0000"
+ },
+ "instagram": {
+  "title": "Instagram",
+  "hex": "E4405F"
+ },
+ "facebook": {
+  "title": "Facebook",
+  "hex": "0866FF"
+ },
+ "threads": {
+  "title": "Threads",
+  "hex": "000000"
+ },
+ "spotify": {
+  "title": "Spotify",
+  "hex": "1DB954"
+ },
+ "netflix": {
+  "title": "Netflix",
+  "hex": "E50914"
+ },
+ "tesla": {
+  "title": "Tesla",
+  "hex": "CC0000"
+ },
+ "spacex": {
+  "title": "SpaceX",
+  "hex": "000000"
+ },
+ "openstreetmap": {
+  "title": "OpenStreetMap",
+  "hex": "7EBC6F"
+ },
+ "wikipedia": {
+  "title": "Wikipedia",
+  "hex": "000000"
+ },
+ "mozilla": {
+  "title": "Mozilla",
+  "hex": "000000"
+ },
+ "firefox": {
+  "title": "Firefox",
+  "hex": "FF7139"
+ },
+ "googlechrome": {
+  "title": "Google Chrome",
+  "hex": "4285F4"
+ },
+ "brave": {
+  "title": "Brave",
+  "hex": "FB542B"
+ },
+ "protonmail": {
+  "title": "Proton Mail",
+  "hex": "6D4AFF"
+ },
+ "proton": {
+  "title": "Proton",
+  "hex": "6D4AFF"
+ },
+ "okta": {
+  "title": "Okta",
+  "hex": "007DC1"
+ },
+ "cisco": {
+  "title": "Cisco",
+  "hex": "1BA0D7"
+ },
+ "jfrog": {
+  "title": "JFrog",
+  "hex": "40BE46"
+ },
+ "redhat": {
+  "title": "Red Hat",
+  "hex": "EE0000"
+ },
+ "ubuntu": {
+  "title": "Ubuntu",
+  "hex": "E95420"
+ },
+ "debian": {
+  "title": "Debian",
+  "hex": "A81D33"
+ },
+ "intel": {
+  "title": "Intel",
+  "hex": "0071C5"
+ },
+ "amd": {
+  "title": "AMD",
+  "hex": "ED1C24"
+ },
+ "arm": {
+  "title": "Arm",
+  "hex": "0091BD"
+ },
+ "samsung": {
+  "title": "Samsung",
+  "hex": "1428A0"
+ },
+ "xiaomi": {
+  "title": "Xiaomi",
+  "hex": "FF6900"
+ },
+ "huawei": {
+  "title": "Huawei",
+  "hex": "FF0000"
+ },
+ "bytedance": {
+  "title": "ByteDance",
+  "hex": "3C8CFF"
+ },
+ "perplexity": {
+  "title": "Perplexity",
+  "hex": "1FB8CD"
+ },
+ "githubcopilot": {
+  "title": "GitHub Copilot",
+  "hex": "000000"
+ },
+ "jetbrains": {
+  "title": "JetBrains",
+  "hex": "000000"
+ }
+}

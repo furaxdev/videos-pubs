@@ -21,6 +21,15 @@
 - Une scène = 2,4 à 3,4 s, calée sur une phrase de narration. Ne jamais laisser un texte 2–3 s sans changement.
 - Intro : un « mini-film » de 3–4 s qui montre le sujet (ex. logo qui devient menaçant, binaire vert, tuile qui tombe). Exemples : `identite/hf-test/scene.js` (`intro`, bots, ordi qui se casse, serveurs, bouclier, document + tampon).
 
+## Variété visuelle (OBLIGATOIRE — chaque vidéo doit avoir SON identité)
+Furax : « c'est toujours la même chose, trop ressemblant ». Donc, pour chaque vidéo :
+- **Les vrais logos des marques/outils du sujet** (GitHub, 1Password, OpenAI…) via `identite/assets/logos.js` + `logoTile` — jamais de tuile générique à la place d'une marque qui existe dans la bibliothèque.
+- **Au moins 3 composants de `kit2.js` (timeline, versus, bars, notification, chat, diff, browser, icônes…) qui n'ont PAS servi dans les 2 vidéos précédentes** (voir la colonne « éléments » de `daily/historique.md`).
+- **Une intro « mini-film » différente** des précédentes (pas toujours bot + ordinateur/serveur/terminal) : choisir une mise en scène propre au sujet (ex. un logo qui se fissure, une notification qui arrive, un message qui part…).
+- Les bots-têtes restent un personnage récurrent mais ne sont PAS obligatoires dans chaque vidéo ; ne pas refaire la même séquence (serveurs, écran qui casse) deux vidéos de suite.
+- Noter dans `daily/historique.md` la liste des éléments utilisés (colonne « éléments »).
+- Catalogue des composants et logos : `identite/anim/COMPOSANTS.md` (démo : `identite/anim/catalogue/`).
+
 ## Narration / sous-titres
 - Sous-titres en bas, mot par mot : mot en cours dans la couleur du sens de la phrase, mots dits en encre, mots à venir en gris clair (#C5CDE8). Phrases courtes (≤ 55 caractères), ton simple, tutoiement.
 - Structure : **accroche** (0–3 s) → contexte → montée en tension → conséquence → réponse/enjeu → source → **appel à l'action**.
