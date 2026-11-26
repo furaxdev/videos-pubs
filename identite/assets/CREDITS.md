@@ -1,0 +1,5 @@
+- logo claude : Wikimedia Commons « File:Claude AI logo.svg » (Public domain) https://upload.wikimedia.org/wikipedia/commons/8/8a/Claude_AI_logo.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original
+- logo amazonwebservices : simple-icons (CC0)
+- image fortune : og:image de https://fortune.com/2026/08/26/openai-publishes-technical-report-on-how-its-agents-hacked-hugging-face-here-are-the-main-takeaways-and-what-openai-left-out/ (visuel de presse — à créditer, remplacer pour une publication)
+- logo azure : Wikimedia Commons « File:Microsoft Azure.svg » (Public domain) https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original
+- logo bitwarden : simple-icons (CC0)

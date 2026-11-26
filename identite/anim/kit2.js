@@ -3,9 +3,9 @@
 const LOGO_CACHE = {};
 function logoKey(n, c) { return n + '|' + c; }
 function loadLogos(list) { return Promise.all(list.map(([n, c]) => { const L = window.LOGOS[n]; if (!L) { console.error('logo inconnu : ' + n); return Promise.resolve(); } const col = c || L.hex, k = logoKey(n, col); if (LOGO_CACHE[k]) return Promise.resolve();
-  const svg = L.svg.replace('<svg ', `<svg fill="${col}" `), im = new Image(); LOGO_CACHE[k] = im; return new Promise(r => { im.onload = r; im.onerror = r; im.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg))); }); })); }
+  const svg = L.colored ? L.svg : L.svg.replace('<svg ', `<svg fill="${col}" `), im = new Image(); LOGO_CACHE[k] = im; return new Promise(r => { im.onload = r; im.onerror = r; im.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg))); }); })); }
 const logoImg = (n, c) => LOGO_CACHE[logoKey(n, c || (window.LOGOS[n] || {}).hex)];
-const brandCol = n => { const h = (window.LOGOS[n] || {}).hex || C.ink, v = parseInt(h.slice(1), 16), L = (.299 * (v >> 16) + .587 * ((v >> 8) & 255) + .114 * (v & 255)); return L > 215 ? C.ink : h; };   // marques très claires → encre
+const brandCol = n => { const h = (window.LOGOS[n] || {}).colored ? C.ink : ((window.LOGOS[n] || {}).hex || C.ink), v = parseInt(h.slice(1), 16), L = (.299 * (v >> 16) + .587 * ((v >> 8) & 255) + .114 * (v & 255)); return L > 215 ? C.ink : h; };   // marques très claires → encre
 
 // ---- icônes supplémentaires (repère 48×48, tracé) ----
 const ICONS2 = { lock: new Path2D('M12 22h24v18H12zM17 22v-6a7 7 0 0 1 14 0v6'), unlock: new Path2D('M12 22h24v18H12zM17 22v-6a7 7 0 0 1 13.5-2.6'), key: new Path2D('M16 28a8 8 0 1 1 0-16 8 8 0 0 1 0 16zM22 22l16 16M32 32l4-4M36 36l4-4'),
@@ -68,3 +68,41 @@ function diff(ctx, t, { x = 90, y = 520, w = 900, lines, delay = 0 }) {
 function browser(ctx, t, { x = 90, y = 520, w = 900, h = 520, url, delay = 0, draw: content }) {
   windowBox(ctx, t, { x, y, w, h, title: '', delay, draw: (xx, yy, ww, hh) => { ctx.fillStyle = C.mist; ctx.beginPath(); ctx.roundRect(xx + 130, yy - 46, ww - 160, 36, 18); ctx.fill(); const n = Math.floor(clamp((t - delay - .5) * 26, 0, url.length)); txt(ctx, url.slice(0, n), xx + 152, yy - 20, 22, C.ink, { font: 'JetBrains Mono', weight: 600, ls: 0 }); if (content) content(xx, yy, ww, hh); } });
 }
+
+// ---- images téléchargées (identite/assets/fetch.py → window.IMAGES) ----
+const IMG_CACHE = {};
+function loadImages(names) { return Promise.all(names.map(n => { const src = (window.IMAGES || {})[n]; if (!src) { console.error('image inconnue : ' + n); return Promise.resolve(); } if (IMG_CACHE[n]) return Promise.resolve(); const im = new Image(); IMG_CACHE[n] = im; return new Promise(r => { im.onload = r; im.onerror = r; im.src = src; }); })); }
+// photo : image cadrée (ombre pleine bleue), léger zoom lent, crédit en petit dessous
+function photo(ctx, t, { name, x = 120, y = 520, w = 840, h = 520, delay = 0, zoom = .22, credit }) {
+  const p = ease.out(seg(t, delay, delay + .6)), im = IMG_CACHE[name]; if (p <= 0 || !im) return; ctx.save(); ctx.globalAlpha = clamp(p * 2); ctx.translate(0, (1 - p) * 40);
+  ctx.fillStyle = C.blue; ctx.beginPath(); ctx.roundRect(x + 14, y + 14, w, h, 26); ctx.fill(); ctx.save(); ctx.beginPath(); ctx.roundRect(x, y, w, h, 26); ctx.clip();
+  const k = 1 + zoom * clamp((t - delay) / 3), sc = Math.max(w / im.width, h / im.height) * k; ctx.translate(x + w / 2, y + h / 2); ctx.scale(sc, sc); ctx.drawImage(im, -im.width / 2, -im.height / 2); ctx.restore();
+  ctx.strokeStyle = C.ink; ctx.lineWidth = 4; ctx.beginPath(); ctx.roundRect(x, y, w, h, 26); ctx.stroke(); ctx.restore(); if (credit) txt(ctx, credit, x, y + h + 56, 22, C.grey, { font: 'JetBrains Mono', weight: 500, ls: 0 });
+}
+
+// ======== animations supplémentaires ========
+// tampon (arrive en grand, se pose avec une légère rotation)
+function stamp(ctx, t, { text, cx, cy, color = C.red, delay = 0, size = 44, rot = -.2 }) { const q = ease.out(seg(t, delay, delay + .3)); if (q <= 0) return; ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot); const s = 1.5 - .5 * q; ctx.scale(s, s); ctx.globalAlpha = q; ctx.strokeStyle = color; ctx.lineWidth = 7; const w = txt(ctx, text, 0, 14, size, color, { font: 'JetBrains Mono', weight: 700, align: 'center', ls: 0 }) || 0; ctx.font = `700 ${size}px JetBrains Mono`; const tw = ctx.measureText(text).width; ctx.beginPath(); ctx.roundRect(-tw / 2 - 26, -size * .8, tw + 52, size * 1.7, 16); ctx.stroke(); ctx.restore(); }
+// cercle « au marqueur » autour d'un élément (se trace)
+function circle(ctx, t, { cx, cy, rx, ry, color = C.red, delay = 0, lw = 8 }) { const p = ease.inout(seg(t, delay, delay + .7)); if (p <= 0) return; ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round'; ctx.beginPath(); const n = 80, end = Math.floor(n * p); for (let i = 0; i <= end; i++) { const a = -2.2 + (i / n) * (Math.PI * 2 + .35), wob = 1 + .03 * Math.sin(a * 3); const px = cx + Math.cos(a) * rx * wob, py = cy + Math.sin(a) * ry * wob; i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); } ctx.stroke(); ctx.restore(); }
+// flèche courbe qui se dessine, pointe à la fin
+function arrow(ctx, t, { x0, y0, x1, y1, bend = 120, color = C.blue, delay = 0, lw = 7 }) { const p = ease.inout(seg(t, delay, delay + .6)); if (p <= 0) return; const mx = (x0 + x1) / 2 + bend, my = (y0 + y1) / 2 - bend; const pt = u => [(1 - u) * (1 - u) * x0 + 2 * (1 - u) * u * mx + u * u * x1, (1 - u) * (1 - u) * y0 + 2 * (1 - u) * u * my + u * u * y1];
+  ctx.save(); ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round'; ctx.beginPath(); for (let i = 0; i <= 40; i++) { const [a, b] = pt(i / 40 * p); i ? ctx.lineTo(a, b) : ctx.moveTo(a, b); } ctx.stroke();
+  if (p > .95) { const [a, b] = pt(1), [c, d] = pt(.96), ang = Math.atan2(b - d, a - c); ctx.beginPath(); ctx.moveTo(a, b); ctx.lineTo(a - 26 * Math.cos(ang - .45), b - 26 * Math.sin(ang - .45)); ctx.lineTo(a - 26 * Math.cos(ang + .45), b - 26 * Math.sin(ang + .45)); ctx.closePath(); ctx.fill(); } ctx.restore(); }
+// anneaux qui pulsent (attire l'œil)
+function pulse(ctx, t, { cx, cy, r = 80, color = C.blue, delay = 0, n = 3, period = 1.2 }) { if (t < delay) return; for (let k = 0; k < n; k++) { const ph = (((t - delay) / period - k / n) % 1 + 1) % 1; ctx.save(); ctx.globalAlpha = .55 * (1 - ph); ctx.strokeStyle = color; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(cx, cy, r + ph * r * 1.4, 0, 7); ctx.stroke(); ctx.restore(); } }
+// projecteur : assombrit tout sauf une zone (à dessiner APRÈS la scène)
+function spotlight(ctx, t, { cx, cy, rx, ry, delay = 0, alpha = .78 }) { const p = ease.out(seg(t, delay, delay + .5)); if (p <= 0) return; ctx.save(); ctx.fillStyle = `rgba(10,18,48,${alpha * p})`; ctx.beginPath(); ctx.rect(0, 0, 1080, 1920); ctx.roundRect(cx - rx, cy - ry, rx * 2, ry * 2, 30); ctx.fill('evenodd'); ctx.restore(); }
+// bandeau d'actualité qui défile (ticker)
+function ticker(ctx, t, { y = 300, items, speed = 140, color = C.ink, bg = C.mist, gap = 70 }) {   // bandeau d'actus : chaque titre apparaît/disparaît en fondu aux bords de la zone sûre (x 120–960)
+  ctx.save(); ctx.fillStyle = bg; ctx.fillRect(0, y - 46, 1080, 70); ctx.font = '700 32px Inter'; ctx.letterSpacing = '-1px'; const ws = items.map(s => ctx.measureText(s).width), total = ws.reduce((a, b) => a + b + gap, 0), off = (t * speed) % total;
+  for (let rep = -1; rep < 3; rep++) { let x = 960 - off + rep * total; items.forEach((s, i) => { const w = ws[i], edge = Math.min(x - 120, 960 - (x + w)), a = clamp(edge / 120); if (a > 0) { ctx.globalAlpha = a; txt(ctx, s, x, y, 32, color, { weight: 700, ls: -.03 }); } x += w + gap; }); }
+  ctx.restore(); }
+// anneau de progression (pourcentage)
+function ring(ctx, t, { cx, cy, r = 110, value = 1, color = C.blue, delay = 0, label }) { const p = ease.out(seg(t, delay, delay + 1)) * value; ctx.save(); ctx.lineWidth = 22; ctx.lineCap = 'round'; ctx.strokeStyle = C.mist; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.stroke(); ctx.strokeStyle = color; ctx.beginPath(); ctx.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + p * Math.PI * 2); ctx.stroke(); txt(ctx, (label ?? Math.round(p * 100) + ' %'), cx, cy + 16, 48, color, { font: 'Inter Display', weight: 800, align: 'center' }); ctx.restore(); }
+// curseur de souris qui se déplace puis clique (ondulation)
+function mouse(ctx, t, { from, to, delay = 0, click = true }) { const p = ease.inout(seg(t, delay, delay + .8)), x = from[0] + (to[0] - from[0]) * p, y = from[1] + (to[1] - from[1]) * p, c = t > delay + .85 && t < delay + 1.2;
+  if (click && t > delay + .8) { const k = clamp((t - delay - .8) / .45); ctx.save(); ctx.globalAlpha = .6 * (1 - k); ctx.strokeStyle = C.blue; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(to[0], to[1], 10 + k * 44, 0, 7); ctx.stroke(); ctx.restore(); }
+  ctx.save(); ctx.translate(x, y + (c ? 4 : 0)); ctx.fillStyle = C.ink; ctx.strokeStyle = '#fff'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, 56); ctx.lineTo(15, 43); ctx.lineTo(27, 66); ctx.lineTo(38, 61); ctx.lineTo(26, 38); ctx.lineTo(45, 36); ctx.closePath(); ctx.stroke(); ctx.fill(); ctx.restore(); }
+// liste cochée : les lignes se cochent une à une
+function checklist(ctx, t, { x, y, items, delay = 0, gap = 100 }) { items.forEach((it, i) => { const a = delay + i * .6, q = ease.out(seg(t, a, a + .4)), k = ease.out(seg(t, a + .35, a + .7)); if (q <= 0) return; ctx.save(); ctx.globalAlpha = clamp(q * 2); ctx.translate((1 - q) * -30, 0); const yy = y + i * gap; ctx.strokeStyle = C.ink; ctx.lineWidth = 4; ctx.fillStyle = k > 0 ? C.green : '#fff'; ctx.beginPath(); ctx.roundRect(x, yy - 38, 56, 56, 14); ctx.fill(); ctx.stroke(); if (k > 0) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x + 13, yy - 10); ctx.lineTo(x + 26, yy + 3); ctx.lineTo(x + 45, yy - 24); ctx.globalAlpha = k; ctx.stroke(); } txt(ctx, it, x + 90, yy + 2, 36, C.ink, { weight: 600, ls: -.02 }); ctx.restore(); }); }

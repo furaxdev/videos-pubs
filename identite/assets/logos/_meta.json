@@ -266,5 +266,19 @@
  "jetbrains": {
   "title": "JetBrains",
   "hex": "000000"
+ },
+ "claude": {
+  "title": "claude",
+  "hex": "",
+  "colored": true
+ },
+ "amazonwebservices": {
+  "title": "Amazon Web Services",
+  "hex": "232F3E"
+ },
+ "azure": {
+  "title": "azure",
+  "hex": "",
+  "colored": true
  }
 }

@@ -29,7 +29,10 @@ def spans(flags, min_s, label):
 static = [False] + [float((np.abs(fr[k][y0:top] - fr[k - 1][y0:top]) > 20).mean()) < 0.0008 for k in range(1, len(fr))]
 spans(static, 1.4, 'image figée')
 blank = [float(f[y0:top].std()) < 3 for f in fr]; spans(blank, .6, 'zone vide')
-edge = [bool((f[y0:top, :8] < 235).any() or (f[y0:top, -8:] < 235).any()) for f in fr]; spans(edge, .3, 'élément qui touche le bord gauche/droit')
+def _edge(f):   # un élément qui TOUCHE le bord (partiellement) est un défaut ; un voile plein écran (spotlight, transition) couvre tout le bord : voulu
+    fl = float(((f[y0:top, :8] < 235).mean() + (f[y0:top, -8:] < 235).mean()) / 2)
+    return 0 < fl < .6 and ((f[y0:top, :8] < 235).any() or (f[y0:top, -8:] < 235).any())
+edge = [_edge(f) for f in fr]; spans(edge, .3, 'élément qui touche le bord gauche/droit')
 # planche contact : 1 image par seconde
 n = int(dur); cols = 6; rows = (n + cols - 1) // cols; sheet = Image.new('RGB', (cols * 180, rows * 320), 'white')
 for s in range(n):

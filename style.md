@@ -28,6 +28,8 @@ Furax : « c'est toujours la même chose, trop ressemblant ». Donc, pour chaque
 - **Une intro « mini-film » différente** des précédentes (pas toujours bot + ordinateur/serveur/terminal) : choisir une mise en scène propre au sujet (ex. un logo qui se fissure, une notification qui arrive, un message qui part…).
 - Les bots-têtes restent un personnage récurrent mais ne sont PAS obligatoires dans chaque vidéo ; ne pas refaire la même séquence (serveurs, écran qui casse) deux vidéos de suite.
 - Noter dans `daily/historique.md` la liste des éléments utilisés (colonne « éléments »).
+- **Télécharger les assets du sujet automatiquement** : `python3 identite/assets/fetch.py logo <marques…>` et `og <url-article> <nom>` / `image <url> <nom>` (voir `identite/anim/COMPOSANTS.md`). Chercher activement de nouveaux visuels à chaque vidéo ; ajouter à la bibliothèque tout logo manquant.
+- **Utiliser VRAIMENT le kit d'animation** (`identite/anim/kit.js` + `kit2.js`) : `identite/qa/variety.py` (lancé par `make.sh`) EXIGE ≥ 5 styles `textFx` différents sur 10, ≥ 9 fonctions du kit, ≥ 4 composants kit2, ≥ 2 animations d'annotation (stamp, circle, arrow, pulse, spotlight, ticker, ring, mouse, checklist), ≥ 2 vrais logos, et ≥ 3 éléments absents de chacune des 2 vidéos précédentes. Si le contrôle échoue : enrichir la scène, ne pas livrer.
 - Catalogue des composants et logos : `identite/anim/COMPOSANTS.md` (démo : `identite/anim/catalogue/`).
 
 ## Narration / sous-titres
