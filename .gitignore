@@ -1,2 +1,7 @@
 node_modules/
 site/dist/
+ball/audio/
+ball/exemples/*/audio-mix.wav
+ball/exemples/*/ball-AVEC-musique.mp4
+ball/exemples/*/ball-AVEC-musique.contact.png
+ball/exemples/*/stills/

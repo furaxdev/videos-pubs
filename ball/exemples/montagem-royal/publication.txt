@@ -1,0 +1,7 @@
+Bouncing Ball: MONTAGEM ROYAL
+Musique : MONTAGEM ROYAL
+
+À chaque contact avec le cercle, la balle accélère et joue le morceau suivant du son. Jusqu'où ira-t-elle ?
+(Pour publier : utilise ball-SANS-musique.mp4 et ajoute le son « MONTAGEM ROYAL » depuis la bibliothèque TikTok / Instagram ; impacts.json donne l'instant exact de chaque impact.)
+
+#satisfying #bouncingball #montagemroyal #phonk #asmr

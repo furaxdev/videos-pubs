@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """Boucle de vérification d'une vidéo FuraxDev : python3 qa/check.py video.mp4 [--sub-y 1480]
-Contrôles : format (1080x1920, 30 fps), durée, image figée > 1,4 s (zone au-dessus des sous-titres), zone vide > 0,6 s,
+Contrôles : format (1080x1920, 30 fps ; --fps 60 pour les vidéos BALL MUSIC), durée, image figée > 1,4 s (zone au-dessus des sous-titres), zone vide > 0,6 s,
 éléments qui débordent sur les marges gauche/droite, audio présent (info). Écrit <video>.contact.png (1 image / seconde) à regarder ensuite.
 Code retour 1 s'il y a au moins un problème."""
 import subprocess, sys, json, tempfile, os, glob
 import numpy as np
 from PIL import Image
-v = sys.argv[1]; sub_y = int(sys.argv[sys.argv.index('--sub-y') + 1]) if '--sub-y' in sys.argv else 1480
+v = sys.argv[1]; VFPS = int(sys.argv[sys.argv.index('--fps') + 1]) if '--fps' in sys.argv else 30; sub_y = int(sys.argv[sys.argv.index('--sub-y') + 1]) if '--sub-y' in sys.argv else 1480
 FPS, W, H = 10, 270, 480; problems = []; info = []
 pr = json.loads(subprocess.check_output(['ffprobe', '-v', 'error', '-show_streams', '-show_format', '-of', 'json', v]))
 vs = next(s for s in pr['streams'] if s['codec_type'] == 'video'); dur = float(pr['format']['duration']); has_a = any(s['codec_type'] == 'audio' for s in pr['streams'])
 if (vs['width'], vs['height']) != (1080, 1920): problems.append(f"format {vs['width']}x{vs['height']} au lieu de 1080x1920")
 num, den = map(int, vs['r_frame_rate'].split('/'))
-if round(num / den) != 30: problems.append(f"{num/den:.1f} fps au lieu de 30")
+if round(num / den) != VFPS: problems.append(f"{num/den:.1f} fps au lieu de {VFPS}")
 info.append(f"durée {dur:.1f}s · audio {'oui' if has_a else 'non'}")
 d = tempfile.mkdtemp(); subprocess.check_call(['ffmpeg', '-loglevel', 'error', '-i', v, '-vf', f'fps={FPS},scale={W}:{H}', f'{d}/f%04d.png'])
 fr = [np.asarray(Image.open(f).convert('L'), dtype=np.int16) for f in sorted(glob.glob(d + '/f*.png'))]

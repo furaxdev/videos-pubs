@@ -4,7 +4,7 @@
 //  - formes (cartes, tuiles, images) qui sortent de la zone de sécurité
 // usage : node qa/audit.js <dossier-projet>   (le dossier contient index.html qui expose renderFrame + DURATION)
 const { chromium } = require('playwright'), path = require('path');
-const SAFE = { l: 120, r: 960, t: 60, b: 1700 }, FPS = 30;
+const SAFE = { l: 120, r: 960, t: 60, b: 1700 }, FPS = +process.env.FPS || 30;
 (async () => {
   const dir = path.resolve(process.argv[2]), b = await chromium.launch(), p = await b.newPage({ viewport: { width: 1080, height: 1920 } });
   p.on('pageerror', e => { console.error('ERR', e.message); process.exit(2); });

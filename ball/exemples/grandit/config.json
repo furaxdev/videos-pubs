@@ -1,0 +1,1 @@
+{ "variant": "grow", "seed": 5, "max_impacts": 60, "circle": {"R": 200}, "grow": {"per_hit": 3.3, "max": 398}, "v0": 400, "factor": 1.035 }
