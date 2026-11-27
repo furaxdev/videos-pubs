@@ -14,3 +14,6 @@ YouTube Shorts · TikTok · Instagram Reels (même vidéo 1080×1920). Option : 
 
 ## Réponse aux commentaires
 Quand quelqu'un commente le mot d'appel, envoyer en DM la ressource + le lien source (à faire à la main ou via l'outil du réseau).
+
+## Livraison du MP4 à Furax
+Google Drive, dossier « FuraxDev — vidéos du jour » (id `1_gCj7Hsf5PNghLv3XV_HwCj874nLsrew`) : voir CLAUDE.md, étape 6. Le lien Drive est dans le message final.
