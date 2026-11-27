@@ -1,0 +1,12 @@
+{
+  "titre": "Google force les agents IA à passer par MCP (dès février 2027)",
+  "description": "Dès le 1er février 2027, un agent IA qui accède à Gmail, Drive ou Agenda doit passer par les serveurs MCP de Google. Quotas, paliers payants : ce qui change.\nSource : Google Workspace, Google Cloud.\nCommente « MCP » et je t'envoie la ressource en DM.",
+  "hashtags": ["#IA", "#MCP", "#Google", "#Gmail", "#AgentsIA", "#Dev", "#Shorts"],
+  "mot_cta": "MCP",
+  "reponse_dm": "Voilà la ressource : <url-du-site>/?q=MCP — sources Google incluses (addendum Workspace AI Tools, quotas, blog Google Cloud).",
+  "heure_publication": "07:30 Europe/Paris (repli 12:30 / 18:30)",
+  "sources": ["https://workspace.google.com/terms/ai-tools", "https://developers.google.com/workspace/gmail/api/guides/quotas", "https://cloud.google.com/blog/products/identity-security/deploying-agents-safely-in-your-enterprise", "https://techstackups.com/articles/google-workspace-ai-agents-mcp/"],
+  "youtube": {"titre": "Google force les agents IA à passer par MCP (dès février 2027)", "description": "Dès le 1er février 2027, un agent IA qui accède à Gmail, Drive ou Agenda doit passer par les serveurs MCP de Google.\nSource : Google Workspace, Google Cloud.\nCommente « MCP » pour recevoir la ressource.\n#Shorts #IA #MCP #Google"},
+  "tiktok": "Google impose MCP aux agents IA dès le 1er février 2027. Commente « MCP » 👇 #IA #MCP #Google #Gmail #Dev",
+  "instagram": "Google impose les serveurs MCP aux agents IA dès le 1er février 2027. Commente « MCP » et je t'envoie la ressource en DM.\n.\n#IA #MCP #Google #Gmail #AgentsIA #Dev"
+}

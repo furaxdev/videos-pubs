@@ -1,0 +1,24 @@
+{
+  "slug": "google-mcp-agents-ia",
+  "mot": "MCP",
+  "titre": "Google impose MCP aux agents IA dès février 2027",
+  "resume": "Ce qui change pour les agents IA qui touchent Gmail, Drive ou Agenda : passage obligatoire par les serveurs MCP de Google, quotas et paliers payants.",
+  "points": [
+    "Selon l'addendum « Workspace AI Tools » de Google (modifié le 24 novembre 2026), un outil qui est, ou est piloté par, un agent IA doit utiliser un serveur MCP Google pour accéder à Google Workspace.",
+    "L'obligation est appliquée à partir du 1er février 2027 : les agents doivent passer par les serveurs MCP Google Workspace ou le Workspace CLI.",
+    "Un agent qui appelle directement les API REST est limité aux quotas du palier Standard, quel que soit le palier choisi.",
+    "Palier Standard : 5 000 requêtes par jour, par projet et par produit. Dès le 1er avril 2027, les paliers s'appliquent à tous les projets ; le palier Scaled du serveur MCP Gmail est facturé dès la première requête.",
+    "Justification de Google (blog Google Cloud, 25 novembre 2026) : pour des agents qui agissent à vitesse machine, « un jeton valide ne suffit plus »."
+  ],
+  "sources": [
+    { "titre": "Google — Workspace AI Tools Addendum", "url": "https://workspace.google.com/terms/ai-tools" },
+    { "titre": "Google — Quotas de l'API Gmail et serveurs MCP", "url": "https://developers.google.com/workspace/gmail/api/guides/quotas" },
+    { "titre": "Google Cloud — Deploying agents safely in your enterprise", "url": "https://cloud.google.com/blog/products/identity-security/deploying-agents-safely-in-your-enterprise" },
+    { "titre": "TechStacks — Google Will Make AI Agents Use Its MCP Servers", "url": "https://techstackups.com/articles/google-workspace-ai-agents-mcp/" }
+  ],
+  "tags": ["agents IA", "MCP", "Google Workspace", "Gmail", "API"],
+  "date": "2026-11-27",
+  "video": "google-mcp-agents.mp4",
+  "note": "Dates et quotas lus sur les pages officielles de Google. La date de généralisation du 24 novembre vient de TechStacks.",
+  "thumb_at": 5.0
+}

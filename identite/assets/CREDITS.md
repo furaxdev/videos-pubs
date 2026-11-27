@@ -3,3 +3,7 @@
 - image fortune : og:image de https://fortune.com/2026/08/26/openai-publishes-technical-report-on-how-its-agents-hacked-hugging-face-here-are-the-main-takeaways-and-what-openai-left-out/ (visuel de presse — à créditer, remplacer pour une publication)
 - logo azure : Wikimedia Commons « File:Microsoft Azure.svg » (Public domain) https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original
 - logo bitwarden : simple-icons (CC0)
+- logo gmail : simple-icons (CC0)
+- logo googledrive : simple-icons (CC0)
+- logo googlecalendar : simple-icons (CC0)
+- logo googlecloud : simple-icons (CC0)

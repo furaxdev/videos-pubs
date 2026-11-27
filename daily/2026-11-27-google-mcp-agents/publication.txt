@@ -1,0 +1,30 @@
+TITRE : Google force les agents IA à passer par MCP (dès février 2027)
+
+DESCRIPTION :
+Dès le 1er février 2027, un agent IA qui accède à Gmail, Drive ou Agenda doit passer par les serveurs MCP de Google. Quotas, paliers payants : ce qui change.
+Source : Google Workspace, Google Cloud.
+Commente « MCP » et je t'envoie la ressource en DM.
+
+HASHTAGS : #IA #MCP #Google #Gmail #AgentsIA #Dev #Shorts
+MOT CTA : MCP
+HEURE : 07:30 Europe/Paris (repli 12:30 / 18:30)
+
+YOUTUBE : Google force les agents IA à passer par MCP (dès février 2027)
+Dès le 1er février 2027, un agent IA qui accède à Gmail, Drive ou Agenda doit passer par les serveurs MCP de Google.
+Source : Google Workspace, Google Cloud.
+Commente « MCP » pour recevoir la ressource.
+#Shorts #IA #MCP #Google
+
+TIKTOK : Google impose MCP aux agents IA dès le 1er février 2027. Commente « MCP » 👇 #IA #MCP #Google #Gmail #Dev
+
+INSTAGRAM : Google impose les serveurs MCP aux agents IA dès le 1er février 2027. Commente « MCP » et je t'envoie la ressource en DM.
+.
+#IA #MCP #Google #Gmail #AgentsIA #Dev
+
+RÉPONSE DM : Voilà la ressource : <url-du-site>/?q=MCP — sources Google incluses (addendum Workspace AI Tools, quotas, blog Google Cloud).
+
+SOURCES :
+https://workspace.google.com/terms/ai-tools
+https://developers.google.com/workspace/gmail/api/guides/quotas
+https://cloud.google.com/blog/products/identity-security/deploying-agents-safely-in-your-enterprise
+https://techstackups.com/articles/google-workspace-ai-agents-mcp/
