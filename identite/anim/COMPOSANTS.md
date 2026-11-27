@@ -21,7 +21,7 @@ Charger dans index.html : `<script src="../../assets/logos.js"></script><script 
 | `spotlight` | `{cx, cy, rx, ry}` | assombrit tout sauf une zone (à dessiner après la scène) |
 | `ticker` | `{y, items}` | bandeau d'actus qui défile (plein écran, volontaire) |
 | `ring` | `{cx, cy, value, color}` | anneau de pourcentage animé |
-| `mouse` | `{from, to}` | curseur de souris qui se déplace et clique |
+| `mouse` | `{from, to, name, color, style:'fill'\|'outline'}` | curseur de souris EXACT style Figma (pointe fine + étiquette rectangulaire au nom, en bas à droite : garder ≥ 150 px de marge à droite) |
 | `checklist` | `{x, y, items}` | liste dont les cases se cochent une à une |
 (+ tout `kit.js` : `textFx` (10 styles : fade, blur, blurWords, letters, slideLeft, slideDown, tracking, wipe, focus, type), `rise`, `words`, `underline`, `strike`, `windowBox`, `typing`, `draw`, `tile`, `counter`, `wipe`, `progress`)
 

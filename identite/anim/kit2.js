@@ -100,9 +100,23 @@ function ticker(ctx, t, { y = 300, items, speed = 140, color = C.ink, bg = C.mis
   ctx.restore(); }
 // anneau de progression (pourcentage)
 function ring(ctx, t, { cx, cy, r = 110, value = 1, color = C.blue, delay = 0, label }) { const p = ease.out(seg(t, delay, delay + 1)) * value; ctx.save(); ctx.lineWidth = 22; ctx.lineCap = 'round'; ctx.strokeStyle = C.mist; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.stroke(); ctx.strokeStyle = color; ctx.beginPath(); ctx.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + p * Math.PI * 2); ctx.stroke(); txt(ctx, (label ?? Math.round(p * 100) + ' %'), cx, cy + 16, 48, color, { font: 'Inter Display', weight: 800, align: 'center' }); ctx.restore(); }
-// curseur de souris qui se déplace puis clique (ondulation)
-function mouse(ctx, t, { from, to, delay = 0, click = true }) { const p = ease.inout(seg(t, delay, delay + .8)), x = from[0] + (to[0] - from[0]) * p, y = from[1] + (to[1] - from[1]) * p, c = t > delay + .85 && t < delay + 1.2;
-  if (click && t > delay + .8) { const k = clamp((t - delay - .8) / .45); ctx.save(); ctx.globalAlpha = .6 * (1 - k); ctx.strokeStyle = C.blue; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(to[0], to[1], 10 + k * 44, 0, 7); ctx.stroke(); ctx.restore(); }
-  ctx.save(); ctx.translate(x, y + (c ? 4 : 0)); ctx.fillStyle = C.ink; ctx.strokeStyle = '#fff'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, 56); ctx.lineTo(15, 43); ctx.lineTo(27, 66); ctx.lineTo(38, 61); ctx.lineTo(26, 38); ctx.lineTo(45, 36); ctx.closePath(); ctx.stroke(); ctx.fill(); ctx.restore(); }
+// curseur de souris : style 'solid' (défaut) = tête de flèche pleine aux coins arrondis (sans queue, sans traits de clic), d'après l'icône « curseur » d'Icons8 ;
+// style 'figma' = pointe fine + étiquette au nom (multijoueur Figma) ; style 'outline' = flèche creuse. click:true ajoute une onde de clic (désactivée par défaut).
+function mouse(ctx, t, { from, to, delay = 0, click = false, name = null, color = C.ink, s = 3, style = 'solid' }) {
+  const p = ease.inout(seg(t, delay, delay + .8)), x = from[0] + (to[0] - from[0]) * p, y = from[1] + (to[1] - from[1]) * p, c = click && t > delay + .85 && t < delay + 1.2;
+  if (click && t > delay + .8) { const kk = clamp((t - delay - .8) / .45); ctx.save(); ctx.globalAlpha = .6 * (1 - kk); ctx.strokeStyle = color; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(to[0], to[1], 10 + kk * 44, 0, 7); ctx.stroke(); ctx.restore(); }
+  const dy = c ? 3 : 0; ctx.save(); ctx.translate(x, y + dy); ctx.scale(s, s); ctx.lineJoin = ctx.lineCap = 'round';
+  if (style === 'solid') {
+    const body = () => { ctx.beginPath(); ctx.moveTo(2.1, 2.1); ctx.lineTo(13.6, 12.2); ctx.lineTo(11.0, 12.7); ctx.quadraticCurveTo(6.9, 13.4, 5.0, 15.6); ctx.lineTo(2.9, 18.2); ctx.closePath(); };   // creux du bas arrondi (là où était la queue)   // tête de flèche seule (sans queue)
+    ctx.shadowColor = 'rgba(10,18,48,.22)'; ctx.shadowBlur = 5; ctx.shadowOffsetY = 2;
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 6.4; body(); ctx.stroke();   // liseré blanc : lisible sur fond sombre
+    ctx.shadowColor = 'transparent'; ctx.fillStyle = ctx.strokeStyle = color; ctx.lineWidth = 3.8; body(); ctx.fill(); ctx.stroke();   // trait épais + jointures rondes = coins bien arrondis
+  } else {
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(16, 9.2); ctx.lineTo(8, 11); ctx.lineTo(3.8, 18); ctx.closePath();
+    if (style === 'outline') { ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.7; ctx.stroke(); } else { ctx.shadowColor = 'rgba(10,18,48,.25)'; ctx.shadowBlur = 6; ctx.shadowOffsetY = 2; ctx.fillStyle = color; ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.6; ctx.stroke(); ctx.shadowColor = 'transparent'; ctx.fill(); }
+  }
+  ctx.restore();
+  if (name) { ctx.save(); ctx.translate(x + 19.2 * s, y + dy + 16.5 * s); ctx.font = `600 ${9.4 * s}px Inter`; ctx.letterSpacing = '0px'; const w = ctx.measureText(name).width + 9 * s, h = 15.8 * s; ctx.fillStyle = style === 'figma' ? C.blue : color; ctx.beginPath(); ctx.roundRect(0, 0, w, h, 1.5); ctx.fill(); ctx.fillStyle = '#fff'; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillText(name, 4.5 * s, h * .73); ctx.restore(); }
+}
 // liste cochée : les lignes se cochent une à une
 function checklist(ctx, t, { x, y, items, delay = 0, gap = 100 }) { items.forEach((it, i) => { const a = delay + i * .6, q = ease.out(seg(t, a, a + .4)), k = ease.out(seg(t, a + .35, a + .7)); if (q <= 0) return; ctx.save(); ctx.globalAlpha = clamp(q * 2); ctx.translate((1 - q) * -30, 0); const yy = y + i * gap; ctx.strokeStyle = C.ink; ctx.lineWidth = 4; ctx.fillStyle = k > 0 ? C.green : '#fff'; ctx.beginPath(); ctx.roundRect(x, yy - 38, 56, 56, 14); ctx.fill(); ctx.stroke(); if (k > 0) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x + 13, yy - 10); ctx.lineTo(x + 26, yy + 3); ctx.lineTo(x + 45, yy - 24); ctx.globalAlpha = k; ctx.stroke(); } txt(ctx, it, x + 90, yy + 2, 36, C.ink, { weight: 600, ls: -.02 }); ctx.restore(); }); }
