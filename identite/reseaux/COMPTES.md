@@ -10,7 +10,7 @@ Visuels : `avatar.png` (1024×1024, recadrage rond OK) · `banniere-youtube.png`
 - **TikTok** (≤ 80 car.) : `L'actu IA & tech en 30 s. Commente le mot, je t'envoie la ressource 🎁`
 - **X** (≤ 160 car.) : `L'actu IA & tech en 30 secondes. Une vidéo par jour. Commente le mot de la vidéo : ressource gratuite en DM.`
 - **YouTube — description de la chaîne** : `Chaque jour, l'actu IA & tech expliquée en 30 secondes, sourcée, sans blabla. Commente le mot affiché à la fin de la vidéo et je t'envoie la ressource gratuite en DM. Les sources de chaque vidéo sont toujours indiquées.`
-- **Lien en bio** : le site des ressources (`site/config.json` → `url`, à renseigner à la mise en ligne). En attendant : laisser vide.
+- **Lien en bio** : `https://furaxdev-ressources.vercel.app` (site des ressources, en ligne). Lien à envoyer en DM : `https://furaxdev-ressources.vercel.app/?q=MOT`.
 
 ## À faire par Furax (je ne peux pas le faire à ta place : vérification téléphone/e-mail, captcha, conditions d'utilisation)
 1. Créer les comptes avec le même e-mail et le pseudo ci-dessus : YouTube (chaîne « FuraxDev »), TikTok, Instagram, X.
