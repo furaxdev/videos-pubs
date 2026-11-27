@@ -27,9 +27,9 @@ function circleState(t) {
   return { R, rings };
 }
 function innerR(cs) { return (cs.rings ? Math.min(...cs.rings.filter(r => r.a > .5).map(r => r.R)) : cs.R) - SW / 2; }
-function pulseAt(t) { const i = lastImp(t); if (i < 0) return 0; const dt = t - IMP[i].t; return dt > .4 ? 0 : .016 * Math.exp(-dt * 13) * Math.cos(dt * 30); }
+function pulseAt(t) { if (REAL && !DEFORM) return 0; const i = lastImp(t); if (i < 0) return 0; const dt = t - IMP[i].t; return dt > .4 ? 0 : .016 * Math.exp(-dt * 13) * Math.cos(dt * 30); }
 // ---- dessin ----
-const REAL = RGB && CFG.realistic !== false;   // impacts « réalistes » : déformation du contour, étincelles, écrasement de la balle, tremblement
+const REAL = RGB && CFG.realistic !== false, DEFORM = CFG.deform === true;   // DEFORM : contour qui bosse à l'impact (désactivé par défaut : le rond reste rigide)   // impacts « réalistes » : déformation du contour, étincelles, écrasement de la balle, tremblement
 const wrapA = a => { while (a > Math.PI) a -= 2 * Math.PI; while (a < -Math.PI) a += 2 * Math.PI; return a; };
 // déformation radiale (px, vers l'extérieur) du contour au point d'un impact : bosse qui s'étale en onde et vibre en s'amortissant
 function deform(th, t) { let d = 0; const n = lastImp(t) + 1;
@@ -48,7 +48,7 @@ function ribbon(b, t, col, I) {
 let TNOW = 0; const BBOX = [];  // boîtes d'éléments (utilisées par l'audit qualité)
 function drawCircle(R, a, pul, cs) { const r = R * (1 + pul);
   ctx.save(); ctx.globalAlpha = a; ctx.lineWidth = SW; ctx.beginPath(); ctx.arc(CX + SHADOW, CY + SHADOW, r, 0, 7); if (!RGB) { ctx.strokeStyle = BLUE; ctx.stroke(); } // ombre pleine bleue décalée (thème Furax)
-  ctx.beginPath(); if (REAL) { for (let k = 0; k <= 240; k++) { const th = k / 240 * 2 * Math.PI, rr = r + deform(th, TNOW); k ? ctx.lineTo(CX + rr * Math.cos(th), CY + rr * Math.sin(th)) : ctx.moveTo(CX + rr * Math.cos(th), CY + rr * Math.sin(th)); } ctx.closePath(); } else ctx.arc(CX, CY, r, 0, 7); if (RGB) { const g = ctx.createConicGradient(-TNOW * 1.1, CX, CY); for (let k = 0; k <= 12; k++) g.addColorStop(k / 12, hsl(k * 30 + TNOW * 40, 27)); ctx.strokeStyle = g; } else ctx.strokeStyle = INK; ctx.stroke(); ctx.restore();
+  ctx.beginPath(); if (REAL) { for (let k = 0; k <= 240; k++) { const th = k / 240 * 2 * Math.PI, rr = r + (DEFORM ? deform(th, TNOW) : 0); k ? ctx.lineTo(CX + rr * Math.cos(th), CY + rr * Math.sin(th)) : ctx.moveTo(CX + rr * Math.cos(th), CY + rr * Math.sin(th)); } ctx.closePath(); } else ctx.arc(CX, CY, r, 0, 7); if (RGB) { const g = ctx.createConicGradient(-TNOW * 1.1, CX, CY); for (let k = 0; k <= 12; k++) g.addColorStop(k / 12, hsl(k * 30 + TNOW * 40, 27)); ctx.strokeStyle = g; } else ctx.strokeStyle = INK; ctx.stroke(); ctx.restore();
   BBOX.push({ k: 'cercle', x0: CX - r - SW / 2, y0: CY - r - SW / 2, x1: CX + r + (RGB ? 0 : SHADOW) + SW / 2, y1: CY + r + (RGB ? 0 : SHADOW) + SW / 2 }); }
 function title(t) {
   const F = { font: 'Inter Display', weight: 700 }, size = 46, y = 236, a = 'Bouncing Ball:', b = 'MONTAGEM ROYAL';

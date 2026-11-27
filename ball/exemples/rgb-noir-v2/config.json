@@ -1,0 +1,1 @@
+{ "theme": "rgb", "show_title": false, "trail": "ribbon", "variant": "single", "seed": 7, "max_impacts": 60, "circle": { "stroke": 44, "R": 378 }, "title_note": "rgb-noir + traînée en ruban continu (pas de ronds)" }
