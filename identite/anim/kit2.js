@@ -8,7 +8,7 @@ const logoImg = (n, c) => LOGO_CACHE[logoKey(n, c || (window.LOGOS[n] || {}).hex
 const brandCol = n => { const h = (window.LOGOS[n] || {}).colored ? C.ink : ((window.LOGOS[n] || {}).hex || C.ink), v = parseInt(h.slice(1), 16), L = (.299 * (v >> 16) + .587 * ((v >> 8) & 255) + .114 * (v & 255)); return L > 215 ? C.ink : h; };   // marques très claires → encre
 
 // ---- icônes supplémentaires (repère 48×48, tracé) ----
-const ICONS2 = { lock: new Path2D('M12 22h24v18H12zM17 22v-6a7 7 0 0 1 14 0v6'), unlock: new Path2D('M12 22h24v18H12zM17 22v-6a7 7 0 0 1 13.5-2.6'), key: new Path2D('M16 28a8 8 0 1 1 0-16 8 8 0 0 1 0 16zM22 22l16 16M32 32l4-4M36 36l4-4'),
+const ICONS2 = { lock: new Path2D('M12 22h24v18H12zM17 22v-6a7 7 0 0 1 14 0v6'), unlock: new Path2D('M12 22h24v18H12zM17 22v-6a7 7 0 0 1 13.5-2.6'), key: new Path2D('M23 31a8 8 0 1 1-16 0 8 8 0 0 1 16 0zM21 25L41 5M35 11l6 6M29 17l5 5M15 31h.01'),
   db: new Path2D('M10 12c0-3 6-5 14-5s14 2 14 5-6 5-14 5-14-2-14-5zM10 12v24c0 3 6 5 14 5s14-2 14-5V12M10 24c0 3 6 5 14 5s14-2 14-5'), cloud: new Path2D('M14 36a8 8 0 0 1-1-15.9A11 11 0 0 1 34 17a8.5 8.5 0 0 1 1 17H14z'),
   file: new Path2D('M12 6h16l8 8v28H12zM28 6v8h8M18 24h12M18 31h12'), bug: new Path2D('M24 14a7 7 0 0 1 7 7v7a7 7 0 0 1-14 0v-7a7 7 0 0 1 7-7zM18 14l-3-4M30 14l3-4M17 22H9M31 22h8M17 30l-7 3M31 30l7 3M24 21v14'),
   phone: new Path2D('M15 5h18a3 3 0 0 1 3 3v32a3 3 0 0 1-3 3H15a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3zM21 38h6'), globe: new Path2D('M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0zM6 24h36M24 6c6 5 8 11 8 18s-2 13-8 18c-6-5-8-11-8-18s2-13 8-18z'),
