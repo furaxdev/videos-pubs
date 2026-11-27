@@ -1,1 +1,1 @@
-{ "variant": "multi", "balls": 3, "seed": 21, "max_impacts": 64, "v0": 420, "factor": 1.02 }
+{ "variant": "multi", "balls": 3, "seed": 21, "max_impacts": 64, "v0": 420, "factor": 1.02, "min_gap": 0.06, "chaos": 0.3 }

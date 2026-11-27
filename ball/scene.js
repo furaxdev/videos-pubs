@@ -37,11 +37,11 @@ function deform(th, t) { let d = 0; const n = lastImp(t) + 1;
   return d; }
 const RIBBON = CFG.trail === 'ribbon', withA = (c, a) => c.replace(/^rgb\(/, 'rgba(').replace(/^hsl\(/, 'hsla(').replace(/\)$/, `,${a})`);
 // traînée en ruban continu : une seule forme, fine à la queue, plus large vers la balle, qui se plie aux rebonds (un ruban par trajet entre deux impacts)
-function ribbon(b, t, col, I) {
-  const TL = .09 + .3 * I, M = 44, pts = []; for (let j = 0; j <= M; j++) { const ts = Math.max(0, t - TL * j / M); pts.push({ ...ballAt(b, ts), j, seg: lastImp(ts, b) }); }
+function ribbon(b, t, col, I, P) {
+  const spd = Math.max(1, Math.hypot(P.vx, P.vy)), TL = Math.max(.05, Math.min(.09 + .3 * I, 230 / spd)), M = 44, pts = []; for (let j = 0; j <= M; j++) { const ts = Math.max(0, t - TL * j / M); pts.push({ ...(j === 0 ? P : ballAt(b, ts)), j, seg: lastImp(ts, b) }); }
   let a = 0; while (a < pts.length - 1) { let e = a; while (e + 1 < pts.length && pts[e + 1].seg === pts[a].seg) e++;
-    if (e - a >= 2) { const g = pts.slice(a, e + 1), L = [], Rr = [];
-      g.forEach((p, k) => { const q = g[Math.min(k + 1, g.length - 1)], o = g[Math.max(k - 1, 0)]; let dx = o.x - q.x, dy = o.y - q.y; const l = Math.hypot(dx, dy) || 1; dx /= l; dy /= l; const w = BR * .62 * Math.pow(1 - p.j / (M + 1), 1.15); L.push([p.x - dy * w, p.y + dx * w]); Rr.push([p.x + dy * w, p.y - dx * w]); });
+    if (e - a >= 3 && Math.hypot(pts[a].x - pts[e].x, pts[a].y - pts[e].y) > 26) { const g = pts.slice(a, e + 1), L = [], Rr = [];
+      g.forEach((p, k) => { const q = g[Math.min(k + 1, g.length - 1)], o = g[Math.max(k - 1, 0)]; let dx = o.x - q.x, dy = o.y - q.y; const l = Math.hypot(dx, dy) || 1; dx /= l; dy /= l; const w = BR * .5 * Math.pow(1 - p.j / (M + 1), 1.5); L.push([p.x - dy * w, p.y + dx * w]); Rr.push([p.x + dy * w, p.y - dx * w]); });
       const h = g[0], tl = g[g.length - 1], gr = ctx.createLinearGradient(tl.x, tl.y, h.x, h.y); gr.addColorStop(0, withA(col, 0)); gr.addColorStop(1, withA(col, .75));
       ctx.globalAlpha = 1; ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(L[0][0], L[0][1]); for (let k = 1; k < L.length; k++) ctx.lineTo(L[k][0], L[k][1]); for (let k = Rr.length - 1; k >= 0; k--) ctx.lineTo(Rr[k][0], Rr[k][1]); ctx.closePath(); ctx.fill(); }
     a = e + 1; } }
@@ -77,10 +77,10 @@ function renderFrame(t) {
   ctx.save(); ctx.beginPath(); ctx.arc(CX, CY, innerR(cs) * (1 + pul) - 1, 0, 7); ctx.clip();
   for (let i = Math.max(0, n - 12); i < n; i++) { const im = IMP[i], dt = t - im.t, col = impCol(im);
     if (dt < .5) { const p = eo(dt / .5); ctx.globalAlpha = (REAL ? .3 : .75) * (1 - p); ctx.strokeStyle = col; ctx.lineWidth = 6 - 4.5 * p; ctx.beginPath(); ctx.arc(im.x, im.y, 16 + 150 * p, 0, 7); ctx.stroke(); }
-    if (REAL) { if (dt < .75) { const R = rng(i * 104729 + 7), I = intensity(im.speed), cnt = i === N - 1 ? 60 : 30 + Math.round(24 * I), tx = -im.ny, ty = im.nx;
-      for (let k = 0; k < cnt; k++) { const sd = (R() < .5 ? -1 : 1), tang = (.15 + R() * .85) * sd, nrm = .25 + R() * .9, sp = (380 + 1100 * R()) * (.55 + .7 * I), life = .3 + .4 * R(); if (dt > life) continue;
+    if (REAL) { if (dt < .75) { const R = rng(i * 104729 + 7), I = intensity(im.speed), cnt = i === N - 1 ? 40 : 20 + Math.round(8 * I), tx = -im.ny, ty = im.nx;
+      for (let k = 0; k < cnt; k++) { const sd = (R() < .5 ? -1 : 1), tang = (.15 + R() * .85) * sd, nrm = .25 + R() * .9, sp = (380 + 1100 * R()) * (.55 + .7 * I), life = .25 + .3 * R(); if (dt > life) continue;
         const vx = (tx * tang + im.nx * nrm) * sp, vy = (ty * tang + im.ny * nrm) * sp, drag = Math.exp(-dt * 2.2), px = im.x + vx * (1 - drag) / 2.2, py = im.y + vy * (1 - drag) / 2.2 + .5 * 1300 * dt * dt, q = dt / life;
-        const dx = vx * drag, dy = vy * drag + 1300 * dt, L = Math.hypot(dx, dy) || 1, tl = Math.min(46, L * .03);
+        const dx = vx * drag, dy = vy * drag + 1300 * dt, L = Math.hypot(dx, dy) || 1, tl = Math.min(26, L * .02);
         ctx.globalAlpha = (1 - q) * (1 - q * .4); ctx.strokeStyle = q < .25 ? '#fff' : col; ctx.lineWidth = 5.5 * (1 - .6 * q); ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px - dx / L * tl, py - dy / L * tl); ctx.stroke(); }
       if (dt < .07) { const p = dt / .07; ctx.globalAlpha = 1 - p; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(im.x, im.y, 6 + 20 * p, 0, 7); ctx.fill(); } } }
     else if (dt < .6) { const R = rng(i * 7919 + 13), cnt = i === N - 1 ? 30 : 14, base = Math.atan2(im.ny, im.nx), I = intensity(im.speed);
@@ -97,12 +97,12 @@ function renderFrame(t) {
     if (REAL && cur && t - cur.t < .045) { const u = (t - cur.t) / .045, w = 2 * u * u - u * u * u; P = { ...P, x: cur.bx + (P.x - cur.bx) * w, y: cur.by + (P.y - cur.by) * w }; }   // collée à la paroi pendant le contact, puis reprend sa trajectoire sans saut
     // traînée : positions passées, longueur selon la vitesse
     const TL = .05 + .17 * I, M = 16;
-    if (RIBBON) { if (t <= D.impacts[N - 1].t + .14) ribbon(b, t, col, I); }
+    if (RIBBON) { if (t <= D.impacts[N - 1].t + .14) ribbon(b, t, col, I, P); }
     else for (let j = (t > D.impacts[N - 1].t + .14) ? 0 : M; j >= 1; j--) { const q = ballAt(b, Math.max(0, t - TL * j / M)), f = 1 - j / (M + 1); ctx.globalAlpha = .38 * f * f + .04; ctx.fillStyle = col; ctx.beginPath(); ctx.arc(q.x, q.y, BR * (.35 + .6 * f), 0, 7); ctx.fill(); }
     const endT = D.impacts[N - 1].t, k = clamp01(1 - (t - endT) / .14), rr = BR * (t >= endT ? k : 1);
     if (rr > .5) { ctx.globalAlpha = 1; ctx.fillStyle = col; ctx.strokeStyle = RGB ? '#fff' : INK; ctx.lineWidth = RGB ? 5 : 4; ctx.beginPath();
       const dq = cur ? t - cur.t : 9, sq = REAL && cur && dq < .045 ? Math.sin(Math.PI * dq / .045) : 0;   // écrasement contre la paroi (~90 ms), volume conservé
-      if (sq > 0) { const c = (.3 + .12 * curI) * sq, ang = Math.atan2(cur.ny, cur.nx), sh = rr * c; ctx.save(); ctx.translate(P.x - cur.nx * sh, P.y - cur.ny * sh); ctx.rotate(ang); ctx.ellipse(0, 0, rr * (1 - c), rr / Math.sqrt(1 - c), 0, 0, 7); ctx.restore(); }
+      if (sq > 0) { const c = .22 * sq, ang = Math.atan2(cur.ny, cur.nx), sh = rr * c; ctx.save(); ctx.translate(P.x - cur.nx * sh, P.y - cur.ny * sh); ctx.rotate(ang); ctx.ellipse(0, 0, rr * (1 - c), rr / Math.sqrt(1 - c), 0, 0, 7); ctx.restore(); }
       else ctx.arc(P.x, P.y, rr, 0, 7);
       ctx.fill(); ctx.stroke();
       BBOX.push({ k: 'balle', x0: P.x - rr - 2, y0: P.y - rr - 2, x1: P.x + rr + 2, y1: P.y + rr + 2 }); }

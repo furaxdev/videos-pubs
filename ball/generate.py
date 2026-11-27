@@ -11,7 +11,7 @@ DEF = dict(title_a='Bouncing Ball:', title_b='MONTAGEM ROYAL', variant='single',
            max_impacts=60, circle=dict(cx=540, cy=960, R=380, stroke=6), ball=dict(r=30), gravity=700, v0=520, factor=1.035, vmax=2600,
            min_gap=0.07, tail=1.0, overlap=0.12, pre_roll=0.006, fade_in=0.003, fade_out=0.04,
            rings=dict(count=6, R0=250, gap=26, hits=10), grow=dict(per_hit=5, max=398), balls=1,
-           colors=['#2F5BFF', '#12B76A', '#FFB020', '#FF3B4E'], min_s=20, max_s=40)
+           colors=['#2F5BFF', '#12B76A', '#FFB020', '#FF3B4E'], min_s=20, max_s=40, chaos=1.0, max_graze=1.05)
 
 def cfg_load(d):
     c = json.load(open(os.path.join(d, 'config.json'))); o = json.loads(json.dumps(DEF))
@@ -69,12 +69,17 @@ def analyse(st):
                 beats=[round(float(b), 4) for b in beats], onsets=onsets, bars=sections)
 
 def choose_start(an, n_slices, m):
-    beats = np.array(an['beats']); beat = an['beat']; best = None
+    """début d'un DROP : la 1re mesure dont l'énergie saute (> 1,3 × les 2 mesures précédentes) et dont la fenêtre de n_slices temps reste forte (>= 85 % de la meilleure) ; sinon la fenêtre la plus forte."""
+    beats = np.array(an['beats']); beat = an['beat']; bars = an['bars']; cand = []
+    rms = lambda i: float(np.sqrt((m[int(beats[i] * SR):int((beats[i] + n_slices * beat) * SR)] ** 2).mean()))
     for i in range(0, len(beats) - n_slices - 1, 4):
-        a = int((beats[i]) * SR); b = int((beats[i] + n_slices * beat) * SR)
-        sc = float(np.sqrt((m[a:b] ** 2).mean()))
-        if best is None or sc > best[0] * 1.02: best = (sc, i)
-    return int(best[1]) if best else 0
+        cand.append((i, rms(i)))
+    if not cand: return 0
+    best = max(s for _, s in cand)
+    for i, s in cand:
+        b = i // 4
+        if b >= 2 and bars[b]['rms'] > 1.3 * np.mean([bars[b - 1]['rms'], bars[b - 2]['rms']]) and s >= .85 * best: return int(i)
+    return int(max(cand, key=lambda c: c[1])[0])
 
 # ---------- physique ----------
 def flight(p, v, g, t):  # parabole depuis (p, v), t secondes
@@ -88,7 +93,7 @@ def simulate(c, seed, n_max, ball_idx):
     def Rb(): return (rings[alive[0]] if rings else R) - r - sw
     a0 = rng.uniform(0, 2 * math.pi); sp = c['v0']
     Rin = rings[0] if rings else R; p = (cx + rng.uniform(-.16, .16) * Rin, cy + rng.uniform(-.5, -.15) * Rin); v = (sp * math.cos(a0), sp * math.sin(a0) * 0.6 - 40)
-    t = 0.0; segs = []; imps = []; events = [dict(t=0.0, R=R, alive=list(alive))]; cur_speed = sp
+    last_th = 0.0; t = 0.0; segs = []; imps = []; events = [dict(t=0.0, R=R, alive=list(alive))]; cur_speed = sp
     def f(pp): return math.hypot(pp[0] - cx, pp[1] - cy) - Rb()
     h = 1 / 600
     for k in range(n_max):
@@ -108,7 +113,18 @@ def simulate(c, seed, n_max, ball_idx):
         nx, ny = (cx - q[0]), (cy - q[1]); nl = math.hypot(nx, ny); nx, ny = nx / nl, ny / nl       # normale vers l'intérieur
         vn = w[0] * nx + w[1] * ny
         w = (w[0] - 2 * vn * nx, w[1] - 2 * vn * ny)
-        cur_speed = min(c['vmax'], cur_speed * c['factor']); s = math.hypot(*w); w = (w[0] / s * cur_speed, w[1] / s * cur_speed)
+        cur_speed = min(c['vmax'], cur_speed * c['factor'])
+        # rebond « vivant » : sans hasard, un cercle donne toujours le même polygone/étoile (la balle tourne en boucle). On dévie l'angle de sortie
+        # (frottement/rotation simulés, graine => déterministe) et on interdit les rebonds trop rasants (la balle ne longe plus la paroi).
+        tx, ty = -ny, nx; wn, wt = w[0] * nx + w[1] * ny, w[0] * tx + w[1] * ty
+        th0 = math.atan2(wt, wn)
+        if c['chaos'] >= 1:   # angle de sortie tiré au hasard (sens de rotation compris) et différent du précédent : jamais deux cordes pareilles de suite
+            for _ in range(20):
+                th = rng.uniform(-c['max_graze'], c['max_graze'])
+                if abs(th - last_th) > .5 and abs(th + last_th) > .35: break
+            last_th = th
+        else: th = max(-c['max_graze'], min(c['max_graze'], th0 + rng.uniform(-c['chaos'], c['chaos'])))
+        w = (cur_speed * (math.cos(th) * nx + math.sin(th) * tx), cur_speed * (math.cos(th) * ny + math.sin(th) * ty))
         # contact visuel = point de la paroi (bord de la balle) ; on garde le centre pour la trajectoire
         t += tau; ring = alive[0] if rings else 0
         ix, iy = q[0] - nx * r, q[1] - ny * r      # point de contact sur la paroi
@@ -138,14 +154,14 @@ def main(d):
     # impacts (précalcul complet)
     nb = c['balls'] if c['variant'] == 'multi' else 1
     seed0 = c['seed']
-    for attempt in range(400 if nb > 1 else 1):      # plusieurs balles : on cherche (déterministe) une graine sans impacts quasi simultanés
+    for attempt in range(1500 if nb > 1 else 1):      # plusieurs balles : on cherche (déterministe) une graine sans impacts quasi simultanés
         all_imps, balls = [], []; events = None
         for b in range(nb):
             segs, imps, ev = simulate(c, seed0 + attempt + 101 * b, c['max_impacts'], b)
             if b == 0: events = ev
             all_imps += imps; balls.append(segs)
         ts = sorted(i['t'] for i in all_imps)[:c['max_impacts']]
-        if nb == 1 or min(np.diff(ts)) >= c['min_gap'] + .02: break
+        if nb == 1 or min(np.diff(ts)) >= c['min_gap']: break
     else: print('ATTENTION : pas de graine sans impacts rapprochés')
     c['seed_used'] = seed0 + attempt
     all_imps.sort(key=lambda i: i['t'])
