@@ -1,0 +1,9 @@
+{
+  "titre": "Black Friday : un skimmer WebRTC vole des cartes bancaires",
+  "description": "Selon InfoHawk (27 nov.), un script caché dans un pixel marketing a volé des données de carte sur 5 boutiques, via WebRTC. Il semble ne viser que le mobile, à la caisse. Source : InfoHawk News. Commente SKIMMER et je t'envoie la ressource en DM.",
+  "hashtags": ["#Cybersécurité", "#BlackFriday", "#Dev", "#WebRTC", "#Skimmer", "#Sécurité", "#Shorts"],
+  "mot_cta": "SKIMMER",
+  "reponse_dm": "https://furaxdev-ressources.vercel.app/?q=SKIMMER",
+  "heure_publication": "07:30 Europe/Paris (repli 12:30 / 18:30)",
+  "sources": ["https://www.infohawk.com/news/2026-11-27-black-friday-webrtc-skimmer", "https://sansec.io/research/webrtc-skimmer", "https://thehackernews.com/2026/03/webrtc-skimmer-bypasses-csp-to-steal.html"]
+}

@@ -1,0 +1,23 @@
+{
+  "slug": "skimmer-webrtc-black-friday",
+  "mot": "SKIMMER",
+  "titre": "Le skimmer WebRTC qui vole les cartes bancaires à la caisse",
+  "resume": "Comment un script caché dans un pixel marketing a volé des cartes sur 5 boutiques en ligne pendant le Black Friday, pourquoi WebRTC passe sous les radars, et comment s'en protéger.",
+  "points": [
+    "Selon InfoHawk (27 novembre 2026), un skimmer a été trouvé sur 5 sites : Lascana, Samsonite, American Tourister, Revolve et FWRD.",
+    "Il arrivait par un pixel marketing, un réglage de bannière de cookies ou un fichier du CDN : jamais par le code de la boutique elle-même.",
+    "Il semble ne s'activer qu'à la page de paiement et sur mobile, donc un test sur ordinateur ou sur la page d'accueil le manque.",
+    "WebRTC (la techno des appels vidéo) transporte le code malveillant et les données volées via un relais Cloudflare : un canal souvent moins surveillé.",
+    "Défense côté site : une règle CSP connect-src stricte sur les pages de paiement, un cadre de paiement isolé, aucune balise tierce à la caisse. Côté client : surveiller ses relevés et contester sous 60 jours."
+  ],
+  "sources": [
+    { "titre": "InfoHawk News — Credit card skimming scripts using WebRTC (27 nov. 2026)", "url": "https://www.infohawk.com/news/2026-11-27-black-friday-webrtc-skimmer" },
+    { "titre": "Sansec — Novel WebRTC skimmer bypasses security controls (mars 2026)", "url": "https://sansec.io/research/webrtc-skimmer" },
+    { "titre": "The Hacker News — WebRTC Skimmer Bypasses CSP (mars 2026)", "url": "https://thehackernews.com/2026/03/webrtc-skimmer-bypasses-csp-to-steal.html" }
+  ],
+  "tags": ["sécurité", "paiement", "WebRTC", "Black Friday", "skimmer"],
+  "date": "2026-11-28",
+  "video": "skimmer-webrtc.mp4",
+  "note": "Les faits viennent de l'enquête InfoHawk ; le nombre de victimes est inconnu.",
+  "thumb_at": 11.0
+}
